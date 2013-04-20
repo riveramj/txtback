@@ -11,6 +11,7 @@ import net.liftweb.http.js.jquery._
 import net.liftweb.mapper._
 import net.liftweb.http.Html5Properties
 import net.liftweb.mapper.Schemifier
+import com.riveramj.model._
 
 
 /**
@@ -30,7 +31,9 @@ class Boot {
     Schemifier.schemify(
       true,
       Schemifier.infoF
-        _
+      _,
+      Answer,
+      Question
     )
 
     // where to search snippet
