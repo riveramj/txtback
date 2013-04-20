@@ -14,9 +14,9 @@
 
 
 
-    <logger name="code.snippet" level="info" />
+    <logger name="code.com.riveramj" level="info" />
     <logger name="com.riveramj" level="warn" />
-    <logger name="bootstrap.riveramj" level="info" />
+    <logger name="bootstrap.liftweb" level="info" />
     <root level="warn">
         <appender-ref ref="STDOUT" />
     </root>

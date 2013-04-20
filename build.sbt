@@ -15,6 +15,9 @@ libraryDependencies ++= {
 val liftVersion = "2.5-RC2"
   Seq(
   "net.liftweb"       %% "lift-webkit"    % liftVersion       % "compile",
+  "net.liftweb"       %% "lift-mapper"    % liftVersion       % "compile",
+  "c3p0" % "c3p0" % "0.9.1.2",
+    "org.dbunit" % "dbunit" % "2.4.8",
   "org.specs2"        %% "specs2"         % "1.14"            % "test",
   "org.eclipse.jetty" % "jetty-webapp"    % "8.0.1.v20110908" % "container",
   "com.h2database"    % "h2"              % "1.2.138",
