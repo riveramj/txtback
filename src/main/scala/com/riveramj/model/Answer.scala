@@ -9,7 +9,6 @@ class Answer extends LongKeyedMapper[Answer] {
   object id extends MappedLongIndex(this)
   object question extends MappedLongForeignKey(this, Question)
   object answer extends MappedString(this, 140)
-
 }
 
 object Answer extends Answer with LongKeyedMetaMapper[Answer]{}
