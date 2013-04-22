@@ -10,33 +10,89 @@ class ModelSpecs extends Specification {
   step {
     val boot = new Boot
     boot.boot
-
-    //don't use proxy
-    java.lang.System.clearProperty("http.proxyHost")
-    java.lang.System.clearProperty("https.proxyHost")
   }
 
   "the Company mapper" should {
-    "generate a unique company ID" in {
-      Company.create.companyId must not beNull
+    args(sequential=true)
+
+    "create test company" in {
+      val company = Company.create
+      company.companyName("company name")
+      company.save must beTrue
     }
+    "find a company by name" in {
+      val company = Company.find(By(Company.companyName, "company name"))
+      company must not beEmpty
+      val name = company.map(company => company.companyName) openOr ""
+      name must beEqualTo("company name")
+    }
+    "delete test company" in {
+      val company = Company.find(By(Company.companyName, "company name"))
+      company must not beEmpty
+
+      company.map(c => c.delete_!).openOr(false) must beTrue
+    }
+
   }
 
   "the Survey mapper" should {
-    "generate a unique survey ID" in {
-      Survey.create.surveyId must not beNull
+    "create test survey" in {
+      val survey = Survey.create
+      survey.surveyName("survey name")
+      survey.save must beTrue
+    }
+    "find a survey by name" in {
+      val survey = Survey.find(By(Survey.surveyName, "survey name"))
+      survey must not beEmpty
+      val name = survey.map(survey => survey.surveyName) openOr ""
+      name must beEqualTo("survey name")
+    }
+    "delete survey company" in {
+      val survey = Survey.find(By(Survey.surveyName, "survey name"))
+      survey must not beEmpty
+
+      survey.map(s => s.delete_!).openOr(false) must beTrue
     }
   }
 
   "the Question mapper" should {
-    "generate a unique question ID" in {
-      Question.create.questionId must not beNull
+    "create test question" in {
+      val question = Question.create
+      question.question("question 1")
+      question.save must beTrue
+    }
+    "find a question by question text" in {
+      val question = Question.find(By(Question.question, "question 1"))
+      question must not beEmpty
+
+      val question1 = question.map(question => question.question) openOr ""
+      question1 must beEqualTo("question 1")
+    }
+    "delete test question" in {
+      val question = Question.find(By(Question.question, "question 1"))
+      question must not beEmpty
+
+      question.map(q => q.delete_!).openOr(false) must beTrue
     }
   }
 
   "the Answer mapper" should {
-    "generate a unique Answer ID" in {
-      Answer.create.answerId must not beNull
+    "create test answer" in {
+      val answer = Answer.create
+      answer.answer("answer 1")
+      answer.save must beTrue
+    }
+    "find a answer by answer text" in {
+      val answer = Answer.find(By(Answer.answer, "answer 1"))
+      answer must not beEmpty
+      val answer1 = answer.map(answer => answer.answer) openOr ""
+      answer1 must beEqualTo("answer 1")
+    }
+    "delete test answer" in {
+      val answer = Answer.find(By(Answer.answer, "answer 1"))
+      answer must not beEmpty
+
+      answer.map(c => c.delete_!).openOr(false) must beTrue
     }
   }
 }

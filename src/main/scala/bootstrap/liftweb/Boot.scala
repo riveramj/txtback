@@ -33,7 +33,9 @@ class Boot {
       Schemifier.infoF
       _,
       Answer,
-      Question
+      Question,
+      Survey,
+      Company
     )
 
     // where to search snippet

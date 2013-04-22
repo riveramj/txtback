@@ -18,6 +18,7 @@ val liftVersion = "2.5-RC2"
   "net.liftweb"       %% "lift-mapper"    % liftVersion       % "compile",
   "c3p0" % "c3p0" % "0.9.1.2",
     "org.dbunit" % "dbunit" % "2.4.8",
+    "mysql"               % "mysql-connector-java"% "5.1.20",
   "org.specs2"        %% "specs2"         % "1.14"            % "test",
   "org.eclipse.jetty" % "jetty-webapp"    % "8.0.1.v20110908" % "container",
   "com.h2database"    % "h2"              % "1.2.138",
@@ -25,7 +26,7 @@ val liftVersion = "2.5-RC2"
   )
 }
 
-
+parallelExecution in Test := false
 
 // append -deprecation to the options passed to the Scala compiler
 scalacOptions += "-deprecation"
