@@ -1,4 +1,4 @@
-name := "TxtBack"
+name := "TxtBck"
 
 version := "0.1"
 
