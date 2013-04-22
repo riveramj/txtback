@@ -22,7 +22,8 @@ val liftVersion = "2.5-RC2"
   "org.specs2"        %% "specs2"         % "1.14"            % "test",
   "org.eclipse.jetty" % "jetty-webapp"    % "8.0.1.v20110908" % "container",
   "com.h2database"    % "h2"              % "1.2.138",
-  "ch.qos.logback"    % "logback-classic" % "0.9.26"
+  "ch.qos.logback"    % "logback-classic" % "0.9.26",
+    "org.apache.shiro"    % "shiro-core"          % "1.2.0"
   )
 }
 

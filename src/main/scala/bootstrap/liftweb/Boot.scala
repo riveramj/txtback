@@ -35,7 +35,8 @@ class Boot {
       Answer,
       Question,
       Survey,
-      Company
+      Company,
+      User
     )
 
     // where to search snippet
