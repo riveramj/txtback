@@ -2,11 +2,8 @@ package com.riveramj.model
 
 import net.liftweb.mapper._
 
-class Company extends LongKeyedMapper[Company] with  OneToMany[Long, Company] {
+class Company extends LongKeyedMapper[Company] with IdPK with OneToMany[Long, Company] {
   def getSingleton = Company
-
-  def primaryKeyField = comp_id
-  object comp_id extends MappedLongIndex(this)
 
   object companyId extends MappedString(this, 256){
     override def dbIndexed_? = true
