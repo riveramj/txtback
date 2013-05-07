@@ -2,7 +2,7 @@ package com.riveramj.model
 
 import net.liftweb.mapper._
 
-class User extends LongKeyedMapper[User] with  OneToMany[Long, User] {
+class User extends LongKeyedMapper[User] with OneToMany[Long, User] {
   def getSingleton = User
 
   def primaryKeyField = userId

@@ -12,7 +12,7 @@ class Company extends LongKeyedMapper[Company] with IdPK with OneToMany[Long, Co
     override def dbIndexed_? = true
   }
 
-  object surveys extends MappedOneToMany(Survey, Survey.company, OrderBy(Survey.surveyId, Ascending))
+  object surveys extends MappedOneToMany(Survey, Survey.company, OrderBy(Survey.id, Ascending))
   object users extends MappedOneToMany(User, User.company, OrderBy(User.userId, Ascending))
 }
 
