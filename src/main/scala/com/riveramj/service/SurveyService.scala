@@ -14,7 +14,7 @@ object SurveyService extends Loggable {
   def createSurvey(name:String) = {
     val survey = Survey.create
       .surveyName(name)
-      .surveyId(generateId)
+      .surveyId(generateStringId)
 
     tryo(saveSurvey(survey)) flatMap {
       u => u match {
