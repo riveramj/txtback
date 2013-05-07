@@ -2,6 +2,7 @@ package com.riveramj.service
 
 import net.liftweb.common._
 import com.riveramj.model.Company
+import com.riveramj.util.RandomIdGenerator.generateId
 import net.liftweb.mapper.By
 import net.liftweb.util.Helpers._
 import org.apache.shiro.crypto.SecureRandomNumberGenerator
@@ -9,11 +10,10 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator
 object CompanyService extends Loggable {
   private val rng = new SecureRandomNumberGenerator();
 
-
   def createCompany(name:String) = {
     val company = Company.create
       .companyName(name)
-      .companyId(rng.nextBytes(32).toBase64)
+      .companyId(generateId)
 
     tryo(saveCompany(company)) flatMap {
       u => u match {

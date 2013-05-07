@@ -2,11 +2,12 @@ package com.riveramj.model
 
 import net.liftweb.mapper._
 
-class Survey extends LongKeyedMapper[Survey] with OneToMany[Long, Survey] {
+class Survey extends LongKeyedMapper[Survey] with IdPK with OneToMany[Long, Survey] {
   def getSingleton = Survey
 
-  def primaryKeyField = surveyId
-  object surveyId extends MappedLongIndex(this)
+  object surveyId extends MappedString(this, 256){
+    override def dbIndexed_? = true
+  }
   object surveyName extends MappedString(this, 140) {
     override def dbIndexed_? = true
   }
