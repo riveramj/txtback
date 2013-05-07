@@ -18,7 +18,7 @@ class ModelSpecs extends Specification {
     "create test company" in {
       val company = Company.create
       company.companyName("company name")
-      company.companyId("identifier")
+      company.companyId(100000)
       company.save must beTrue
     }
     "find a company by name" in {

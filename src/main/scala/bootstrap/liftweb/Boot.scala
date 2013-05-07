@@ -18,7 +18,7 @@ import com.riveramj.model._
  * A class that's instantiated early and run.  It allows the application
  * to modify lift's environment
  */
-class Boot {
+class Boot extends Loggable {
   def boot {
 
     if (!DB.jndiJdbcConnAvailable_?) {

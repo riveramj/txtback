@@ -32,4 +32,5 @@ parallelExecution in Test := false
 // append -deprecation to the options passed to the Scala compiler
 scalacOptions += "-deprecation"
 
+fullRunTask(TaskKey[Unit]("load-test-data", "Loads SQL database with test data"), Compile, "com.riveramj.util.TestDataLoader")
 

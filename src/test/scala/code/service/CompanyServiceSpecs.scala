@@ -33,7 +33,7 @@ class CompanyServiceSpecs extends Specification {
       val companyName = company.map(_.companyName.get)
       companyName must beEqualTo(Full("Mike Company"))
 
-      val companyId = company.map(_.companyId.get).getOrElse("")
+      val companyId = company.map(_.companyId.get).getOrElse(0L)
 
       val companyById = getCompanyById(companyId)
       companyById.map(_.companyName.get).getOrElse("") must beEqualTo("Mike Company")
@@ -52,7 +52,7 @@ class CompanyServiceSpecs extends Specification {
       val companyName = company.map(_.companyName.get)
       companyName must beEqualTo(Full("Mike Company"))
 
-      val companyId = company.map(_.companyId.get).getOrElse("")
+      val companyId = company.map(_.companyId.get).getOrElse(0L)
 
       deleteCompanyById(companyId).openOr(false) must beTrue
     }
