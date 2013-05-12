@@ -30,6 +30,6 @@ class  TestDataLoader extends  Loggable {
   }
 
   private def populateTestUser(firstName: String, lastName: String, email: String, companyId: Long, password: String) {
-    UserService.createUser(email, firstName, lastName, companyId, password)
+    UserService.createUser(firstName, lastName, email, companyId, password)
   }
 }

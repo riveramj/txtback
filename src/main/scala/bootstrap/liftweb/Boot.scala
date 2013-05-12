@@ -36,7 +36,7 @@ class Boot extends Loggable {
       Question,
       Survey,
       Company,
-      User
+      Users
     )
 
     // where to search snippet

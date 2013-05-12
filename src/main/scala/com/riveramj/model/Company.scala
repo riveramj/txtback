@@ -13,7 +13,7 @@ class Company extends LongKeyedMapper[Company] with IdPK with OneToMany[Long, Co
   }
 
   object surveys extends MappedOneToMany(Survey, Survey.company, OrderBy(Survey.id, Ascending))
-  object users extends MappedOneToMany(User, User.companyId, OrderBy(User.id, Ascending))
+  object users extends MappedOneToMany(Users, Users.companyId, OrderBy(Users.id, Ascending))
 }
 
 object Company extends Company with LongKeyedMetaMapper[Company]{}
