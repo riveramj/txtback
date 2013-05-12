@@ -7,7 +7,7 @@ object RandomIdGenerator extends Loggable {
   private val rng = new SecureRandomNumberGenerator();
 
   def generateIntId() = {
-    rng.getDefaultNextBytesSize
+    scala.util.Random.nextLong()
   }
 
   def generateStringId() = {

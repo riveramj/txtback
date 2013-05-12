@@ -20,6 +20,7 @@ class ModelSpecs extends Specification {
       company.companyName("company name")
       company.companyId(100000)
       company.save must beTrue
+      company.id.get must not equalTo -1L
     }
     "find a company by name" in {
       val company = Company.find(By(Company.companyName, "company name"))
@@ -36,23 +37,33 @@ class ModelSpecs extends Specification {
     }
   }
 
-  "the User mapper" should {
+  "the Users mapper" should {
     args(sequential=true)
 
     "create test user" in {
-      val user = User.create
+      val user = Users.create
       user.firstName("Mike")
       user.lastName("Rivera")
+      user.email("foo.bar@gmail.com")
       user.save must beTrue
+      user.id.get must not equalTo  -1L
     }
     "find a user by name" in {
-      val user = User.find(By(User.firstName, "Mike"))
+      val user = Users.find(By(Users.firstName, "Mike"))
       user must not beEmpty
       val name = user.map(_.firstName) openOr ""
       name must beEqualTo("Mike")
     }
+    "find a user by email" in {
+      val user = Users.find(By(Users.email, "foo.bar@gmail.com"))
+      println("user is " + user)
+
+      user must not beEmpty
+      val email = user.map(_.email) openOr ""
+      email must beEqualTo("foo.bar@gmail.com")
+    }
     "delete test user" in {
-      val user = User.find(By(User.firstName, "Mike"))
+      val user = Users.find(By(Users.firstName, "Mike"))
       user must not beEmpty
 
       user.map(_.delete_!).openOr(false) must beTrue
@@ -65,6 +76,7 @@ class ModelSpecs extends Specification {
       val survey = Survey.create
       survey.surveyName("survey name")
       survey.save must beTrue
+      survey.id.get must not equalTo  -1L
     }
     "find a survey by name" in {
       val survey = Survey.find(By(Survey.surveyName, "survey name"))
@@ -86,6 +98,7 @@ class ModelSpecs extends Specification {
       val question = Question.create
       question.question("question 1")
       question.save must beTrue
+      question.id.get must not equalTo  -1L
     }
     "find a question by question text" in {
       val question = Question.find(By(Question.question, "question 1"))
@@ -108,6 +121,7 @@ class ModelSpecs extends Specification {
       val answer = Answer.create
       answer.answer("answer 1")
       answer.save must beTrue
+      answer.id.get must not equalTo  -1L
     }
     "find a answer by answer text" in {
       val answer = Answer.find(By(Answer.answer, "answer 1"))
