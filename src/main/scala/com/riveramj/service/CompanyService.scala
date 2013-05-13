@@ -1,7 +1,7 @@
 package com.riveramj.service
 
 import net.liftweb.common._
-import com.riveramj.model.Company
+import com.riveramj.model.{Survey, Company}
 import com.riveramj.util.RandomIdGenerator._
 import net.liftweb.mapper.By
 import net.liftweb.util.Helpers._

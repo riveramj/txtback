@@ -6,6 +6,7 @@ import com.riveramj.service.CompanyService.createCompany
 import com.riveramj.service.UserService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
+import com.riveramj.service.AnswerServiceService.createAnswer
 
 
 
@@ -47,18 +48,37 @@ class  TestDataLoader extends Loggable {
 
     val newSurveyId = survey.map(survey => survey.surveyId.get) openOr 0L
 
-    createQuestion(
+    val question1 = createQuestion(
       parentSurveyId = newSurveyId,
       surveyQuestion = "This is question 1"
     )
-    createQuestion(
+    val question1Id = question1.map(question => question.questionId.get) openOr 0L
+
+    createAnswer(
+      parentQuestionId = question1Id,
+      surveyAnswers = List("Answer 1","Answer 2","Answer 3","Answer 4")
+    )
+
+    val question2 = createQuestion(
       parentSurveyId = newSurveyId,
       surveyQuestion = "This is question 2"
     )
-    createQuestion(
+    val question2Id = question2.map(question => question.questionId.get) openOr 0L
+
+    createAnswer(
+      parentQuestionId = question2Id,
+      surveyAnswers = List("Answer 11","Answer 22","Answer 33","Answer 44")
+    )
+
+    val question3 = createQuestion(
       parentSurveyId = newSurveyId,
       surveyQuestion = "This is question 3"
     )
+    val question3Id = question3.map(question => question.questionId.get) openOr 0L
 
+    createAnswer(
+      parentQuestionId = question3Id,
+      surveyAnswers = List("Answer 111","Answer 222","Answer 333","Answer 444")
+    )
   }
 }
