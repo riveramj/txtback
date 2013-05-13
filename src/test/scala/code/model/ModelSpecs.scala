@@ -56,7 +56,6 @@ class ModelSpecs extends Specification {
     }
     "find a user by email" in {
       val user = Users.find(By(Users.email, "foo.bar@gmail.com"))
-      println("user is " + user)
 
       user must not beEmpty
       val email = user.map(_.email) openOr ""

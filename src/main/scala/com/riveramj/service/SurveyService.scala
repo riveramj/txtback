@@ -60,7 +60,8 @@ object SurveyService extends Loggable {
     Survey.find(By(Survey.surveyName, surveyName))
   }
 
-  def getAllSurveysByCompanyId(company: Company): List[Survey] = {
+  def getAllSurveysByCompany(givenCompany: Box[Company]): List[Survey] = {
+    val company = givenCompany.openOr(new Company())
     Survey.findAll(By(Survey.company, company))
   }
 

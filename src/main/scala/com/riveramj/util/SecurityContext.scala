@@ -17,12 +17,15 @@ import com.riveramj.service.CompanyService._
  */
 object SecurityContext extends Loggable {
   private object loggedInUserId extends SessionVar[Box[Long]](Empty)
+  private object loggedInCompanyId extends SessionVar[Box[Long]](Empty)
 
   private object loggedInUser extends RequestVar[Box[Users]](Empty)
-  private object cachedCurrentUserCompany extends RequestVar[Box[Company]](Empty)
+  private object loggedInUserCompany extends RequestVar[Box[Company]](Empty)
+
 
 
   def logIn(user: Users) {
+
     setCurrentUser(user)
 
     logger.info("Logged user in [ %s ]".format(user.email.get ))
@@ -41,7 +44,7 @@ object SecurityContext extends Loggable {
 
   def logUserIn(userId: Long): Boolean = {
     getUserById(userId) match {
-      case Full(user: Users) =>
+      case Full(user) =>
         logIn(user)
         true
       case _ =>
@@ -84,14 +87,18 @@ object SecurityContext extends Loggable {
   }
 
   def currentCompany : Box[Company] = {
-    cachedCurrentUserCompany.is or {
-      val currentCompany = currentUser.flatMap(_.companyId)
-      cachedCurrentUserCompany(currentCompany)
-      cachedCurrentUserCompany.is
+    loggedInUserCompany.is or {
+      val currentCompanyId = currentUser.map(_.companyId.get)
+      val currentCompany = getCompanyById(currentCompanyId openOr 0L)
+
+      loggedInCompanyId(currentCompanyId)
+      loggedInUserCompany(currentCompany)
+
+      loggedInUserCompany.is
     }
   }
 
-  def currentUserBusinessUnitId : Box[Long] = cachedCurrentUserCompany map (_.companyId.get)
+  def currentUserCompanyId : Box[Long] = loggedInUserCompany map (_.companyId.get)
 
   def loggedIn_? : Boolean = {
     currentUser.isDefined

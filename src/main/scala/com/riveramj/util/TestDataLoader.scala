@@ -26,10 +26,23 @@ class  TestDataLoader extends  Loggable {
     val company = createCompany("Company1")
 
     val companyId = company.map(comp => comp.companyId.get) getOrElse 0L
-    populateTestUser("Mike", "Rivera", "rivera.mj@gmail.com", companyId , "password")
+
+    populateTestUser(
+      firstName = "Mike",
+      lastName = "Rivera",
+      email = "rivera.mj@gmail.com",
+      companyId = companyId,
+      password = "password"
+    )
   }
 
   private def populateTestUser(firstName: String, lastName: String, email: String, companyId: Long, password: String) {
-    UserService.createUser(firstName, lastName, email, companyId, password)
+    UserService.createUser(
+      firstName = firstName,
+      lastName = lastName,
+      email = email,
+      companyId = companyId,
+      password = password
+    )
   }
 }
