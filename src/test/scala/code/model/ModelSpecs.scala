@@ -37,11 +37,11 @@ class ModelSpecs extends Specification {
     }
   }
 
-  "the Users mapper" should {
+  "the Surveyor mapper" should {
     args(sequential=true)
 
     "create test user" in {
-      val user = Users.create
+      val user = Surveyor.create
       user.firstName("Mike")
       user.lastName("Rivera")
       user.email("foo.bar@gmail.com")
@@ -49,20 +49,20 @@ class ModelSpecs extends Specification {
       user.id.get must not equalTo  -1L
     }
     "find a user by name" in {
-      val user = Users.find(By(Users.firstName, "Mike"))
+      val user = Surveyor.find(By(Surveyor.firstName, "Mike"))
       user must not beEmpty
       val name = user.map(_.firstName) openOr ""
       name must beEqualTo("Mike")
     }
     "find a user by email" in {
-      val user = Users.find(By(Users.email, "foo.bar@gmail.com"))
+      val user = Surveyor.find(By(Surveyor.email, "foo.bar@gmail.com"))
 
       user must not beEmpty
       val email = user.map(_.email) openOr ""
       email must beEqualTo("foo.bar@gmail.com")
     }
     "delete test user" in {
-      val user = Users.find(By(Users.firstName, "Mike"))
+      val user = Surveyor.find(By(Surveyor.firstName, "Mike"))
       user must not beEmpty
 
       user.map(_.delete_!).openOr(false) must beTrue

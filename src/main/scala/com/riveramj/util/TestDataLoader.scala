@@ -2,8 +2,12 @@ package com.riveramj.util
 
 import net.liftweb.common.Loggable
 import bootstrap.liftweb.Boot
-import com.riveramj.service.CompanyService._
-import com.riveramj.service.UserService
+import com.riveramj.service.CompanyService.createCompany
+import com.riveramj.service.UserService.createSurveyor
+import com.riveramj.service.SurveyService.createSurvey
+import com.riveramj.service.QuestionService.createQuestion
+
+
 
 object TestDataLoader extends Loggable {
 
@@ -17,32 +21,44 @@ object TestDataLoader extends Loggable {
   def main(args: Array[String]) {
     initialize
     val testData = new TestDataLoader
-    testData.populateTestUsers()
+    testData.createTestData()
   }
 }
 
-class  TestDataLoader extends  Loggable {
-  def populateTestUsers() {
+class  TestDataLoader extends Loggable {
+  def createTestData() {
     val company = createCompany("Company1")
 
-    val companyId = company.map(comp => comp.companyId.get) getOrElse 0L
+    val newCompanyId = company.map(company => company.companyId.get) openOr 0L
+    println(newCompanyId  + " is the company id")
 
-    populateTestUser(
+    createSurveyor(
       firstName = "Mike",
       lastName = "Rivera",
       email = "rivera.mj@gmail.com",
-      companyId = companyId,
+      companyId = newCompanyId,
       password = "password"
     )
-  }
 
-  private def populateTestUser(firstName: String, lastName: String, email: String, companyId: Long, password: String) {
-    UserService.createUser(
-      firstName = firstName,
-      lastName = lastName,
-      email = email,
-      companyId = companyId,
-      password = password
+    val survey = createSurvey(
+      name = "Survey 1",
+      companyId = newCompanyId
     )
+
+    val newSurveyId = survey.map(survey => survey.surveyId.get) openOr 0L
+
+    createQuestion(
+      parentSurveyId = newSurveyId,
+      surveyQuestion = "This is question 1"
+    )
+    createQuestion(
+      parentSurveyId = newSurveyId,
+      surveyQuestion = "This is question 2"
+    )
+    createQuestion(
+      parentSurveyId = newSurveyId,
+      surveyQuestion = "This is question 3"
+    )
+
   }
 }

@@ -11,10 +11,11 @@ import net.liftweb.common.Full
 
 object SurveyService extends Loggable {
 
-  def createSurvey(name:String) = {
+  def createSurvey(name:String, companyId:Long) = {
     val survey = Survey.create
       .surveyName(name)
-      .surveyId(generateStringId)
+      .companyId(companyId)
+      .surveyId(generateLongId())
 
     tryo(saveSurvey(survey)) flatMap {
       u => u match {
@@ -47,11 +48,11 @@ object SurveyService extends Loggable {
     }
   }
 
-  def getSurveyById(surveyId: String): Box[Survey] = {
+  def getSurveyById(surveyId: Long): Box[Survey] = {
     Survey.find(By(Survey.surveyId, surveyId))
   }
 
-  def deleteSurveyById(surveyId: String): Box[Boolean] = {
+  def deleteSurveyById(surveyId: Long): Box[Boolean] = {
     val survey = Survey.find(By(Survey.surveyId, surveyId))
     survey.map(_.delete_!)
   }
@@ -60,9 +61,12 @@ object SurveyService extends Loggable {
     Survey.find(By(Survey.surveyName, surveyName))
   }
 
-  def getAllSurveysByCompany(givenCompany: Box[Company]): List[Survey] = {
-    val company = givenCompany.openOr(new Company())
-    Survey.findAll(By(Survey.company, company))
+  def getAllSurveysByCompanyId(companyId: Long): List[Survey] = {
+    Survey.findAll(By(Survey.companyId, companyId))
+  }
+
+  def findAllSurveyQuestions(surveyId:Long): List[Question] = {
+    Question.findAll(By(Question.surveyId, surveyId))
   }
 
   def getAllSurveys = {

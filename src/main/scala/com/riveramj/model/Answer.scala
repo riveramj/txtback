@@ -5,7 +5,7 @@ import net.liftweb.mapper._
 class Answer extends LongKeyedMapper[Answer] with IdPK {
   def getSingleton = Answer
 
-  object question extends MappedLongForeignKey(this, Question)
+  object questionId extends MappedLongForeignKey(this, Question)
   object answer extends MappedString(this, 140)
 }
 

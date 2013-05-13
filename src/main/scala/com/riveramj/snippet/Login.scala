@@ -4,7 +4,7 @@ import net.liftweb.sitemap.Menu
 import net.liftweb.http.{S, SHtml}
 import net.liftweb.util.Helpers._
 import com.riveramj.service.UserService._
-import com.riveramj.model.Users
+import com.riveramj.model.Surveyor
 import net.liftweb.common._
 import com.riveramj.util.SecurityContext
 import net.liftweb.common.Full
@@ -16,7 +16,7 @@ object Login {
 class Login extends Loggable {
 
 
-  def userCanLogIn_?(user:Users, password:String): Box[Boolean] = {
+  def userCanLogIn_?(user:Surveyor, password:String): Box[Boolean] = {
     if (user.password.get != hashPassword(password, user.salt.get)) {
       Full(false)
     } else {

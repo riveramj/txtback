@@ -12,8 +12,8 @@ class Company extends LongKeyedMapper[Company] with IdPK with OneToMany[Long, Co
     override def dbIndexed_? = true
   }
 
-  object surveys extends MappedOneToMany(Survey, Survey.company, OrderBy(Survey.id, Ascending))
-  object users extends MappedOneToMany(Users, Users.companyId, OrderBy(Users.id, Ascending))
+  object surveys extends MappedOneToMany(Survey, Survey.companyId, OrderBy(Survey.id, Ascending))
+  object users extends MappedOneToMany(Surveyor, Surveyor.companyId, OrderBy(Surveyor.id, Ascending))
 }
 
 object Company extends Company with LongKeyedMetaMapper[Company]{}

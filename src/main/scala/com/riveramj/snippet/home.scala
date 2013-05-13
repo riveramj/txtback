@@ -15,7 +15,8 @@ class Home {
   def render() = {
 
     val currentCompany = SecurityContext.currentCompany
-    val surveys = SurveyService.getAllSurveysByCompany(currentCompany)
+    val currentCompanyId = SecurityContext.currentCompanyId
+    val surveys = SurveyService.getAllSurveysByCompanyId(currentCompanyId openOr 0)
 
     ClearClearable andThen
     "#company-name *" #> currentCompany.map(_.companyName.get) &

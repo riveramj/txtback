@@ -3,7 +3,7 @@ package com.riveramj.util
 import net.liftweb.http._
 import net.liftweb.common._
 import net.liftweb.util.ControlHelpers._
-import com.riveramj.model.{Company, Users}
+import com.riveramj.model.{Company, Surveyor}
 import com.riveramj.service.UserService._
 import com.riveramj.service.CompanyService._
 
@@ -19,20 +19,24 @@ object SecurityContext extends Loggable {
   private object loggedInUserId extends SessionVar[Box[Long]](Empty)
   private object loggedInCompanyId extends SessionVar[Box[Long]](Empty)
 
-  private object loggedInUser extends RequestVar[Box[Users]](Empty)
+  private object loggedInUser extends RequestVar[Box[Surveyor]](Empty)
   private object loggedInUserCompany extends RequestVar[Box[Company]](Empty)
 
 
 
-  def logIn(user: Users) {
+  def logIn(user: Surveyor) {
 
     setCurrentUser(user)
+
+    // We immediately access the request var to suppress the warning about it
+    // never being accessed during a request.
+    loggedInUser.is
 
     logger.info("Logged user in [ %s ]".format(user.email.get ))
   }
 
 
-  def setCurrentUser(user: Users) {
+  def setCurrentUser(user: Surveyor) {
     loggedInUserId(Full(user.userId.get))
     loggedInUser(Full(user))
   }
@@ -65,7 +69,7 @@ object SecurityContext extends Loggable {
     } openOr false
   }
 
-  def currentUser: Box[Users] = {
+  def currentUser: Box[Surveyor] = {
     loggedInUser.is or loggedInUserId.is.flatMap { userId =>
       val user = getUserById(userId)
       loggedInUser(user)
@@ -98,7 +102,7 @@ object SecurityContext extends Loggable {
     }
   }
 
-  def currentUserCompanyId : Box[Long] = loggedInUserCompany map (_.companyId.get)
+  def currentCompanyId : Box[Long] = loggedInUserCompany map (_.companyId.get)
 
   def loggedIn_? : Boolean = {
     currentUser.isDefined
