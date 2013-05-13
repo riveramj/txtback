@@ -5,18 +5,19 @@ import net.liftweb.http.{S, SHtml}
 import net.liftweb.util.Helpers._
 import com.riveramj.service.UserService._
 import com.riveramj.model.Users
-import net.liftweb.common.{Failure, Box, Full}
+import net.liftweb.common._
+import com.riveramj.util.SecurityContext
+import net.liftweb.common.Full
 
 
 object Login {
   val menu = Menu.i("login") / "login"
 }
-class Login {
+class Login extends Loggable {
 
 
   def userCanLogIn_?(user:Users, password:String): Box[Boolean] = {
     if (user.password.get != hashPassword(password, user.salt.get)) {
-      println("failed to match ")
       Full(false)
     } else {
       Full(true)
@@ -29,8 +30,10 @@ class Login {
 
     def login() = {
       getUserByEmail(email) match {
-        case Full(user) => println("legit"); S.redirectTo("/home")
-        case failure => println("failure with info %s".format(failure))
+        case Full(user) =>
+          SecurityContext.logUserIn(user.userId.get)
+          S.redirectTo("/home")
+        case failure => logger.error("failure with info %s".format(failure))
 
       }
     }

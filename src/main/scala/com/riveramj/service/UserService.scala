@@ -67,11 +67,11 @@ object UserService extends Loggable {
   }
 
   def getUserById(userId: Long): Box[Users] = {
-    Users.find(By(Users.id, userId))
+    Users.find(By(Users.userId, userId))
   }
 
   def deleteUserById(userId: Long): Box[Boolean] = {
-    val user = Users.find(By(Users.id, userId))
+    val user = Users.find(By(Users.userId, userId))
     user.map(_.delete_!)
   }
 
