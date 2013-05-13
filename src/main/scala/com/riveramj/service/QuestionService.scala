@@ -15,7 +15,7 @@ object QuestionService extends Loggable {
     val question = Question.create
       .question(surveyQuestion)
       .surveyId(parentSurveyId)
-      .questionId(generateStringId)
+      .questionId(generateLongId())
 
     tryo(saveQuestion(question)) flatMap {
       u => u match {
@@ -48,13 +48,17 @@ object QuestionService extends Loggable {
     }
   }
 
-  def getQuestionById(questionId: String): Box[Question] = {
+  def getQuestionById(questionId: Long): Box[Question] = {
     Question.find(By(Question.questionId, questionId))
   }
 
-  def deleteQuestionById(questionId: String): Box[Boolean] = {
+  def deleteQuestionById(questionId: Long): Box[Boolean] = {
     val question = Question.find(By(Question.questionId, questionId))
     question.map(_.delete_!)
+  }
+
+  def findAllSurveyQuestions(surveyId:Long): List[Question] = {
+    Question.findAll(By(Question.surveyId, surveyId))
   }
 
   def getAllQuestions = {

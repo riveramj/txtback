@@ -8,7 +8,7 @@ class Question extends LongKeyedMapper[Question] with IdPK with OneToMany[Long, 
   object question extends MappedString(this, 140) {
     override def dbIndexed_? = true
   }
-  object questionId extends MappedString(this, 256){
+  object questionId extends MappedLong(this){
     override def dbIndexed_? = true
   }
 
