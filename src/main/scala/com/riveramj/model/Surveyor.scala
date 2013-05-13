@@ -2,8 +2,8 @@ package com.riveramj.model
 
 import net.liftweb.mapper._
 
-class Users extends LongKeyedMapper[Users] with IdPK with OneToMany[Long, Users] {
-  def getSingleton = Users
+class Surveyor extends LongKeyedMapper[Surveyor] with IdPK with OneToMany[Long, Surveyor] {
+  def getSingleton = Surveyor
 
   object userId extends MappedLong(this) {
     override def dbIndexed_? = true
@@ -17,4 +17,4 @@ class Users extends LongKeyedMapper[Users] with IdPK with OneToMany[Long, Users]
   object companyId extends MappedLongForeignKey(this, Company)
 }
 
-object Users extends Users with LongKeyedMetaMapper[Users]{}
+object Surveyor extends Surveyor with LongKeyedMetaMapper[Surveyor]{}

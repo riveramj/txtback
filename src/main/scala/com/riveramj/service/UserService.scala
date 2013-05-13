@@ -1,7 +1,7 @@
 package com.riveramj.service
 
 import org.apache.shiro.crypto.SecureRandomNumberGenerator
-import com.riveramj.model.Users
+import com.riveramj.model.Surveyor
 import com.riveramj.util.RandomIdGenerator._
 import net.liftweb.util.Helpers._
 import net.liftweb.common._
@@ -19,43 +19,43 @@ object UserService extends Loggable {
     generateStringId
   }
 
-  def createUser(
+  def createSurveyor(
                   firstName: String, lastName: String, email: String, 
                   companyId: Long, password: String) = {
 
     val salt = getSalt
     val hashedPassword = hashPassword(password, salt)
     
-    val user = Users.create
+    val user = Surveyor.create
       .firstName(firstName)
       .lastName(lastName)
       .email(email)
       .companyId(companyId)
-      .userId(generateIntId)
+      .userId(generateLongId)
       .password(hashedPassword)
       .salt(salt)
 
     tryo(saveUser(user)) flatMap {
       u => u match {
-        case Full(newUser:Users) => Full(newUser)
+        case Full(newUser:Surveyor) => Full(newUser)
         case (failure: Failure) => failure
         case _ => Failure("Unknown error")
       }
     }
   }
 
-  def saveUser(user:Users):Box[Users] = {
+  def saveUser(user:Surveyor):Box[Surveyor] = {
 
     val uniqueConstraintPattern = """.*Unique(.+)""".r
     val validateErrors = user.validate
 
     if (validateErrors.isEmpty) {
       tryo(user.saveMe()) match {
-        case Full(newUser:Users) => Full(newUser)
+        case Full(newUser:Surveyor) => Full(newUser)
         case Failure(_, Full(err), _) => {
           val error = err.getMessage.substring(0, err.getMessage.indexOf("\n"))
           error match {
-            case uniqueConstraintPattern(x) => Failure("Users Already Exists")
+            case uniqueConstraintPattern(x) => Failure("Surveyor Already Exists")
             case _ => Failure("Unknown error")
           }
         }
@@ -66,20 +66,20 @@ object UserService extends Loggable {
     }
   }
 
-  def getUserById(userId: Long): Box[Users] = {
-    Users.find(By(Users.userId, userId))
+  def getUserById(userId: Long): Box[Surveyor] = {
+    Surveyor.find(By(Surveyor.userId, userId))
   }
 
   def deleteUserById(userId: Long): Box[Boolean] = {
-    val user = Users.find(By(Users.userId, userId))
+    val user = Surveyor.find(By(Surveyor.userId, userId))
     user.map(_.delete_!)
   }
 
-  def getUserByEmail(email: String): Box[Users] = {
-    Users.find(By(Users.email, email))
+  def getUserByEmail(email: String): Box[Surveyor] = {
+    Surveyor.find(By(Surveyor.email, email))
   }
 
   def getAllCompanies = {
-    Users.findAll()
+    Surveyor.findAll()
   }
 }

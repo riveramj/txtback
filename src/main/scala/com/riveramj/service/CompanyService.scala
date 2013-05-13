@@ -13,7 +13,7 @@ object CompanyService extends Loggable {
   def createCompany(name:String) = {
     val company = Company.create
       .companyName(name)
-      .companyId(generateIntId)
+      .companyId(generateLongId)
 
     tryo(saveCompany(company)) flatMap {
       u => u match {
