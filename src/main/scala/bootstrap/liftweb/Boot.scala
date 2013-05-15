@@ -12,6 +12,7 @@ import net.liftweb.mapper._
 import net.liftweb.http.Html5Properties
 import net.liftweb.mapper.Schemifier
 import com.riveramj.model._
+import com.riveramj.util.Paths
 
 
 /**
@@ -52,6 +53,7 @@ class Boot extends Loggable {
 //    LiftRules.setSiteMap(SiteMap(entries:_*))
 //
 
+    LiftRules.setSiteMap(Paths.siteMap)
     //Show the spinny image when an Ajax call starts
     LiftRules.ajaxStart =
       Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)

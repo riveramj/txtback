@@ -5,6 +5,7 @@ import net.liftweb.sitemap.Loc.EarlyResponse
 import net.liftweb.common._
 import net.liftweb.http.RedirectResponse
 import com.riveramj.snippet.Login
+import com.riveramj.snippet.SurveySnippet
 
 object Paths {
   val static = Menu.i("Static") / "static" / **
@@ -17,6 +18,7 @@ object Paths {
   def siteMap = SiteMap(
     static,
     index,
-    Login.menu
+    Login.menu,
+    SurveySnippet.menu
   )
 }

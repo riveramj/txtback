@@ -6,9 +6,7 @@ import com.riveramj.service.CompanyService.createCompany
 import com.riveramj.service.UserService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
-import com.riveramj.service.AnswerServiceService.createAnswer
-
-
+import com.riveramj.service.AnswerService.createAnswer
 
 object TestDataLoader extends Loggable {
 
