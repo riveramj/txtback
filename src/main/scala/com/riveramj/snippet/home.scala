@@ -22,6 +22,7 @@ class Home {
     "#company-name *" #> currentCompany.map(_.companyName.get) &
     "#survey-list" #> surveys.map{ survey =>
       ".survey *" #> survey.surveyName.get
+      ".survey [href]" #> ("/survey/" + survey.surveyId.get)
     }
   }
 }

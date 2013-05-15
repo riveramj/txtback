@@ -9,7 +9,7 @@ import net.liftweb.mapper.By
 import net.liftweb.common.Full
 
 
-object AnswerServiceService extends Loggable {
+object AnswerService extends Loggable {
 
   def createAnswer(surveyAnswers:List[String], parentQuestionId:Long) = {
     surveyAnswers.foreach{ surveyAnswer =>
