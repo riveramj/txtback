@@ -6,12 +6,14 @@ import com.riveramj.util.SecurityContext
 import com.riveramj.service.SurveyService
 import net.liftweb.util.ClearClearable
 import net.liftweb.http.SHtml
+import net.liftweb.http.js.{JsCmd, JsCmds}
+import net.liftweb.common.{Loggable, Full}
 
 object Home {
   val menu = Menu.i("Home") / "Home"
 }
 
-class Home {
+class Home extends Loggable {
 
   def render() = {
 
@@ -25,11 +27,22 @@ class Home {
       SurveyService.createSurvey(surveyName,currentCompanyId)
     }
 
+    def deleteSurvey(surveyId: Long): JsCmd = {
+      SurveyService.deleteSurveyById(surveyId) match {
+        case Full(true) =>
+          JsCmds.Run("$('#" + surveyId + "').parent().remove()")
+        case _ => logger.error("couldn't delete survey with id %s" format surveyId)
+      }
+
+    }
+
     ClearClearable andThen
     "#company-name *" #> currentCompany.map(_.companyName.get) &
     ".survey" #> surveys.map{ survey =>
-      ".survey a *" #> survey.surveyName.get &
-      ".survey a [href]" #> ("/survey/" + survey.surveyId.get)
+      "a *" #> survey.surveyName.get &
+      "a [href]" #> ("/survey/" + survey.surveyId.get) &
+      "a [id]" #> survey.surveyId.get &
+      ".delete-survey [onclick]" #> SHtml.ajaxInvoke(() => deleteSurvey(survey.surveyId.get))
     } &
     "#survey-name" #> SHtml.text(surveyName,surveyName = _) &
     "#create-survey" #> SHtml.onSubmitUnit(process _)
