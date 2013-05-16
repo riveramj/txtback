@@ -1,5 +1,5 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
-  <div data-lift="home">
+  <form data-lift="home?form=post">
     <ul>
       <li>
           <div>welcome home!</div>
@@ -17,15 +17,19 @@
       <li>
         <div>Surveys</div>
       </li>
+      <li class="survey">
+        <a href="/survey/survey2">Survey A</a>
+      </li>
+      <li class="clearable">
+        <a href="/survey/survey2">Survey B</a>
+      </li>
+      <li class="clearable">
+        <a href="/survey/survey3">Survey C</a>
+      </li>
       <li>
-        <a class="survey" href="/survey/survey2">Survey A</a>
-      </li>
-      <li class="clearable">
-        <a class="survey" href="/survey/survey2">Survey B</a>
-      </li>
-      <li class="clearable">
-        <a class="survey" href="/survey/survey3">Survey C</a>
+        <input id="survey-name" type="text" placeholder="Survey Name">
+        <button type="submit" id="create-survey">Create Survey</button>
       </li>
     </ul>
-  </div>
+  </form>
 </div>
