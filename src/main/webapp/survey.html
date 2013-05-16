@@ -1,5 +1,5 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
-  <div data-lift="surveySnippet">
+  <form data-lift="surveySnippet?form=post">
     <ul>
       <li>
         <label for="survey-name">Survey Name</label>
@@ -12,16 +12,30 @@
     <ul id="question-list">
       <li>
         <a class="question" href="#">Question A</a>
-        <ul id="answer-list">
-          <li class="answer">Answer A</li>
+        <button type="button" class="delete-question" >Delete</button>
+        <ul>
+          <li class="answer">
+            <span>Answer A</span>
+            <button type="button" class="delete-answer" >Delete</button>
+          </li>
+          <li>
+            <input id="new-answer" type="text" placeholder="New Answer">
+            <button type="submit" id="create-answer">Create Answer</button>
+          </li>
         </ul>
       </li>
       <li class="clearable">
-        <a class="question" href="#">Question B</a>
+        <a href="#">Question B</a>
       </li>
       <li class="clearable">
-        <a class="question" href="#">Question C</a>
+        <a href="#">Question C</a>
       </li>
     </ul>
-  </div>
+    <ul>
+      <li>
+        <input id="new-question" type="text" placeholder="New Question">
+        <button type="submit" id="create-question">Create Question</button>
+      </li>
+    </ul>
+  </form>
 </div>
