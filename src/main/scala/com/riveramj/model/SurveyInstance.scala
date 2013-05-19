@@ -5,11 +5,11 @@ import net.liftweb.mapper._
 class SurveyInstance extends LongKeyedMapper[SurveyInstance] with IdPK with OneToMany[Long, SurveyInstance] {
   def getSingleton = SurveyInstance
 
-  object SurveyInstanceId extends MappedLong(this){
+  object surveyInstanceId extends MappedLong(this){
     override def dbIndexed_? = true
   }
 
-  object respondeePhone extends MappedString(this, 140)
+  object responderPhone extends MappedString(this, 140)
   object dateStarted extends MappedDateTime(this)
   object dateFinished extends MappedDateTime(this)
 

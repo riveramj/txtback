@@ -4,9 +4,7 @@ import net.liftweb.common._
 import com.riveramj.model._
 import com.riveramj.util.RandomIdGenerator._
 import net.liftweb.util.Helpers._
-import net.liftweb.common.Full
 import net.liftweb.mapper.By
-import net.liftweb.common.Full
 
 
 object QuestionService extends Loggable {
