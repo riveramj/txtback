@@ -9,12 +9,11 @@ import com.riveramj.util.RandomIdGenerator._
 
 object QASetService extends Loggable {
 
-  def createQASet(surveyInstanceId: Long, questionId: Long, answerId: Long) = {
+  def createQASet(surveyInstanceId: Long, questionId: Long) = {
     val qaSet = QASet.create
       .qaSetId(generateLongId())
       .SurveyInstanceId(surveyInstanceId)
       .QuestionId(questionId)
-      .AnswerId(answerId)
 
     tryo(saveQASet(qaSet)) flatMap {
       u => u match {

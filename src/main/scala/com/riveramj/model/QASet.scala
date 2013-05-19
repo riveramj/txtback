@@ -11,7 +11,6 @@ class QASet extends LongKeyedMapper[QASet] with IdPK with OneToMany[Long, QASet]
 
   object SurveyInstanceId extends MappedLongForeignKey(this, SurveyInstance)
   object QuestionId extends MappedLongForeignKey(this, Question)
-  object AnswerId extends MappedLongForeignKey(this, Answer)
 }
 
 object QASet extends QASet with LongKeyedMetaMapper[QASet]{}

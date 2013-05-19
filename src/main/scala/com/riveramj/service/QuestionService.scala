@@ -52,8 +52,6 @@ object QuestionService extends Loggable {
 
   def deleteQuestionById(questionId: Long): Box[Boolean] = {
     val question = Question.find(By(Question.questionId, questionId))
-    val answers = AnswerService.findAllAnswersByQuestionId(questionId)
-    answers.map(_.delete_!)
     question.map(_.delete_!)
   }
 

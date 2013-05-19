@@ -35,7 +35,6 @@ class Boot extends Loggable {
       true,
       Schemifier.infoF
       _,
-      Answer,
       Question,
       Survey,
       Company,
