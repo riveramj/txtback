@@ -13,7 +13,7 @@ class SurveyInstance extends LongKeyedMapper[SurveyInstance] with IdPK with OneT
   object dateStarted extends MappedDateTime(this)
   object dateFinished extends MappedDateTime(this)
 
-  object qaSet extends MappedOneToMany(QASet, QASet.surveyInstanceId, OrderBy(QASet.id, Ascending))
+  object qaSet extends MappedOneToMany(QASet, QASet.SurveyInstanceId, OrderBy(QASet.id, Ascending))
 
   object SurveyId extends MappedLongForeignKey(this, Survey)
 }
