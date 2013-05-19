@@ -1,18 +1,20 @@
 package com.riveramj.util
 
 import net.liftweb.common.Loggable
-import bootstrap.liftweb.Boot
 import com.riveramj.service.CompanyService.createCompany
 import com.riveramj.service.SurveyorService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
+import com.riveramj.service.SurveyInstanceService.createSurveyInstance
+import com.riveramj.service.QASetService.createQASet
 
 object  TestDataLoader extends Loggable {
   def createTestData() {
+    logger.info("Creating Test Data")
+
     val company = createCompany("Company1")
 
     val newCompanyId = company.map(company => company.companyId.get) openOr 0L
-    println(newCompanyId  + " is the company id")
 
     createSurveyor(
       firstName = "Mike",
@@ -46,5 +48,31 @@ object  TestDataLoader extends Loggable {
       surveyQuestion = "This is question 3"
     )
     val question3Id = question3.map(question => question.questionId.get) openOr 0L
+
+    val surveyInstance = createSurveyInstance(
+      responderPhone = "404-409-0725",
+      surveyId = newSurveyId
+    )
+
+    val surveyInstanceId = surveyInstance.map(surveyInstance =>
+      surveyInstance.surveyInstanceId.get) openOr 0L
+
+    createQASet(
+      surveyInstanceId = surveyInstanceId,
+      questionId = question1Id,
+      answer = "question 1 answer"
+    )
+
+    createQASet(
+      surveyInstanceId = surveyInstanceId,
+      questionId = question2Id,
+      answer = "question 2 answer"
+    )
+
+    createQASet(
+      surveyInstanceId = surveyInstanceId,
+      questionId = question3Id,
+      answer = "question 3 answer"
+    )
   }
 }

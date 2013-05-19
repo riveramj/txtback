@@ -9,6 +9,9 @@ class QASet extends LongKeyedMapper[QASet] with IdPK with OneToMany[Long, QASet]
     override def dbIndexed_? = true
   }
 
+  object answer extends MappedString(this, 1024)
+  object dateAnswered extends MappedDateTime(this)
+
   object SurveyInstanceId extends MappedLongForeignKey(this, SurveyInstance)
   object QuestionId extends MappedLongForeignKey(this, Question)
 }
