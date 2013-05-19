@@ -15,7 +15,7 @@ object AnswerService extends Loggable {
     surveyAnswers.foreach{ surveyAnswer =>
       val answer = Answer.create
         .answer(surveyAnswer)
-        .questionId(parentQuestionId)
+        .QuestionId(parentQuestionId)
         .answerId(generateLongId())
 
       tryo(saveAnswer(answer)) flatMap {
