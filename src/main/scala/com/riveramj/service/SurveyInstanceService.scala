@@ -13,8 +13,8 @@ object SurveyInstanceService extends Loggable {
   def createSurveyInstance(responderPhone:String, surveyId:Long) = {
     val surveyInstance = SurveyInstance.create
       .responderPhone(responderPhone)
-      .dateStarted(DateTime.now())
-      .SurveyInstanceId(generateLongId())
+      .dateStarted(DateTime.now().toDate)
+      .surveyInstanceId(generateLongId())
       .SurveyId(surveyId)
 
     tryo(saveSurveyInstance(surveyInstance)) flatMap {

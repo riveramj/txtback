@@ -8,8 +8,7 @@ import net.liftweb.common._
 import net.liftweb.mapper.By
 import org.apache.shiro.crypto.hash.Sha256Hash
 
-object UserService extends Loggable {
-  private val rng = new SecureRandomNumberGenerator()
+object SurveyorService extends Loggable {
 
   def hashPassword(password: String, salt: String) : String = {
     new Sha256Hash(password, salt, 1024).toBase64
@@ -79,7 +78,7 @@ object UserService extends Loggable {
     Surveyor.find(By(Surveyor.email, email))
   }
 
-  def getAllCompanies = {
+  def getAllUsers = {
     Surveyor.findAll()
   }
 }

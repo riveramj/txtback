@@ -4,7 +4,7 @@ import net.liftweb.http._
 import net.liftweb.common._
 import net.liftweb.util.ControlHelpers._
 import com.riveramj.model.{Company, Surveyor}
-import com.riveramj.service.UserService._
+import com.riveramj.service.SurveyorService._
 import com.riveramj.service.CompanyService._
 
 /**

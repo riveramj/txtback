@@ -13,7 +13,7 @@ object QuestionService extends Loggable {
     val question = Question.create
       .question(surveyQuestion)
       .surveyId(parentSurveyId)
-      .QuestionId(generateLongId())
+      .questionId(generateLongId())
 
     tryo(saveQuestion(question)) flatMap {
       u => u match {
