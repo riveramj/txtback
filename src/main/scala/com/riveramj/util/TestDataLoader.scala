@@ -3,28 +3,12 @@ package com.riveramj.util
 import net.liftweb.common.Loggable
 import bootstrap.liftweb.Boot
 import com.riveramj.service.CompanyService.createCompany
-import com.riveramj.service.UserService.createSurveyor
+import com.riveramj.service.SurveyorService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.AnswerService.createAnswer
 
-object TestDataLoader extends Loggable {
-
-  def initialize = {
-    val boot = new Boot
-    boot.boot
-  }
-
-
-
-  def main(args: Array[String]) {
-    initialize
-    val testData = new TestDataLoader
-    testData.createTestData()
-  }
-}
-
-class  TestDataLoader extends Loggable {
+object  TestDataLoader extends Loggable {
   def createTestData() {
     val company = createCompany("Company1")
 

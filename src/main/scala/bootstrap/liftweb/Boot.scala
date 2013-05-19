@@ -13,6 +13,8 @@ import net.liftweb.http.Html5Properties
 import net.liftweb.mapper.Schemifier
 import com.riveramj.model._
 import com.riveramj.util.Paths
+import com.riveramj.service.SurveyorService
+import com.riveramj.util.TestDataLoader
 
 
 /**
@@ -70,6 +72,11 @@ class Boot extends Loggable {
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
+
+    SurveyorService.getAllUsers match {
+      case users if users.isEmpty => TestDataLoader.createTestData()
+      case _ =>
+    }
 
   } //boot
 

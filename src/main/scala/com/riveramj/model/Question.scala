@@ -13,7 +13,7 @@ class Question extends LongKeyedMapper[Question] with IdPK with OneToMany[Long, 
   }
 
   object surveyId extends MappedLongForeignKey(this, Survey)
-  object answers extends MappedOneToMany(Answer, Answer.questionId, OrderBy(Answer.id, Ascending))
+  object answers extends MappedOneToMany(Answer, Answer.QuestionId, OrderBy(Answer.id, Ascending))
 }
 
 object Question extends Question with LongKeyedMetaMapper[Question]{}

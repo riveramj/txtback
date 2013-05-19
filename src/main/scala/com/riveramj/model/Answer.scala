@@ -8,7 +8,7 @@ class Answer extends LongKeyedMapper[Answer] with IdPK {
   object answerId extends MappedLong(this){
     override def dbIndexed_? = true
   }
-  object questionId extends MappedLongForeignKey(this, Question)
+  object QuestionId extends MappedLongForeignKey(this, Question)
   object answer extends MappedString(this, 140)
 }
 

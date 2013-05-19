@@ -60,7 +60,7 @@ object AnswerService extends Loggable {
   }
 
   def findAllAnswersByQuestionId(questionId: Long): List[Answer] = {
-    Answer.findAll(By(Answer.questionId, questionId))
+    Answer.findAll(By(Answer.QuestionId, questionId))
   }
 
   def getAllAnswers = {

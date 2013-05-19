@@ -3,7 +3,7 @@ package com.riveramj.snippet
 import net.liftweb.sitemap.Menu
 import net.liftweb.http.{S, SHtml}
 import net.liftweb.util.Helpers._
-import com.riveramj.service.UserService._
+import com.riveramj.service.SurveyorService._
 import com.riveramj.model.Surveyor
 import net.liftweb.common._
 import com.riveramj.util.SecurityContext
