@@ -1,3 +1,7 @@
+import com.typesafe.startscript.StartScriptPlugin
+
+seq(StartScriptPlugin.startScriptForClassesSettings: _*)
+
 name := "TxtBck"
 
 version := "0.1"
@@ -20,7 +24,7 @@ val liftVersion = "2.5-RC2"
     "com.h2database"         %  "h2"                   % "1.2.138",
     "ch.qos.logback"         %  "logback-classic"      % "0.9.26",
     "org.apache.shiro"       %  "shiro-core"           % "1.2.0",
-    "org.eclipse.jetty"      %  "jetty-webapp"         % "8.0.1.v20110908" % "container",
+    "org.eclipse.jetty"      %  "jetty-webapp"         % "8.0.1.v20110908" % "container; compile->default",
     "com.twilio.sdk"         % "twilio-java-sdk"       % "3.3.15"          % "compile",
     "net.liftweb"            %% "lift-webkit"          % liftVersion       % "compile",
     "net.liftweb"            %% "lift-mapper"          % liftVersion       % "compile",
