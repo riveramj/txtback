@@ -72,8 +72,8 @@ object SurveyService extends Loggable {
   }
 
   def startSurvey(surveyId: Long, toPhoneNumber: String) {
-    val surveyInstance = SurveyInstanceService.createSurveyInstance(toPhoneNumber, surveyId)
+    SurveyInstanceService.createSurveyInstance(toPhoneNumber, surveyId)
     val firstQuestion = QuestionService.getFirstQuestion(surveyId)
-
+    TwilioService.sendMessage(toPhoneNumber,firstQuestion)
   }
 }

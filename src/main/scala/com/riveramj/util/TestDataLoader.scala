@@ -7,9 +7,12 @@ import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.SurveyInstanceService.createSurveyInstance
 import com.riveramj.service.QASetService.createQASet
-import com.riveramj.service.QuestionService
+import com.riveramj.service.{SurveyService, QuestionService}
 
 object  TestDataLoader extends Loggable {
+  val surveyName = "Survey 1"
+  lazy val exampleSurveyId = SurveyService.getSurveyByName(surveyName) map(_.surveyId.get) getOrElse 0L
+
   def createTestData() {
     logger.info("Creating Test Data")
 
@@ -26,7 +29,7 @@ object  TestDataLoader extends Loggable {
     )
 
     val survey = createSurvey(
-      name = "Survey 1",
+      name = surveyName,
       companyId = newCompanyId
     )
 

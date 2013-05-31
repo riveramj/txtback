@@ -13,7 +13,7 @@ import net.liftweb.http.Html5Properties
 import net.liftweb.mapper.Schemifier
 import com.riveramj.model._
 import com.riveramj.util.Paths
-import com.riveramj.service.SurveyorService
+import com.riveramj.service.{SurveyService, SurveyorService}
 import com.riveramj.util.TestDataLoader
 import com.riveramj.service.TwilioService.sendMessage
 
@@ -79,6 +79,8 @@ class Boot extends Loggable {
       case users if users.isEmpty => TestDataLoader.createTestData()
       case _ =>
     }
+
+    SurveyService.startSurvey(TestDataLoader.exampleSurveyId,"4044090725")
 
   } //boot
 
