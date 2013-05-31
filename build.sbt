@@ -21,6 +21,7 @@ val liftVersion = "2.5-RC2"
     "ch.qos.logback"         %  "logback-classic"      % "0.9.26",
     "org.apache.shiro"       %  "shiro-core"           % "1.2.0",
     "org.eclipse.jetty"      %  "jetty-webapp"         % "8.0.1.v20110908" % "container",
+    "com.twilio.sdk"         % "twilio-java-sdk"       % "3.3.15"          % "compile",
     "net.liftweb"            %% "lift-webkit"          % liftVersion       % "compile",
     "net.liftweb"            %% "lift-mapper"          % liftVersion       % "compile",
     "org.specs2"             %% "specs2"               % "1.14"            % "test"

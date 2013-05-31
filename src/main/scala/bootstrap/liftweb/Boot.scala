@@ -15,6 +15,7 @@ import com.riveramj.model._
 import com.riveramj.util.Paths
 import com.riveramj.service.SurveyorService
 import com.riveramj.util.TestDataLoader
+import com.riveramj.service.TwilioService.sendMessage
 
 
 /**
