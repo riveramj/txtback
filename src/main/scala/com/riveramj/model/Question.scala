@@ -12,6 +12,10 @@ class Question extends LongKeyedMapper[Question] with IdPK with OneToMany[Long, 
     override def dbIndexed_? = true
   }
 
+  object questionNumber extends MappedLong(this){
+    override def dbIndexed_? = true
+  }
+
   object surveyId extends MappedLongForeignKey(this, Survey)
 }
 

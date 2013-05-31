@@ -26,6 +26,8 @@ class SurveySnippet extends Loggable {
 
   var newQuestion = ""
 
+
+
   def deleteQuestion(questionId: Long):JsCmd = {
     QuestionService.deleteQuestionById(questionId) match {
       case Full(true) =>
@@ -37,7 +39,7 @@ class SurveySnippet extends Loggable {
 
 
   def createQuestion(surveyId: Long) = {
-    QuestionService.createQuestion(newQuestion, surveyId)
+    QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, surveyId)
   }
 
   def questionList(question: Question) = {
@@ -59,7 +61,7 @@ class SurveySnippet extends Loggable {
     "#question-list" #> questions.map{ question =>
       questionList(question)
       } &
-    "#new-question" #> SHtml.text(newQuestion,newQuestion = _) &
+    "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#create-question" #> SHtml.onSubmitUnit(() => createQuestion(surveyId))
   }
 }

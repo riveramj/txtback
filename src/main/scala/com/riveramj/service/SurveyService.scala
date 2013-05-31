@@ -71,4 +71,9 @@ object SurveyService extends Loggable {
     Survey.findAll()
   }
 
+  def startSurvey(surveyId: Long, toPhoneNumber: String) {
+    val survey = SurveyService.getSurveyById(surveyId)
+    val surveyInstance = SurveyInstanceService.createSurveyInstance(toPhoneNumber, surveyId)
+  }
+
 }
