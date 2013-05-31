@@ -15,3 +15,7 @@ libraryDependencies <+= sbtVersion(v => v match {
 resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
 
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.4.0")
+
+resolvers += Classpaths.typesafeResolver
+
+addSbtPlugin("com.typesafe.startscript" % "xsbt-start-script-plugin" % "0.5.3")
