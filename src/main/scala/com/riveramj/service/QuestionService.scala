@@ -9,11 +9,12 @@ import net.liftweb.mapper.By
 
 object QuestionService extends Loggable {
 
-  def createQuestion(surveyQuestion:String, parentSurveyId:Long) = {
+  def createQuestion(questionNumber:Long ,surveyQuestion:String, parentSurveyId:Long) = {
     val question = Question.create
       .question(surveyQuestion)
       .surveyId(parentSurveyId)
       .questionId(generateLongId())
+      .questionNumber(questionNumber)
 
     tryo(saveQuestion(question)) flatMap {
       u => u match {
@@ -63,4 +64,7 @@ object QuestionService extends Loggable {
     Question.findAll()
   }
 
+  def nextQuestionNumber(surveyId: Long) = {
+    QuestionService.findAllSurveyQuestions(surveyId).length + 1
+  }
 }

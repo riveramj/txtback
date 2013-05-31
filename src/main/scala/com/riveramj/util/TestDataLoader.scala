@@ -7,6 +7,7 @@ import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.SurveyInstanceService.createSurveyInstance
 import com.riveramj.service.QASetService.createQASet
+import com.riveramj.service.QuestionService
 
 object  TestDataLoader extends Loggable {
   def createTestData() {
@@ -33,19 +34,22 @@ object  TestDataLoader extends Loggable {
 
     val question1 = createQuestion(
       parentSurveyId = newSurveyId,
-      surveyQuestion = "This is question 1"
+      surveyQuestion = "This is question 1",
+      questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
     )
     val question1Id = question1.map(question => question.questionId.get) openOr 0L
 
     val question2 = createQuestion(
       parentSurveyId = newSurveyId,
-      surveyQuestion = "This is question 2"
+      surveyQuestion = "This is question 2",
+      questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
     )
     val question2Id = question2.map(question => question.questionId.get) openOr 0L
 
     val question3 = createQuestion(
       parentSurveyId = newSurveyId,
-      surveyQuestion = "This is question 3"
+      surveyQuestion = "This is question 3",
+      questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
     )
     val question3Id = question3.map(question => question.questionId.get) openOr 0L
 
