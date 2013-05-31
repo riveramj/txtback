@@ -20,6 +20,7 @@ object JettyLauncher extends App {
   context.addFilter(classOf[LiftFilter], "/*", util.EnumSet.of(DispatcherType.REQUEST))
   context.setResourceBase("src/main/webapp")
 
+  server.setHandler(context)
   server.start
   server.join
 }
