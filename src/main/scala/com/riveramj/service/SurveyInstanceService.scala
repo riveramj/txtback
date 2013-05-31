@@ -5,6 +5,7 @@ import com.riveramj.model.SurveyInstance
 import net.liftweb.mapper.By
 import net.liftweb.util.Helpers._
 import com.riveramj.util.RandomIdGenerator._
+import org.joda.time.DateTime
 
 
 object SurveyInstanceService extends Loggable {
@@ -14,6 +15,7 @@ object SurveyInstanceService extends Loggable {
       .responderPhone(responderPhone)
       .surveyInstanceId(generateLongId())
       .SurveyId(surveyId)
+      .dateStarted(DateTime.now().toDate)
 
     tryo(saveSurveyInstance(surveyInstance)) flatMap {
       u => u match {
