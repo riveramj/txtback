@@ -8,6 +8,8 @@ import com.riveramj.model.Surveyor
 import net.liftweb.common._
 import com.riveramj.util.SecurityContext
 import net.liftweb.common.Full
+import net.liftweb.http.js.JsCmds
+import net.liftweb.util.Props
 
 
 object Login {
@@ -32,6 +34,7 @@ class Login extends Loggable {
       getUserByEmail(email) match {
         case Full(user) =>
           SecurityContext.logUserIn(user.userId.get)
+          JsCmds.Alert(Props.mode + " is the mode")
           S.redirectTo("/home")
         case failure => logger.error("failure with info %s".format(failure))
 

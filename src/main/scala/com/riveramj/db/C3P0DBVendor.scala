@@ -41,7 +41,6 @@ object C3P0DBVendor extends ConnectionManager {
       val dataSource = new ComboPooledDataSource()
       dataSource.setDriverClass(chooseDriver)
       dataSource.setJdbcUrl(chooseURL)
-      dataSource.setAutomaticTestTable("CM_CONNECTION_TEST")
       dataSource.setIdleConnectionTestPeriod(600)
 
       val credentials = (Props.get("db.user"), Props.get("db.password"))
