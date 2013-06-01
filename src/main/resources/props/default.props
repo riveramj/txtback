@@ -1,9 +1,4 @@
-//db.driver=com.mysql.jdbc.Driver
-//db.url=jdbc:mysql://localhost:3306/txtbckdev
-//db.user=tbadmin
-//db.password=Tb101
-
 db.driver=com.mysql.jdbc.Driver
-db.url=jdbc:mysql://us-cdbr-east-03.cleardb.com/heroku_c343e4a30f44319
-db.user=be7476218ab21d
-db.password=18d54aa8
+db.url=jdbc:mysql://localhost:3306/txtbckdev
+db.user=tbadmin
+db.password=Tb101
