@@ -25,6 +25,10 @@ import com.riveramj.service.TwilioService.sendMessage
 class Boot extends Loggable {
   def boot {
 
+    Props.mode match {
+      case foo => println(foo + " =============================================")
+    }
+
     if (!DB.jndiJdbcConnAvailable_?) {
       LiftRules.unloadHooks.append(C3P0DBVendor.shutDown _)
 

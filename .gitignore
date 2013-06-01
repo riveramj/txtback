@@ -8,3 +8,4 @@ console.devmode.log
 lift_proto.db.lock.db
 .sass-cache/
 css/
+.env
