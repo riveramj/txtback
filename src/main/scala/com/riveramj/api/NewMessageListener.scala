@@ -10,7 +10,7 @@ object NewMessageListener extends RestHelper with Loggable {
   serve("api" / "textMessage" prefix {
     case "newMessage"  :: _ Post req =>
     {
-      println("======= " + req)
+      println("======= " + req._params)
       JString("ok")
 
     }
