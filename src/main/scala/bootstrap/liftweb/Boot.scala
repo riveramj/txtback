@@ -30,12 +30,10 @@ class Boot extends Loggable {
       case Props.RunModes.Test =>
         println("got Test Mode ==============================")
         println("============================== url is " + Props.get("db.url"))
-        println("============================== users are " + SurveyorService.getAllUsers)
 
       case other =>
         println("got other =========================")
         println("============================== url is " + Props.get("db.url"))
-        println("============================== users are " + SurveyorService.getAllUsers)
     }
 
 
