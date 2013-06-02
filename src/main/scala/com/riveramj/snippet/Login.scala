@@ -34,7 +34,6 @@ class Login extends Loggable {
       getUserByEmail(email) match {
         case Full(user) =>
           SecurityContext.logUserIn(user.userId.get)
-          JsCmds.Alert(Props.mode + " is the mode")
           S.redirectTo("/home")
         case failure => logger.error("failure with info %s".format(failure))
 

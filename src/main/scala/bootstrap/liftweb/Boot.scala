@@ -80,7 +80,7 @@ class Boot extends Loggable {
       case _ =>
     }
 
-    SurveyService.startSurvey(TestDataLoader.exampleSurveyId,"4044090725")
+    //SurveyService.startSurvey(TestDataLoader.exampleSurveyId,"4044090725")
 
   } //boot
 
