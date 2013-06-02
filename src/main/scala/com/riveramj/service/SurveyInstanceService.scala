@@ -10,11 +10,13 @@ import org.joda.time.DateTime
 
 object SurveyInstanceService extends Loggable {
 
-  def createSurveyInstance(responderPhone:String, surveyId:Long) = {
+  def createSurveyInstance(responderPhone:String, surveyId:Long, questionId:Long) = {
     val surveyInstance = SurveyInstance.create
       .responderPhone(responderPhone)
       .surveyInstanceId(generateLongId())
       .SurveyId(surveyId)
+      .status(1)
+      .currentQuestionId(questionId)
       .dateStarted(DateTime.now().toDate)
 
     tryo(saveSurveyInstance(surveyInstance)) flatMap {
@@ -58,8 +60,19 @@ object SurveyInstanceService extends Loggable {
     SurveyInstance.findAll(By(SurveyInstance.surveyInstanceId, surveyInstanceId))
   }
 
+  def findOpenSurveyInstancesByPhone(phone:String): List[SurveyInstance] = {
+    SurveyInstance.findAll(By(SurveyInstance.responderPhone, phone))
+  }
+
   def getAllSurveyInstances = {
     SurveyInstance.findAll()
+  }
+
+  def sendNextQuestion(surveyInstanceId: Long) {
+    val surveyInstance = getSurveyInstanceById(surveyInstanceId)
+    val currentQuestionNumber = surveyInstance flatMap (_.currentQuestionId.obj.map(_.questionNumber.get)) openOr -1L
+    val nextQuestion = QuestionService.findQuestionByNumber(currentQuestionNumber + 1)
+    TwilioService.sendMessage(surveyInstance.map(_.responderPhone.get) openOr(""),nextQuestion.map(_.question.get).openOr(""))
   }
 
 }
