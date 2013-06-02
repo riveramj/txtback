@@ -13,11 +13,11 @@ object C3P0DBVendor extends ConnectionManager {
   private val dataSource = buildDataSource
 
   private lazy val chooseDriver = {
-    Props.get("db.driver") openOr "org.h2.Driver"
+    Props.get("db.driver") openOr "com.mysql.jdbc.Driver"
   }
 
   private lazy val chooseURL = {
-    Props.get("db.url") openOr "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE"
+    Props.get("db.url") openOr "jdbc:mysql://localhost:3306/txtbckdev"
   }
 
   def newConnection(name: ConnectionIdentifier): Box[Connection] = {
