@@ -69,6 +69,10 @@ object QuestionService extends Loggable {
   }
 
   def getFirstQuestion(surveyId: Long) = {
-    Question.find(By(Question.surveyId,surveyId),By(Question.questionNumber,1)) map (_.question.get) openOr ""
+    Question.find(By(Question.surveyId,surveyId),By(Question.questionNumber,1))
+  }
+
+  def findQuestionByNumber(questionNumber: Long) = {
+    Question.find(By(Question.questionNumber,questionNumber))
   }
 }

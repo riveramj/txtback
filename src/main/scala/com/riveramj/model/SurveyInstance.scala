@@ -10,11 +10,13 @@ class SurveyInstance extends LongKeyedMapper[SurveyInstance] with IdPK with OneT
   }
 
   object responderPhone extends MappedString(this, 140)
+  object status extends MappedLong(this) // 1 = started; 2 = finished
   object dateStarted extends MappedDateTime(this)
 
   object qaSet extends MappedOneToMany(QASet, QASet.SurveyInstanceId, OrderBy(QASet.id, Ascending))
 
   object SurveyId extends MappedLongForeignKey(this, Survey)
+  object currentQuestionId extends MappedLongForeignKey(this, Question)
 }
 
 object SurveyInstance extends SurveyInstance with LongKeyedMetaMapper[SurveyInstance]{}
