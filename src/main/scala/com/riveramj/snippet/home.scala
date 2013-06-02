@@ -10,7 +10,7 @@ import net.liftweb.http.js.{JsCmd, JsCmds}
 import net.liftweb.common.{Loggable, Full}
 
 object Home {
-  val menu = Menu.i("Home") / "Home"
+  val menu = Menu.i("home") / "home"
 }
 
 class Home extends Loggable {
