@@ -26,6 +26,20 @@ import com.riveramj.api.NewMessageListener
 class Boot extends Loggable {
   def boot {
 
+    Props.mode match {
+      case Props.RunModes.Test =>
+        println("got Test Mode ==============================")
+        println("============================== url is " + Props.get("db.url"))
+        println("============================== users are " + SurveyorService.getAllUsers)
+
+      case other =>
+        println("got other =========================")
+        println("============================== url is " + Props.get("db.url"))
+        println("============================== users are " + SurveyorService.getAllUsers)
+    }
+
+
+
     if (!DB.jndiJdbcConnAvailable_?) {
       LiftRules.unloadHooks.append(C3P0DBVendor.shutDown _)
 
