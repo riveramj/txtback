@@ -16,6 +16,7 @@ import com.riveramj.util.Paths
 import com.riveramj.service.{SurveyService, SurveyorService}
 import com.riveramj.util.TestDataLoader
 import com.riveramj.service.TwilioService.sendMessage
+import com.riveramj.api.NewMessageListener
 
 
 /**
@@ -74,6 +75,9 @@ class Boot extends Loggable {
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
+
+    // stateless -- no session created
+    LiftRules.statelessDispatch.append(NewMessageListener)
 
     SurveyorService.getAllUsers match {
       case users if users.isEmpty => TestDataLoader.createTestData()
