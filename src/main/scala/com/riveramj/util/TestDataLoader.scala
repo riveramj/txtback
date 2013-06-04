@@ -57,7 +57,7 @@ object  TestDataLoader extends Loggable {
     val question3Id = question3.map(question => question.questionId.get) openOr 0L
 
     val surveyInstance = createSurveyInstance(
-      responderPhone = "404-409-0725",
+      responderPhone = "4044090725",
       surveyId = newSurveyId,
       questionId = question1Id
     )

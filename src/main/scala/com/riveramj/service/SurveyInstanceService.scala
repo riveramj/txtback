@@ -28,6 +28,24 @@ object SurveyInstanceService extends Loggable {
     }
   }
 
+  def updateSurveyInstance(surveyInstance: Box[SurveyInstance]) = {
+    surveyInstance flatMap { newInstance =>
+      tryo(saveSurveyInstance(newInstance)) flatMap {
+        u => u match {
+          case Full(newSurveyInstance:SurveyInstance) => Full(newSurveyInstance)
+          case (failure: Failure) => failure
+          case _ => Failure("Unknown error")
+        }
+      }
+    }
+  }
+
+  def finishSurveyInstance(surveyInstance: Box[SurveyInstance]) = {
+    surveyInstance.map { currentInstance =>
+      saveSurveyInstance(currentInstance.status(2))
+    }
+  }
+
   def saveSurveyInstance(surveyInstance:SurveyInstance):Box[SurveyInstance] = {
 
     val validateErrors = surveyInstance.validate
@@ -61,7 +79,7 @@ object SurveyInstanceService extends Loggable {
   }
 
   def findOpenSurveyInstancesByPhone(phone:String): List[SurveyInstance] = {
-    SurveyInstance.findAll(By(SurveyInstance.responderPhone, phone))
+    SurveyInstance.findAll(By(SurveyInstance.responderPhone, phone), By(SurveyInstance.status, 1))
   }
 
   def getAllSurveyInstances = {
@@ -70,9 +88,26 @@ object SurveyInstanceService extends Loggable {
 
   def sendNextQuestion(surveyInstanceId: Long) {
     val surveyInstance = getSurveyInstanceById(surveyInstanceId)
-    val currentQuestionNumber = surveyInstance flatMap (_.currentQuestionId.obj.map(_.questionNumber.get)) openOr -1L
+    val currentQuestionId = surveyInstance map(_.currentQuestionId.get)
+    val currentQuestionNumber = QuestionService.getQuestionById(currentQuestionId openOr -1L).map(_.questionNumber.get) openOr -1L
     val nextQuestion = QuestionService.findQuestionByNumber(currentQuestionNumber + 1)
-    TwilioService.sendMessage(surveyInstance.map(_.responderPhone.get) openOr(""),nextQuestion.map(_.question.get).openOr(""))
+
+    val messageBody = nextQuestion match {
+      case Empty =>
+        SurveyInstanceService.finishSurveyInstance(surveyInstance)
+        "Thank you for completing our survey"
+      case Full(question) =>
+        question.question.get
+    }
+    TwilioService.sendMessage(
+      toPhoneNumber = surveyInstance.map(_.responderPhone.get) openOr(""),
+      message = messageBody
+    )
+    SurveyInstanceService.updateSurveyInstance(surveyInstance map { instance =>
+      instance.currentQuestionId(
+        nextQuestion.map(_.questionId.get) openOr 0L
+      )
+    })
   }
 
 }
