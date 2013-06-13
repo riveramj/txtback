@@ -12,14 +12,12 @@ import com.riveramj.model.Question
 import com.riveramj.util.PathHelpers.loggedIn
 import net.liftweb.http.js.{JsCmds, JsCmd}
 
-
-
 object SurveySnippet {
   lazy val menu = Menu.param[String]("survey","survey",
     Full(_),
     (id) => id
   ) / "survey" / * >>
-    loggedIn >>
+    //loggedIn >>
   TemplateBox(() => Templates( "survey" :: Nil))
 }
 
