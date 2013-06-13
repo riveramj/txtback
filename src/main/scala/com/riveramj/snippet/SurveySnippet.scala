@@ -8,9 +8,10 @@ import net.liftweb.sitemap._
 import net.liftweb.common.{Loggable, Full}
 import net.liftweb.sitemap.Loc.TemplateBox
 import net.liftweb.http.{SHtml, Templates}
-import com.riveramj.util.Paths
 import com.riveramj.model.Question
+import com.riveramj.util.PathHelpers.loggedIn
 import net.liftweb.http.js.{JsCmds, JsCmd}
+
 
 
 object SurveySnippet {
@@ -18,6 +19,7 @@ object SurveySnippet {
     Full(_),
     (id) => id
   ) / "survey" / * >>
+    loggedIn >>
   TemplateBox(() => Templates( "survey" :: Nil))
 }
 

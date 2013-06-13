@@ -1,12 +1,14 @@
 package com.riveramj.util
 
 import net.liftweb.sitemap._
-import net.liftweb.sitemap.Loc.{If, EarlyResponse}
+import net.liftweb.sitemap.Loc.EarlyResponse
 import net.liftweb.common._
 import net.liftweb.http.RedirectResponse
 import com.riveramj.snippet.Login
 import com.riveramj.snippet.SurveySnippet
 import com.riveramj.snippet.Home
+import com.riveramj.util.PathHelpers.loggedIn
+
 
 object Paths {
   // Roots.
@@ -17,11 +19,6 @@ object Paths {
     index,
     Login.menu,
     Home.menu >> loggedIn,
-    SurveySnippet.menu >> loggedIn
-  )
-
-   val loggedIn = If(
-    () => SecurityContext.loggedIn_?,
-     () => RedirectResponse("/login")
+    SurveySnippet.menu
   )
 }
