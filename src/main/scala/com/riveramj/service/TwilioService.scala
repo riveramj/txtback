@@ -9,8 +9,8 @@ import net.liftweb.common.Loggable
 import scala.collection.convert.WrapAsJava
 
 object TwilioService extends Loggable with WrapAsJava {
-  val ACCOUNT_SID = "AC7b257aff635e86c50a87e5755bf0fd79"
-  val AUTH_TOKEN = "82dca0784a423ff566696aa495f702b0"
+  val ACCOUNT_SID = "AC7b257aff635e86c50a87e5755bf0fd79" //TODO: put in props file
+  val AUTH_TOKEN = "82dca0784a423ff566696aa495f702b0" //TODO: put in props file
   val twilioClient = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
   val messageFactory = twilioClient.getAccount.getSmsFactory
 

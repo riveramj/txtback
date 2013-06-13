@@ -36,6 +36,7 @@ class SurveySnippet extends Loggable {
       case Full(true) =>
         JsCmds.Run("$('#" + questionId + "').parent().remove()")
       case _ => logger.error("couldn't delete survey with id %s" format questionId)
+        //TODO: provide feedback on delete action
     }
 
   }
