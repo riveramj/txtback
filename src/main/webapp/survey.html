@@ -11,20 +11,25 @@
     <div>Questions</div>
     <ul id="question-list">
       <li>
-        <a class="question" href="#">Question A</a>
+        <span class="question" href="#">Question A</span>
         <button type="button" class="delete-question">Delete</button>
       </li>
       <li class="clearable">
-        <a href="#">Question B</a>
+        <span href="#">Question B</span>
       </li>
       <li class="clearable">
-        <a href="#">Question C</a>
+        <span href="#">Question C</span>
       </li>
     </ul>
     <ul>
       <li>
         <input id="new-question" type="text" placeholder="New Question">
         <button type="submit" id="create-question">Create Question</button>
+      </li>
+      <li>
+        <input id="phone-number" type="text" placeholder="Enter Phone Number">
+        <button type="button" id="send-survey">Send Survey</button>
+        <span data-lift="msg?id=send-survey-notice">Survey Sent</span>
       </li>
     </ul>
   </form>
