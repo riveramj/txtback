@@ -7,7 +7,7 @@ import net.liftweb.util.Helpers._
 import net.liftweb.sitemap._
 import net.liftweb.common.{Loggable, Full}
 import net.liftweb.sitemap.Loc.TemplateBox
-import net.liftweb.http.{SHtml, Templates}
+import net.liftweb.http.{S, SHtml, Templates}
 import com.riveramj.model.Question
 import com.riveramj.util.PathHelpers.loggedIn
 import net.liftweb.http.js.{JsCmds, JsCmd}
@@ -27,8 +27,9 @@ class SurveySnippet extends Loggable {
   import SurveySnippet._
 
   var newQuestion = ""
+  var toPhoneNumber = ""
 
-
+  val surveyId = menu.currentValue map {_.toLong} openOr 0L
 
   def deleteQuestion(questionId: Long):JsCmd = {
     QuestionService.deleteQuestionById(questionId) match {
@@ -51,9 +52,15 @@ class SurveySnippet extends Loggable {
     ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => deleteQuestion(question.questionId.get))
   }
 
+  def startSurvey:JsCmd = {
+    SurveyService.startSurvey(surveyId,toPhoneNumber)
+    S.notice("send-survey-notice", "Survey Sent") //TODO: validate it actually sent
+  }
+
+
   def render() = {
 
-    val surveyId = menu.currentValue map {_.toLong} openOr 0L
+
 
     val survey = SurveyService.getSurveyById(surveyId)
     val questions = QuestionService.findAllSurveyQuestions(surveyId)
@@ -64,6 +71,8 @@ class SurveySnippet extends Loggable {
       questionList(question)
       } &
     "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
+    "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
+    "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _) &
     "#create-question" #> SHtml.onSubmitUnit(() => createQuestion(surveyId))
   }
 }
