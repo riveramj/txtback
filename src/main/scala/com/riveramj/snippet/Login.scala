@@ -35,7 +35,7 @@ class Login extends Loggable {
         case Full(user) =>
           SecurityContext.logUserIn(user.userId.get)
           S.redirectTo("/home")
-        case failure => logger.error("failure with info %s".format(failure))
+        case failure => logger.error("failure with info %s".format(failure)) //TODO: return message back if failed to login
 
       }
     }
