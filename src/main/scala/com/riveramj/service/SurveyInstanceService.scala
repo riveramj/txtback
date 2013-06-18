@@ -74,8 +74,8 @@ object SurveyInstanceService extends Loggable {
     surveyInstance.map(_.delete_!)
   }
 
-  def findAllSurveySurveyInstances(surveyInstanceId:Long): List[SurveyInstance] = {
-    SurveyInstance.findAll(By(SurveyInstance.surveyInstanceId, surveyInstanceId))
+  def findAllSurveyInstancesBySurveyId(surveyId: Long): List[SurveyInstance] = {
+    SurveyInstance.findAll(By(SurveyInstance.SurveyId, surveyId))
   }
 
   def findOpenSurveyInstancesByPhone(phone:String): List[SurveyInstance] = {

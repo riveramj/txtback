@@ -54,8 +54,8 @@ object QASetService extends Loggable {
     qaSet.map(_.delete_!)
   }
 
-  def findAllSurveyQASets(qaSetId:Long): List[QASet] = {
-    QASet.findAll(By(QASet.qaSetId, qaSetId))
+  def findAllQASetsBySurveyInstance(surveyInstanceId: Long): List[QASet] = {
+    QASet.findAll(By(QASet.SurveyInstanceId, surveyInstanceId))
   }
 
   def getAllQASets = {

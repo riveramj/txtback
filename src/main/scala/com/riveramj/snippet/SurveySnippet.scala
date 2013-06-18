@@ -1,7 +1,6 @@
 package com.riveramj.snippet
 
 import com.riveramj.service.{SurveyService, QuestionService}
-
 import net.liftweb.util.ClearClearable
 import net.liftweb.util.Helpers._
 import net.liftweb.sitemap._
@@ -66,6 +65,7 @@ class SurveySnippet extends Loggable {
 
     ClearClearable andThen
     "#survey-name *" #> survey.map(_.surveyName.get) &
+    "#view-responses [href]" #> ("/survey/" + surveyId + "/responses") &
     "#question-list" #> questions.map{ question =>
       questionList(question)
       } &
