@@ -21,12 +21,19 @@ class SurveyResponsesSnippet extends Loggable {
   import SurveyResponsesSnippet._
 
   def showSurveyInstanceDetails(surveyInstanceId: Long) = {
-    ".qa-set" #> QASetService.findAllQASetsBySurveyInstance(surveyInstanceId).map{ qaSet =>
-      ".question-number" #> QuestionService.getQuestionById(qaSet.QuestionId.get).map(_.questionNumber.get) &
-      ".question" #> QuestionService.getQuestionById(qaSet.QuestionId.get).map(_.question.get) &
-      ".answer" #> qaSet.answer.get &
-      ".date-answered" #> qaSet.dateAnswered.get.toString
+    println("inside show survey")
+    val qaSet = QASetService.findAllQASetsBySurveyInstance(surveyInstanceId)
+    ".qa-set" #> qaSet.map{ qaSet =>
+      findQuestionInfo(qaSet.QuestionId.get) &
+      ".answer *" #> qaSet.answer.get &
+      ".date-answered *" #> qaSet.dateAnswered.get.toString
     }
+  }
+
+  def findQuestionInfo(questionId: Long) = {
+    val question = QuestionService.getQuestionById(questionId)
+    ".question-number *" #> question.map(_.questionNumber.get) &
+    ".question *" #> question.map(_.question.get)
   }
 
   def render() = {
@@ -39,10 +46,10 @@ class SurveyResponsesSnippet extends Loggable {
     "#survey-name *" #> survey.map(_.surveyName.get) &
     "#view-survey [href]" #> ("/survey/" + surveyId) &
     ".survey-instance" #> allSurveyInstances.map{ surveyInstance =>
-      ".phone-number" #> surveyInstance.responderPhone.get &
-      ".status" #> surveyInstance.status.get &
-      ".date-started" #> surveyInstance.dateStarted.get.toString &
-      showSurveyInstanceDetails(surveyInstance.id.get)
+      ".phone-number *" #> surveyInstance.responderPhone.get &
+      ".status *" #> surveyInstance.status.get &
+      ".date-started *" #> surveyInstance.dateStarted.get.toString &
+      showSurveyInstanceDetails(surveyInstance.surveyInstanceId.get)
     }
 
   }
