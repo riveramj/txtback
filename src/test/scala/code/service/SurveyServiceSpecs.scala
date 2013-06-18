@@ -5,13 +5,6 @@ import bootstrap.liftweb.Boot
 import com.riveramj.service.SurveyService._
 import net.liftweb.common.Full
 
-/**
- * Created with IntelliJ IDEA.
- * Surveyor: mjr
- * Date: 4/22/13
- * Time: 4:03 PM
- * To change this template use File | Settings | File Templates.
- */
 class SurveyServiceSpecs extends Specification {
 
   step {
