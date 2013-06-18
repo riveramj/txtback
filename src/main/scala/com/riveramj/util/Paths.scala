@@ -4,9 +4,7 @@ import net.liftweb.sitemap._
 import net.liftweb.sitemap.Loc.EarlyResponse
 import net.liftweb.common._
 import net.liftweb.http.RedirectResponse
-import com.riveramj.snippet.Login
-import com.riveramj.snippet.SurveySnippet
-import com.riveramj.snippet.Home
+import com.riveramj.snippet._
 import com.riveramj.util.PathHelpers.loggedIn
 
 
@@ -19,6 +17,7 @@ object Paths {
     index,
     Login.menu,
     Home.menu >> loggedIn,
-    SurveySnippet.menu
+    SurveySnippet.menu,
+    SurveyResponsesSnippet.menu
   )
 }
