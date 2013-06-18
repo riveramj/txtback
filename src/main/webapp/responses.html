@@ -1,5 +1,5 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
-  <form data-lift="SurveyResponsesSnippet?form=post">
+  <form data-lift="SurveyResponsesSnippet.render?form=post">
     <ul>
       <li>
         <label for="survey-name">Survey Name</label>
@@ -11,38 +11,22 @@
         <a href="/survey/123456" id="view-survey">Back to Survey</a>
       </li>
     </ul>
-        <div>Survey Responses</div>
-    <ul class="survey-instance">
-      <li>
-        Phone Number: <span class="phone-number">123-456-7890</span>
-      </li>
-      <li>
-        Status: <span class="status">Finished</span>
-      </li>
-      <li>
-        Date Started: <span class="date-started">Jan 7, 1986</span>
-      </li>
-      <li>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Question</th>
-              <th>Answer</th>
-              <th>Date Answered</th>
-            </tr>
-          </thead>
+    <div>Survey Responses</div>
 
-          <tbody>
-            <tr class="qa-set">
-              <td class="question-number">1</td>
-              <td class="question">This is Question 1</td>
-              <td class="answer">Answer to question 1</td>
-              <td class="date-answered">Jan 7 2076</td>
-            </tr>
-          </tbody>
-        </table>
-      </li>
-    </ul>
+    <div class="tabbable"> <!-- Only required for left/right tabs -->
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab1" data-toggle="tab">Survey as a whole</a></li>
+        <li><a href="#tab2" data-toggle="tab">Per Question</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab1">
+          <div data-lift="embed?what=per-survey-results"></div>
+        </div>
+        <div class="tab-pane" id="tab2">
+          <div data-lift="embed?what=per-question-results"></div>
+        </div>
+      </div>
+    </div>
+
   </form>
 </div>
