@@ -58,6 +58,12 @@ object QASetService extends Loggable {
     QASet.findAll(By(QASet.SurveyInstanceId, surveyInstanceId))
   }
 
+  def findAllQASetsBySurveyId(surveyId: Long): List[QASet] = {
+    val surveyInstances = SurveyInstanceService.findAllSurveyInstancesBySurveyId(surveyId)
+    surveyInstances.flatMap{surveyInstance =>
+      QASet.findAll(By(QASet.SurveyInstanceId, surveyInstance.surveyInstanceId.get))}
+  }
+
   def getAllQASets = {
     QASet.findAll()
   }
