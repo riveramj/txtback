@@ -3,19 +3,20 @@
     <ul>
       <li>
         <label for="survey-name">Survey Name</label>
-      </li>
-      <li>
         <div id="survey-name">Survey A</div>
       </li>
       <li>
         <a href="/survey/123456/responses" id="view-responses">View Responses</a>
       </li>
+      <li>
+        <a href="/home">Back Home</a>
+      </li>
     </ul>
-    <div>Questions</div>
+    <h3>Questions</h3>
     <ul id="question-list">
       <li>
         <span class="question" href="#">Question A</span>
-        <button type="button" class="delete-question">Delete</button>
+        <button type="button" class="delete-question btn">Delete</button>
       </li>
       <li class="clearable">
         <span href="#">Question B</span>
@@ -27,11 +28,11 @@
     <ul>
       <li>
         <input id="new-question" type="text" placeholder="New Question">
-        <button type="submit" id="create-question">Create Question</button>
+        <button type="submit" id="create-question" class="btn">Create Question</button>
       </li>
       <li>
         <input id="phone-number" type="text" placeholder="Enter Phone Number">
-        <button type="button" id="send-survey">Send Survey</button>
+        <button type="button" id="send-survey" class="btn">Send Survey</button>
         <span data-lift="msg?id=send-survey-notice">Survey Sent</span>
       </li>
     </ul>
