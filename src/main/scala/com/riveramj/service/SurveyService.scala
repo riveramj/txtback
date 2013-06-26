@@ -55,7 +55,10 @@ object SurveyService extends Loggable {
   def deleteSurveyById(surveyId: Long ): Box[Boolean] = {
     val survey = Survey.find(By(Survey.surveyId, surveyId))
     val questions = QuestionService.findAllSurveyQuestions(surveyId)
+    val answers = questions.flatMap(question =>
+      AnswerService.findAllAnswersByQuestionId(question.questionId.get))
     questions.map(_.delete_!)
+    answers.map(_.delete_!)
     survey.map(_.delete_!)
   }
 

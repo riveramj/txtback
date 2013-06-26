@@ -7,7 +7,8 @@ import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.SurveyInstanceService.createSurveyInstance
 import com.riveramj.service.QASetService.createQASet
-import com.riveramj.service.{SurveyService, QuestionService}
+import com.riveramj.service.{AnswerService, SurveyService, QuestionService}
+import com.riveramj.service.AnswerService.createAnswer
 
 object  TestDataLoader extends Loggable {
   val surveyName = "Survey 1"
@@ -42,12 +43,22 @@ object  TestDataLoader extends Loggable {
     )
     val question1Id = question1.map(question => question.questionId.get) openOr 0L
 
+    createAnswer(
+      parentQuestionId = question1Id,
+      surveyAnswers = List("Answer 1","Answer 2","Answer 3","Answer 4")
+    )
+
     val question2 = createQuestion(
       parentSurveyId = newSurveyId,
       surveyQuestion = "This is question 2",
       questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
     )
     val question2Id = question2.map(question => question.questionId.get) openOr 0L
+
+    createAnswer(
+      parentQuestionId = question2Id,
+      surveyAnswers = List("Answer 11","Answer 22","Answer 33","Answer 44")
+    )
 
     val question3 = createQuestion(
       parentSurveyId = newSurveyId,
@@ -65,22 +76,27 @@ object  TestDataLoader extends Loggable {
     val surveyInstanceId = surveyInstance.map(surveyInstance =>
       surveyInstance.surveyInstanceId.get) openOr 0L
 
+    createAnswer(
+      parentQuestionId = question3Id,
+      surveyAnswers = List("Answer 111","Answer 222","Answer 333","Answer 444")
+    )
+
     createQASet(
       surveyInstanceId = surveyInstanceId,
       questionId = question1Id,
-      answer = "question 1 answer"
+      answerId = AnswerService.lookupAnswerChoice("1", question1Id)
     )
 
     createQASet(
       surveyInstanceId = surveyInstanceId,
       questionId = question2Id,
-      answer = "question 2 answer"
+      answerId = AnswerService.lookupAnswerChoice("1", question2Id)
     )
 
     createQASet(
       surveyInstanceId = surveyInstanceId,
       questionId = question3Id,
-      answer = "question 3 answer"
+      answerId = AnswerService.lookupAnswerChoice("2", question3Id)
     )
   }
 }

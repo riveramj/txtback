@@ -110,4 +110,19 @@ object SurveyInstanceService extends Loggable {
     })
   }
 
+  def answerNotFound(response: String, questionId: Long, surveyInstanceId: Long) = {
+    val surveyInstance = getSurveyInstanceById(surveyInstanceId)
+    QuestionService.getQuestionById(questionId) match {
+      case Full(question) => {
+        TwilioService.sendMessage(
+          toPhoneNumber = surveyInstance.map(_.responderPhone.get) openOr(""),
+          message = "We did not understand your previous answer of \"" + response + "\"."
+        )
+        TwilioService.sendMessage(
+          toPhoneNumber = surveyInstance.map(_.responderPhone.get) openOr(""),
+          message = question.question.get
+        )
+      }
+    }
+  }
 }
