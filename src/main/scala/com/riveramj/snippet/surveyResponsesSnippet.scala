@@ -27,7 +27,7 @@ class SurveyResponsesSnippet extends Loggable {
   def showQASetDetails(qaSets: List[QASet]) = {
     ".qa-set" #> qaSets.map{ qaSet =>
       findQuestionInfo(qaSet.QuestionId.get) &
-      ".answer *" #> qaSet.answer.get &
+      ".answer *" #> qaSet.Response.get &
       ".date-answered *" #> qaSet.dateAnswered.get.toString
     }
   }

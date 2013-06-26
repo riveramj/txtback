@@ -25,7 +25,7 @@ object NewMessageListener extends RestHelper with Loggable {
             case -1L =>
               SurveyInstanceService.answerNotFound(response, surveyInstance.currentQuestionId.get, surveyInstance.surveyInstanceId.get)
             case answerId =>
-              QASetService.createQASet(surveyInstance.surveyInstanceId.get, surveyInstance.currentQuestionId.get, answerId)
+              QASetService.createQASet(surveyInstance.surveyInstanceId.get, surveyInstance.currentQuestionId.get, answerId, response)
               SurveyInstanceService.sendNextQuestion(surveyInstance.surveyInstanceId.get)
           }
       }
