@@ -117,19 +117,22 @@ object  TestDataLoader extends Loggable {
     createQASet(
       surveyInstanceId = surveyInstanceId,
       questionId = question1Id,
-      answerId = AnswerService.lookupAnswerChoice("1", question1Id)
+      answerId = AnswerService.lookupAnswerChoice("1", question1Id),
+      response = "1"
     )
 
     createQASet(
       surveyInstanceId = surveyInstanceId,
       questionId = question2Id,
-      answerId = AnswerService.lookupAnswerChoice("1", question2Id)
+      answerId = AnswerService.lookupAnswerChoice("1", question2Id),
+      response = "1"
     )
 
     createQASet(
       surveyInstanceId = surveyInstanceId,
       questionId = question3Id,
-      answerId = AnswerService.lookupAnswerChoice("2", question3Id)
+      answerId = AnswerService.lookupAnswerChoice("2", question3Id),
+      response = "2"
     )
   }
 }
