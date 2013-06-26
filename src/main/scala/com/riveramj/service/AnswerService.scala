@@ -11,20 +11,19 @@ import net.liftweb.common.Full
 
 object AnswerService extends Loggable {
 
-  def createAnswer(surveyAnswers:List[String], parentQuestionId:Long) = {
-    surveyAnswers.foreach { surveyAnswer =>
-      val answer = Answer.create
-        .answer(surveyAnswer)
-        .answerNumber(1L)
-        .QuestionId(parentQuestionId)
-        .answerId(generateLongId())
+  def createAnswer(answerNumber: Int, answerText: String, parentQuestionId:Long) = {
+    val answer = Answer.create
+      .answer(answerText)
+      .answerNumber(answerNumber)
+      .QuestionId(parentQuestionId)
+      .answerId(generateLongId())
 
-      tryo(saveAnswer(answer)) flatMap {
-        u => u match {
-          case Full(newAnswer:Answer) => Full(newAnswer)
-          case (failure: Failure) => failure
-          case _ => Failure("Unknown error")
-        }
+    tryo(saveAnswer(answer)) flatMap {
+      u => u match {
+        case Full(newAnswer:Answer) => Full(newAnswer)
+        case (failure: Failure) => failure
+        case _ => Failure("Unknown error")
+
       }
     }
   }
@@ -69,7 +68,7 @@ object AnswerService extends Loggable {
   }
 
   def findAnswerIdByResponse(answerChoice: String, questionId: Long) = {
-    Answer.find(By(Answer.QuestionId, questionId), By(Answer.answerNumber,answerChoice))
+    Answer.find(By(Answer.QuestionId, questionId), By(Answer.answerNumber,answerChoice.toLong))
   }
 
   def lookupAnswerChoice(answerChoice: String, questionId: Long) = {

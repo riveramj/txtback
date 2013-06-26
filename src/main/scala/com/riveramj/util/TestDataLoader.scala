@@ -45,7 +45,18 @@ object  TestDataLoader extends Loggable {
 
     createAnswer(
       parentQuestionId = question1Id,
-      surveyAnswers = List("Answer 1","Answer 2","Answer 3","Answer 4")
+      answerNumber = 1,
+      answerText = "answer 1"
+    )
+    createAnswer(
+      parentQuestionId = question1Id,
+      answerNumber = 2,
+      answerText = "answer 2"
+    )
+    createAnswer(
+      parentQuestionId = question1Id,
+      answerNumber = 3,
+      answerText = "answer 3"
     )
 
     val question2 = createQuestion(
@@ -57,7 +68,18 @@ object  TestDataLoader extends Loggable {
 
     createAnswer(
       parentQuestionId = question2Id,
-      surveyAnswers = List("Answer 11","Answer 22","Answer 33","Answer 44")
+      answerNumber = 1,
+      answerText = "answer 11"
+    )
+    createAnswer(
+      parentQuestionId = question2Id,
+      answerNumber = 2,
+      answerText = "answer 22"
+    )
+    createAnswer(
+      parentQuestionId = question2Id,
+      answerNumber = 3,
+      answerText = "answer 33"
     )
 
     val question3 = createQuestion(
@@ -78,7 +100,18 @@ object  TestDataLoader extends Loggable {
 
     createAnswer(
       parentQuestionId = question3Id,
-      surveyAnswers = List("Answer 111","Answer 222","Answer 333","Answer 444")
+      answerNumber = 1,
+      answerText = "answer 111"
+    )
+    createAnswer(
+      parentQuestionId = question3Id,
+      answerNumber = 2,
+      answerText = "answer 222"
+    )
+    createAnswer(
+      parentQuestionId = question3Id,
+      answerNumber = 3,
+      answerText = "answer 333"
     )
 
     createQASet(
