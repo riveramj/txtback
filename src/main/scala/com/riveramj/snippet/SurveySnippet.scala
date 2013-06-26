@@ -23,9 +23,11 @@ object SurveySnippet {
 class SurveySnippet extends Loggable {
   import SurveySnippet._
 
+  var newAnswerNumber = ""
   var newAnswer = ""
   var newQuestion = ""
   var toPhoneNumber = ""
+
 
   val surveyId = menu.currentValue map {_.toLong} openOr 0L
 
@@ -49,7 +51,7 @@ class SurveySnippet extends Loggable {
   }
 
   def createAnswer(questionId: Long) = {
-    AnswerService.createAnswer(List(newAnswer), questionId)
+    AnswerService.createAnswer(newAnswerNumber.toInt, newAnswer, questionId)
   }
 
   def createQuestion(surveyId: Long) = {
@@ -58,17 +60,18 @@ class SurveySnippet extends Loggable {
 
   def questionAndAnswers(question: Question) = {
     val answers = AnswerService.findAllAnswersByQuestionId(question.questionId.get)
-    var answer = ""
 
     ".question *" #> question.question.get &
     ".question [id]" #> question.questionId.get &
     ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => deleteQuestion(question.questionId.get)) &
     ".answer" #> answers.map{ answer =>
+
       "span *" #> answer.answer.get &
       "span [id]" #> answer.answerId.get &
       ".delete-answer [onclick]" #> SHtml.ajaxInvoke(() => deleteAnswer(answer.answerId.get))
     } &
-    "#new-answer" #> SHtml.text("", answer = _) &
+    "#new-answer-number" #> SHtml.text("", newAnswerNumber = _) &
+    "#new-answer" #> SHtml.text("", newAnswer = _) &
     "#create-answer" #> SHtml.onSubmitUnit(() => createAnswer(question.questionId.get))
   }
 
@@ -79,9 +82,6 @@ class SurveySnippet extends Loggable {
 
 
   def render() = {
-
-
-
     val survey = SurveyService.getSurveyById(surveyId)
     val questions = QuestionService.findAllSurveyQuestions(surveyId)
 
