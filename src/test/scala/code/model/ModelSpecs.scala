@@ -113,4 +113,26 @@ class ModelSpecs extends Specification {
       question.map(_.delete_!).openOr(false) must beTrue
     }
   }
+
+  "the Answer mapper" should {
+    args(sequential=true)
+    "create test answer" in {
+      val answer = Answer.create
+      answer.answer("answer 1")
+      answer.save must beTrue
+      answer.id.get must not equalTo  -1L
+    }
+    "find a answer by answer text" in {
+      val answer = Answer.find(By(Answer.answer, "answer 1"))
+      answer must not beEmpty
+      val answer1 = answer.map(_.answer) openOr ""
+      answer1 must beEqualTo("answer 1")
+    }
+    "delete test answer" in {
+      val answer = Answer.find(By(Answer.answer, "answer 1"))
+      answer must not beEmpty
+
+      answer.map(_.delete_!).openOr(false) must beTrue
+    }
+  }
 }

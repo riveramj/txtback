@@ -1,6 +1,6 @@
 package com.riveramj.snippet
 
-import com.riveramj.service.{SurveyService, QuestionService}
+import com.riveramj.service._
 import net.liftweb.util.ClearClearable
 import net.liftweb.util.Helpers._
 import net.liftweb.sitemap._
@@ -23,6 +23,7 @@ object SurveySnippet {
 class SurveySnippet extends Loggable {
   import SurveySnippet._
 
+  var newAnswer = ""
   var newQuestion = ""
   var toPhoneNumber = ""
 
@@ -38,16 +39,37 @@ class SurveySnippet extends Loggable {
 
   }
 
+  def deleteAnswer(answerId: Long):JsCmd = {
+    AnswerService.deleteAnswerById(answerId) match {
+      case Full(true) =>
+        JsCmds.Run("$('#" + answerId + "').parent().remove()")
+      case _ => logger.error("couldn't delete survey with id %s" format answerId)
+    }
+
+  }
+
+  def createAnswer(questionId: Long) = {
+    AnswerService.createAnswer(List(newAnswer), questionId)
+  }
 
   def createQuestion(surveyId: Long) = {
     QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, surveyId)
   }
 
-  def questionList(question: Question) = {
+  def questionAndAnswers(question: Question) = {
+    val answers = AnswerService.findAllAnswersByQuestionId(question.questionId.get)
+    var answer = ""
 
     ".question *" #> question.question.get &
     ".question [id]" #> question.questionId.get &
-    ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => deleteQuestion(question.questionId.get))
+    ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => deleteQuestion(question.questionId.get)) &
+    ".answer" #> answers.map{ answer =>
+      "span *" #> answer.answer.get &
+      "span [id]" #> answer.answerId.get &
+      ".delete-answer [onclick]" #> SHtml.ajaxInvoke(() => deleteAnswer(answer.answerId.get))
+    } &
+    "#new-answer" #> SHtml.text("", answer = _) &
+    "#create-answer" #> SHtml.onSubmitUnit(() => createAnswer(question.questionId.get))
   }
 
   def startSurvey:JsCmd = {
@@ -67,7 +89,7 @@ class SurveySnippet extends Loggable {
     "#survey-name *" #> survey.map(_.surveyName.get) &
     "#view-responses [href]" #> ("/survey/" + surveyId + "/responses") &
     "#question-list" #> questions.map{ question =>
-      questionList(question)
+        questionAndAnswers(question)
       } &
     "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
