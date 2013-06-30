@@ -68,7 +68,7 @@ object AnswerService extends Loggable {
   }
 
   def findAnswerIdByResponse(answerChoice: String, questionId: Long) = {
-    Answer.find(By(Answer.QuestionId, questionId), By(Answer.answerNumber,answerChoice.toLong))
+    Answer.find(By(Answer.QuestionId, questionId), By(Answer.answerNumber,answerChoice.toInt))
   }
 
   def lookupAnswerChoice(answerChoice: String, questionId: Long) = {
@@ -81,4 +81,9 @@ object AnswerService extends Loggable {
     }
   }
 
+  def findNextAnswerNumber(questionId: Long) = {
+    val answers = Answer.findAll(By(Answer.QuestionId, questionId))
+
+    answers.map(_.answerNumber.get).max + 1
+  }
 }
