@@ -23,7 +23,6 @@ object SurveySnippet {
 class SurveySnippet extends Loggable {
   import SurveySnippet._
 
-  var newAnswerNumber = ""
   var newAnswer = ""
   var newQuestion = ""
   var toPhoneNumber = ""
@@ -34,6 +33,7 @@ class SurveySnippet extends Loggable {
   def deleteQuestion(questionId: Long):JsCmd = {
     QuestionService.deleteQuestionById(questionId) match {
       case Full(true) =>
+
         JsCmds.Run("$('#" + questionId + "').parent().remove()")
       case _ => logger.error("couldn't delete survey with id %s" format questionId)
         //TODO: provide feedback on delete action
@@ -51,7 +51,8 @@ class SurveySnippet extends Loggable {
   }
 
   def createAnswer(questionId: Long) = {
-    AnswerService.createAnswer(newAnswerNumber.toInt, newAnswer, questionId)
+    val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
+    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
   }
 
   def createQuestion(surveyId: Long) = {
@@ -67,12 +68,8 @@ class SurveySnippet extends Loggable {
     ".answer" #> answers.map{ answer =>
       ".answer-number *" #> answer.answerNumber.get &
       ".answer-text *" #> answer.answer.get &
-      ".answer-text [id]" #> answer.answerId.get &
-      ".delete-answer [onclick]" #> SHtml.ajaxInvoke(() => deleteAnswer(answer.answerId.get))
-    } &
-    "#new-answer-number" #> SHtml.text("", newAnswerNumber = _) &
-    "#new-answer" #> SHtml.text("", newAnswer = _) &
-    "#create-answer" #> SHtml.onSubmitUnit(() => createAnswer(question.questionId.get))
+      ".answer-text [id]" #> answer.answerId.get
+    }
   }
 
   def startSurvey:JsCmd = {
