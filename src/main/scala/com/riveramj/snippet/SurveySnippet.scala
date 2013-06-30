@@ -65,9 +65,9 @@ class SurveySnippet extends Loggable {
     ".question [id]" #> question.questionId.get &
     ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => deleteQuestion(question.questionId.get)) &
     ".answer" #> answers.map{ answer =>
-
-      "span *" #> answer.answer.get &
-      "span [id]" #> answer.answerId.get &
+      ".answer-number *" #> answer.answerNumber.get &
+      ".answer-text *" #> answer.answer.get &
+      ".answer-text [id]" #> answer.answerId.get &
       ".delete-answer [onclick]" #> SHtml.ajaxInvoke(() => deleteAnswer(answer.answerId.get))
     } &
     "#new-answer-number" #> SHtml.text("", newAnswerNumber = _) &
