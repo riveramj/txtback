@@ -1,4 +1,4 @@
 db.driver=com.mysql.jdbc.Driver
-db.url=jdbc:mysql://localhost:3306/txtbckdev
+db.url=jdbc:mysql://aa1canluooalmnb.cjyscqqvvtmi.us-west-2.rds.amazonaws.com:3306/txtbck
 db.user=tbadmin
-db.password=Tb101
+db.password=Txtbck101
