@@ -4,7 +4,7 @@ seq(StartScriptPlugin.startScriptForClassesSettings: _*)
 
 name := "TxtBck"
 
-version := "0.1"
+version := "0.1-SNAPSHOT"
 
 organization := "com.riveramj"
 
