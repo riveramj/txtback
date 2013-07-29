@@ -6,21 +6,18 @@
     <h3 id="myModalLabel">Edit Question</h3>
   </div>
   <div class="modal-body">
-    <li>
-      <a class="question" href="#">Question A</a>
-      <button type="button" class="edit-question btn">Edit</button>
-      <button type="button" class="delete-question btn">Delete</button>
-      <ul>
-        <li class="answer">
-          <span class="answer-number">1</span>:
-          <span class="answer-text">Answer A</span>
-        </li>
-      </ul>
-    </li>
+    <input type="text" class="question" href="#">
+    <ul>
+      <li class="answer">
+        <span class="answer-number">1</span>:
+        <input type="text" class="answer-text">
+      </li>
+    </ul>
+    <button id="reload-page" style="display: none">Reload Page</button>
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    <button class="btn btn-primary">Save changes</button>
+    <button class="btn btn-primary save-question">Save changes</button>
   </div>
 </div>
 
