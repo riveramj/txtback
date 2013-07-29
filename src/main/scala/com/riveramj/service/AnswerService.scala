@@ -86,4 +86,9 @@ object AnswerService extends Loggable {
 
     answers.map(_.answerNumber.get).max + 1
   }
+
+  def changeAnswer(newAnswer: String, answerId: Long) {
+    val answer = AnswerService.getAnswerById(answerId).openOrThrowException("Couldn't Find Answer")
+    AnswerService.saveAnswer(answer.answer(newAnswer))
+  }
 }

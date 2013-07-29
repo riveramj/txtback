@@ -4,12 +4,13 @@ import com.riveramj.service._
 import net.liftweb.util.{CssSel, ClearClearable}
 import net.liftweb.util.Helpers._
 import net.liftweb.sitemap._
-import net.liftweb.common.{Loggable, Full}
+import net.liftweb.common._
 import net.liftweb.sitemap.Loc.TemplateBox
-import net.liftweb.http.{S, SHtml, Templates}
-import com.riveramj.model.Question
+import net.liftweb.http._
+import com.riveramj.model.{Answer, Question}
 import com.riveramj.util.PathHelpers.loggedIn
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
+import net.liftweb.http.js.JsCmds.Noop
 import net.liftweb.http.js.JE.{JsRaw, JsVal, JsVar}
 
 object SurveySnippet {
@@ -27,7 +28,8 @@ class SurveySnippet extends Loggable {
   var newAnswer = ""
   var newQuestion = ""
   var toPhoneNumber = ""
-  var editQuestionId = 0L
+  object editQuestionId extends RequestVar[Box[Long]](Empty)
+
 
   val surveyId = menu.currentValue map {_.toLong} openOr 0L
 
@@ -66,11 +68,10 @@ class SurveySnippet extends Loggable {
 
     ".question *" #> question.question.get &
     ".question [id]" #> question.questionId.get &
-    ".edit-question [onclick]" #> SHtml.ajaxCall(
-      JsRaw("$('#edit-question').modal('show')"),
-      (s:String) => {
-        editQuestionId = questionId
-        println(editQuestionId + "====")
+    ".edit-question [onclick]" #> SHtml.ajaxInvoke(() => {
+        editQuestionId(Full(questionId))
+        editQuestionId.is
+        Noop
       }) &
     ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => deleteQuestion(questionId)) &
     ".answer" #> answers.map{ answer =>
@@ -85,24 +86,39 @@ class SurveySnippet extends Loggable {
     S.notice("send-survey-notice", "Survey Sent") //TODO: validate it actually sent
   }
 
-  def editQuestion() = {
-    val question = QuestionService.getQuestionById(editQuestionId)
-    println(editQuestionId)
-    println(question)
-    val answers = AnswerService.findAllAnswersByQuestionId(editQuestionId)
+  def changeAnswer(newAnswer: String, answerId: Long) {
+    AnswerService.changeAnswer(newAnswer, answerId)
+  }
 
-    ".question *" #> question.map(_.question.get) &
-      ".question [id]" #> editQuestionId &
-      ".answer" #> answers.map{ answer =>
+  def saveQuestion() {
+    println("here")
+
+  }
+
+  def editQuestion() = {
+    "#edit-question" #> SHtml.idMemoize(renderer => {
+      val editId = editQuestionId.is.openOr(0L)
+      var question = QuestionService.getQuestionById(editId)
+      val answers = AnswerService.findAllAnswersByQuestionId(editId)
+
+      ".question " #> SHtml.text(question.map(_.question.get).getOrElse(""), questionText => question = question.map(q => q.question(questionText))) &
+      ".answer" #> answers.map { answer =>
+        val answerid = answer.answerId.get
+
         ".answer-number *" #> answer.answerNumber.get &
-          ".answer-text *" #> answer.answer.get &
-          ".answer-text [id]" #> answer.answerId.get
-      }
+        ".answer-text" #> SHtml.text(answer.answer.get, changeAnswer(_, answerid)) &
+        ".answer-text [id]" #> answerid
+      } &
+      "#reload-page [onclick]" #> SHtml.ajaxInvoke(renderer.setHtml _)
+//      ".save-question [onclick]" #> SHtml.onSubmitUnit(saveQuestion)
+    })
   }
 
   def render() = {
     val survey = SurveyService.getSurveyById(surveyId)
     val questions = QuestionService.findAllSurveyQuestions(surveyId)
+
+    editQuestionId(QuestionService.getFirstQuestion(surveyId).map(_.questionId.get))
 
     ClearClearable andThen
     "#survey-name *" #> survey.map(_.surveyName.get) &
