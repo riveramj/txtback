@@ -90,9 +90,8 @@ class SurveySnippet extends Loggable {
     AnswerService.changeAnswer(newAnswer, answerId)
   }
 
-  def saveQuestion() {
-    println("here")
-
+  def saveQuestion(question: Box[Question])() {
+    QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question"))
   }
 
   def editQuestion() = {
@@ -101,7 +100,7 @@ class SurveySnippet extends Loggable {
       var question = QuestionService.getQuestionById(editId)
       val answers = AnswerService.findAllAnswersByQuestionId(editId)
 
-      ".question " #> SHtml.text(question.map(_.question.get).getOrElse(""), questionText => question = question.map(q => q.question(questionText))) &
+      ".question " #> SHtml.text(question.map(_.question.get).openOr(""), questionText => question = question.map(q => q.question(questionText))) &
       ".answer" #> answers.map { answer =>
         val answerid = answer.answerId.get
 
@@ -109,8 +108,8 @@ class SurveySnippet extends Loggable {
         ".answer-text" #> SHtml.text(answer.answer.get, changeAnswer(_, answerid)) &
         ".answer-text [id]" #> answerid
       } &
-      "#reload-page [onclick]" #> SHtml.ajaxInvoke(renderer.setHtml _)
-//      ".save-question [onclick]" #> SHtml.onSubmitUnit(saveQuestion)
+      "#reload-page [onclick]" #> SHtml.ajaxInvoke(renderer.setHtml _) &
+      ".save-question" #> SHtml.onSubmitUnit(saveQuestion(question))
     })
   }
 
