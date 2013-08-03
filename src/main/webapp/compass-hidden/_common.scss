@@ -12,3 +12,31 @@ ul{
 table {
   width: 800px !important;
 }
+
+//Extends
+
+%icon {
+  font-family: 'FontAwesome';
+}
+
+%action-icon {
+  @extend %icon;
+
+  background: transparent;
+  border: none;
+  @include box-shadow(none);
+  overflow: hidden;
+
+  display: inline-block;
+  height: 25px;
+  width: 16px;
+  line-height: 25px;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+
+  &:hover, &:focus, &:active {
+    background: none;
+    @include box-shadow(none);
+  }
+}
