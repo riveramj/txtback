@@ -6,10 +6,11 @@
     <h3 id="myModalLabel">Edit Question</h3>
   </div>
   <div class="modal-body">
-    <form>
+    <form data-lift="form.ajax">
       <input type="text" class="question" href="#">
-      <ul>
+      <ul id="answer-list">
         <li class="answer">
+          <button class="delete-answer" type="button">Delete</button>
           <span class="answer-number">1</span>:
           <input type="text" class="answer-text">
         </li>

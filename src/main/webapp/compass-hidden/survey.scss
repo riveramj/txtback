@@ -1,0 +1,36 @@
+@import "common";
+
+.edit-question, .delete-question, .delete-answer {
+  @extend %action-icon;
+}
+
+.edit-question:before {
+  content: ' ';
+}
+
+.delete-question:before {
+  content: ' ';
+}
+
+#answer-list {
+  margin: 0;
+}
+
+.question {
+  width: 93%
+}
+
+.answer-text {
+  width: 87%;
+}
+
+.delete-answer {
+  width: 12px;
+  color: red;
+}
+
+.delete-answer:before {
+  content: ' ';
+}
+
+

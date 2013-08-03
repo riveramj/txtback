@@ -36,7 +36,6 @@ class SurveySnippet extends Loggable {
   def deleteQuestion(questionId: Long):JsCmd = {
     QuestionService.deleteQuestionById(questionId) match {
       case Full(true) =>
-
         JsCmds.Run("$('#" + questionId + "').parent().remove()")
       case _ => logger.error("couldn't delete survey with id %s" format questionId)
         //TODO: provide feedback on delete action
@@ -44,10 +43,11 @@ class SurveySnippet extends Loggable {
 
   }
 
-  def deleteAnswer(answerId: Long):JsCmd = {
+  def deleteAnswer(answerId: Long, renderer: IdMemoizeTransform)(): JsCmd = {
     AnswerService.deleteAnswerById(answerId) match {
       case Full(true) =>
-        JsCmds.Run("$('#" + answerId + "').parent().remove()")
+        JsCmds.Run("$('#" + answerId + "').parent().remove()") &
+        renderer.setHtml()
       case _ => logger.error("couldn't delete survey with id %s" format answerId)
     }
 
@@ -91,24 +91,25 @@ class SurveySnippet extends Loggable {
   }
 
   def saveQuestion(question: Box[Question])() {
-    QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question"))
+    QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question")) //TODO: dont throw nasty exception
   }
 
   def editQuestion() = {
     "#edit-question" #> SHtml.idMemoize(renderer => {
-      val editId = editQuestionId.is.openOr(0L)
+      val editId = editQuestionId.is.openOr(0L) //TODO: dont reply on initialized data
       var question = QuestionService.getQuestionById(editId)
       val answers = AnswerService.findAllAnswersByQuestionId(editId)
 
       ".question " #> SHtml.text(question.map(_.question.get).openOr(""), questionText => question = question.map(q => q.question(questionText))) &
       ".answer" #> answers.map { answer =>
-        val answerid = answer.answerId.get
+        val answerId = answer.answerId.get
 
+        ".delete-answer [onclick]" #> SHtml.ajaxInvoke(deleteAnswer(answerId, renderer)) &
         ".answer-number *" #> answer.answerNumber.get &
-        ".answer-text" #> SHtml.text(answer.answer.get, changeAnswer(_, answerid)) &
-        ".answer-text [id]" #> answerid
+        ".answer-text" #> SHtml.text(answer.answer.get, changeAnswer(_, answerId )) & //TODO: Move the answer save into the "saveQuestion" method
+        ".answer-text [id]" #> answerId
       } &
-      "#reload-page [onclick]" #> SHtml.ajaxInvoke(renderer.setHtml _) &
+      "#reload-page [onclick]" #> SHtml.ajaxInvoke(renderer.setHtml _) & //TODO: drop the reload click
       ".save-question" #> SHtml.onSubmitUnit(saveQuestion(question))
     })
   }
