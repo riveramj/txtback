@@ -25,7 +25,6 @@ object SurveySnippet {
 class SurveySnippet extends Loggable {
   import SurveySnippet._
 
-  var newAnswer = ""
   var newQuestion = ""
   var toPhoneNumber = ""
   object editQuestionId extends RequestVar[Box[Long]](Empty)
@@ -43,20 +42,10 @@ class SurveySnippet extends Loggable {
 
   }
 
-  def deleteAnswer(answerId: Long, renderer: IdMemoizeTransform)(): JsCmd = {
-    AnswerService.deleteAnswerById(answerId) match {
-      case Full(true) =>
-        JsCmds.Run("$('#" + answerId + "').parent().remove()") &
-        renderer.setHtml()
-      case _ => logger.error("couldn't delete survey with id %s" format answerId)
-    }
-
-  }
-
-  def createAnswer(questionId: Long) = {
-    val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
-    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
-  }
+//  def createAnswer(questionId: Long) = {
+//    val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
+//    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
+//  }
 
   def createQuestion(surveyId: Long) = {
     QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, surveyId)
@@ -86,15 +75,35 @@ class SurveySnippet extends Loggable {
     S.notice("send-survey-notice", "Survey Sent") //TODO: validate it actually sent
   }
 
-  def changeAnswer(newAnswer: String, answerId: Long) {
+  def changeAnswer(newAnswer: String, answerId: Long) = {
     AnswerService.changeAnswer(newAnswer, answerId)
   }
 
-  def saveQuestion(question: Box[Question])() {
-    QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question")) //TODO: dont throw nasty exception
+  def deleteAnswer(answerId: Long) = {
+    AnswerService.deleteAnswerById(answerId)
   }
 
+  def removeAnswer(answerId: Long)(): JsCmd = {
+    JsCmds.Run("$('#" + answerId + "e').parent().remove()")
+  }
+
+  def saveQuestion(question: Box[Question], changedAnswers: List[(String, Long)], deletedAnswers: List[Long])() {
+    println(changed + " foo")
+    println("changed: " + changedAnswers)
+    changedAnswers.foreach {
+      case (newAnswer, answerId) => changeAnswer(newAnswer,answerId)
+    }
+    println("deleted: " + deletedAnswers)
+    deletedAnswers.foreach(deleteAnswer(_))
+    QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question")) //TODO: dont throw nasty exception
+  }
+  var changed = ""
+
   def editQuestion() = {
+
+    var changedAnswers: List[(String, Long)] = Nil
+    var deleteAnswers: List[Long] = Nil
+
     "#edit-question" #> SHtml.idMemoize(renderer => {
       val editId = editQuestionId.is.openOr(0L) //TODO: dont reply on initialized data
       var question = QuestionService.getQuestionById(editId)
@@ -104,13 +113,12 @@ class SurveySnippet extends Loggable {
       ".answer" #> answers.map { answer =>
         val answerId = answer.answerId.get
 
-        ".delete-answer [onclick]" #> SHtml.ajaxInvoke(deleteAnswer(answerId, renderer)) &
+        ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
         ".answer-number *" #> answer.answerNumber.get &
-        ".answer-text" #> SHtml.text(answer.answer.get, changeAnswer(_, answerId )) & //TODO: Move the answer save into the "saveQuestion" method
-        ".answer-text [id]" #> answerId
+        ".answer-text" #> SHtml.text(answer.answer.get, changed = _ , "id" -> (answerId + "e")) //TODO: Move the answer save into the "saveQuestion" method
       } &
       "#reload-page [onclick]" #> SHtml.ajaxInvoke(renderer.setHtml _) & //TODO: drop the reload click
-      ".save-question" #> SHtml.onSubmitUnit(saveQuestion(question))
+      "#confirm-edit" #> SHtml.onSubmitUnit(saveQuestion(question, changedAnswers, deleteAnswers))
     })
   }
 
