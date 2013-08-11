@@ -10,7 +10,7 @@ import net.liftweb.http._
 import com.riveramj.model.{Answer, Question}
 import com.riveramj.util.PathHelpers.loggedIn
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
-import net.liftweb.http.js.JsCmds.Noop
+import net.liftweb.http.js.JsCmds.{SetHtml, Alert, Noop}
 import net.liftweb.http.js.JE.{JsRaw, JsVal, JsVar}
 
 object SurveySnippet {
@@ -27,8 +27,8 @@ class SurveySnippet extends Loggable {
 
   var newQuestion = ""
   var toPhoneNumber = ""
-  var changedAnswers: List[(Long, String)] = Nil
-  var newAnswers: List[(Long, String)] = Nil
+  var changedAnswers: Map[Long, String] = Map()
+  var newAnswers: Map[Long, String] = Map()
   var deleteAnswers: List[Long] = Nil
 
   object editQuestionId extends RequestVar[Box[Long]](Empty)
@@ -45,7 +45,7 @@ class SurveySnippet extends Loggable {
     }
   }
 
-  def createAnswer(questionId: Long, newAnswer: String) = {
+  def createAnswer(newAnswer: String, questionId: Long) = {
     val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
     AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
   }
@@ -97,39 +97,77 @@ class SurveySnippet extends Loggable {
     JsCmds.Run("$('#" + answerId + "e').parent().remove()")
   }
 
-  def saveQuestion(question: Box[Question])() {
+  def saveQuestion(question: Box[Question])() = {
+
+    println(changedAnswers + " changed")
+    println(newAnswers + " new")
+    println(deleteAnswers + " delete")
+
     changedAnswers.foreach {
       case (answerId, newAnswer) => changeAnswer(newAnswer, answerId)
     }
+    newAnswers.foreach {
+      case (_, newAnswer) => createAnswer(newAnswer, question.map(_.questionId.get).openOr(0L))
+    }
     deleteAnswers.foreach(deleteAnswer(_))
     QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question")) //TODO: dont throw nasty exception
+
+    JE.JsRaw(
+      "$('#edit-question').modal('hide');" +
+      "location.reload();"
+    ).cmd
   }
 
   def editQuestion() = {
 
+    var editId: Long = 0L
+    var question: Box[Question] = Empty
+    var answers: Map[Long, String] = Map()
+
     def changeAnswer(answer: String, answerId: Long) = {
-      changedAnswers = changedAnswers ::: List((answerId, answer))
+      changedAnswers += (answerId -> answer)
+      answer
+    }
+    def addAnswer(answer: String, questionId: Long) = {
+      newAnswers += (questionId -> answer)
       answer
     }
 
     "#edit-question" #> SHtml.idMemoize(renderer => {
-      deleteAnswers = Nil
-      newAnswers = Nil
 
-      val editId = editQuestionId.is.openOr(0L) //TODO: dont reply on initialized data
-      var question = QuestionService.getQuestionById(editId)
-      val answers = AnswerService.findAllAnswersByQuestionId(editId)
+      def addNewAnswer()() = {
+        answers = changedAnswers
+        deleteAnswers.foreach{ id =>
+          answers = answers.filter{
+            case(answerId, _) => answerId != id
+          }
+        }
+        newAnswers += (newAnswers.size + 1L -> "")
+        renderer.setHtml()
+      }
+
+      def reloadEditQuestion() = {
+        editId = editQuestionId.is.openOr(0L)
+        question = QuestionService.getQuestionById(editId)
+        answers = AnswerService.findAllAnswersByQuestionId(editId).flatMap{ answer =>
+          List(answer.answerId.get -> answer.answer.get)
+        }.toMap
+        renderer.setHtml()
+      }
 
       ".question " #> SHtml.text(question.map(_.question.get).openOr(""), questionText => question = question.map(q => q.question(questionText))) &
-      ".answer" #> answers.map { answer =>
-        val answerId = answer.answerId.get
-
+      ".answer" #> answers.map { case (answerId, answer) =>
         ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
-        ".answer-number *" #> answer.answerNumber.get &
-        ".answer-text" #> SHtml.text(answer.answer.get, changeAnswer(_, answerId), "id" -> (answerId + "e")) //TODO: Move the answer save into the "saveQuestion" method
+        ".answer-text" #> SHtml.text(answer, changeAnswer(_, answerId), "id" -> (answerId + "e")) //TODO: Move the answer save into the "saveQuestion" method
       } &
-      "#reload-page [onclick]" #> SHtml.ajaxInvoke(renderer.setHtml _) & //TODO: drop the reload click
-      "#confirm-edit" #> SHtml.onSubmitUnit(saveQuestion(question))
+      ".new-answer" #> newAnswers.map { case (answerId, answer) =>
+        ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
+        ".answer-text" #> SHtml.text(answer, addAnswer(_, answerId), "id" -> (answerId + "e")) //TODO: Move the answer save into the "saveQuestion" method
+      } &
+      "#add-answer" #> SHtml.ajaxSubmit("Add Answer", addNewAnswer()) &
+      "#cancel-edit [onclick]" #> SHtml.ajaxInvoke(()=> deleteAnswers = Nil ) &
+      "#reload-page [onclick]" #> SHtml.ajaxInvoke(reloadEditQuestion) & //TODO: drop the reload click
+      "#confirm-edit" #> SHtml.ajaxSubmit("Save Changes", saveQuestion(question))
     })
   }
 
@@ -138,6 +176,7 @@ class SurveySnippet extends Loggable {
     val questions = QuestionService.findAllSurveyQuestions(surveyId)
 
     editQuestionId(QuestionService.getFirstQuestion(surveyId).map(_.questionId.get))
+    editQuestionId.is
 
     ClearClearable andThen
     "#survey-name *" #> survey.map(_.surveyName.get) &

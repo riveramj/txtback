@@ -1,7 +1,7 @@
 (function() {
   $(document)
-    .on('click', '.edit-question', function(event) {
+    .on('click', '.edit-question', function() {
       $('#reload-page').click();
-      $('#edit-question').modal('show')
+      $('#edit-question').modal('show');
     })
 })();
