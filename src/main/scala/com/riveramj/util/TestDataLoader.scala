@@ -39,6 +39,7 @@ object  TestDataLoader extends Loggable {
     val question1 = createQuestion(
       parentSurveyId = newSurveyId,
       surveyQuestion = "what type of pet do you have?",
+      questionType = "multipleChoice",
       questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
     )
     val question1Id = question1.map(question => question.questionId.get) openOr 0L
@@ -62,6 +63,7 @@ object  TestDataLoader extends Loggable {
     val question2 = createQuestion(
       parentSurveyId = newSurveyId,
       surveyQuestion = "which state do you live in?",
+      questionType = "multipleChoice",
       questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
     )
     val question2Id = question2.map(question => question.questionId.get) openOr 0L
@@ -85,6 +87,7 @@ object  TestDataLoader extends Loggable {
     val question3 = createQuestion(
       parentSurveyId = newSurveyId,
       surveyQuestion = "whats your favorite food",
+      questionType = "multipleChoice",
       questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
     )
     val question3Id = question3.map(question => question.questionId.get) openOr 0L
