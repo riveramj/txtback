@@ -84,7 +84,10 @@ object AnswerService extends Loggable {
   def findNextAnswerNumber(questionId: Long) = {
     val answers = Answer.findAll(By(Answer.QuestionId, questionId))
 
-    answers.map(_.answerNumber.get).max + 1
+    answers.map(_.answerNumber.get) match {
+      case answerList if answerList.length > 0 => answerList.max + 1
+      case _ => 1
+    }
   }
 
   def changeAnswer(newAnswer: String, answerId: Long) {

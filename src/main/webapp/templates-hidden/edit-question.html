@@ -1,6 +1,6 @@
 <lift:children>
 <div id="edit-question" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-     data-lift="surveySnippet.editQuestion?form=post">
+     data-lift="surveySnippet.editQuestion">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">Edit Question</h3>
@@ -11,19 +11,18 @@
       <ul id="answer-list">
         <li class="answer">
           <button class="delete-answer" type="button">Delete</button>
-          <span class="answer-number">1</span>:
           <input type="text" class="answer-text">
         </li>
         <li class="new-answer">
-          <button class="add-answer" type="button">Delete</button>
-          <span class="next-answer-number">1</span>:
-          <input type="text" class="new-answer-text">
+          <button class="delete-answer" type="button">Delete</button>
+          <input type="text" class="answer-text">
         </li>
       </ul>
 
       <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <button class="btn btn-primary save-question" id="confirm-edit" type="submit">Save changes</button>
+        <button class="btn" id="add-answer" aria-hidden="true">Add Answer</button>
+        <button class="btn" id="cancel-edit" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-primary" id="confirm-edit" type="submit">Save changes</button>
       </div>
     </form>
     <button id="reload-page" style="display: none" type="button">Reload Page</button>
