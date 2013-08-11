@@ -9,9 +9,10 @@ import net.liftweb.mapper.By
 
 object QuestionService extends Loggable {
 
-  def createQuestion(questionNumber:Long ,surveyQuestion:String, parentSurveyId:Long) = {
+  def createQuestion(questionNumber:Long ,surveyQuestion:String, questionType: String, parentSurveyId:Long) = {
     val question = Question.create
       .question(surveyQuestion)
+      .questionType(questionType)
       .surveyId(parentSurveyId)
       .questionId(generateLongId())
       .questionNumber(questionNumber)

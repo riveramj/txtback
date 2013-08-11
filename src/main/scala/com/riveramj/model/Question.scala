@@ -15,6 +15,9 @@ class Question extends LongKeyedMapper[Question] with IdPK with OneToMany[Long, 
   object questionNumber extends MappedLong(this){
     override def dbIndexed_? = true
   }
+  object questionType extends MappedString(this, 140) {
+    override def dbIndexed_? = true
+  }
 
   object surveyId extends MappedLongForeignKey(this, Survey)
   object answers extends MappedOneToMany(Answer, Answer.QuestionId, OrderBy(Answer.id, Ascending))

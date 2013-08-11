@@ -50,8 +50,8 @@ class SurveySnippet extends Loggable {
     AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
   }
 
-  def createQuestion(surveyId: Long) = {
-    QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, surveyId)
+  def createQuestion(surveyId: Long, questionType: String) = {
+    QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, questionType, surveyId)
   }
 
   def questionAndAnswers(question: Question): CssSel = {
@@ -187,6 +187,6 @@ class SurveySnippet extends Loggable {
     "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
     "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _) &
-    "#create-question" #> SHtml.onSubmitUnit(() => createQuestion(surveyId))
+    "#multiple-choice" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "multipleChoice"))
   }
 }
