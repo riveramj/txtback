@@ -2,23 +2,36 @@ package com.riveramj.snippet
 
 import net.liftweb.common.{Empty, Box}
 import net.liftweb.util.Helpers._
-import net.liftweb.http.{RequestVar, SHtml}
+import net.liftweb.http.SHtml
 import com.riveramj.model.Question
+import com.riveramj.snippet.SurveySnippet._
 import com.riveramj.service.{AnswerService, QuestionService}
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
 
 class EditQuestionSnippet {
 
-  var newQuestion = ""
   var toPhoneNumber = ""
   var changedAnswers: Map[Long, String] = Map()
   var newAnswers: Map[Long, String] = Map()
   var deleteAnswers: List[Long] = Nil
 
-  object editQuestionIdRV extends RequestVar[Box[Long]](Empty)
-  object changedAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
-  object newAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
-  object deleteAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
+  def changeAnswer(newAnswer: String, answerId: Long) = {
+    AnswerService.changeAnswer(newAnswer, answerId)
+  }
+
+  def deleteAnswer(answerId: Long) = {
+    AnswerService.deleteAnswerById(answerId)
+  }
+
+  def createAnswer(newAnswer: String, questionId: Long) = {
+    val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
+    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
+  }
+
+  def removeAnswer(answerId: Long)(): JsCmd = {
+    deleteAnswers ::= answerId
+    JsCmds.Run("$('#" + answerId + "e').parent().remove()")
+  }
 
   def saveQuestion(question: Box[Question])() = {
 
@@ -39,11 +52,6 @@ class EditQuestionSnippet {
       "$('#edit-question').modal('hide');" +
         "location.reload();"
     ).cmd
-  }
-
-  def removeAnswer(answerId: Long)(): JsCmd = {
-    deleteAnswers ::= answerId
-    JsCmds.Run("$('#" + answerId + "e').parent().remove()")
   }
 
   def editQuestion() = {
@@ -80,6 +88,7 @@ class EditQuestionSnippet {
         answers = AnswerService.findAllAnswersByQuestionId(editId).flatMap{ answer =>
           List(answer.answerId.get -> answer.answer.get)
         }.toMap
+
         renderer.setHtml()
       }
 
