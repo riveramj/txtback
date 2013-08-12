@@ -18,6 +18,11 @@ object SurveySnippet {
   ) / "survey" / * >>
     //loggedIn >>
   TemplateBox(() => Templates( "survey" :: Nil))
+
+  object editQuestionIdRV extends RequestVar[Box[Long]](Empty)
+  object changedAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
+  object newAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
+  object deleteAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
 }
 
 class SurveySnippet extends Loggable {
@@ -25,15 +30,6 @@ class SurveySnippet extends Loggable {
 
   var newQuestion = ""
   var toPhoneNumber = ""
-  var changedAnswers: Map[Long, String] = Map()
-  var newAnswers: Map[Long, String] = Map()
-  var deleteAnswers: List[Long] = Nil
-
-  object editQuestionIdRV extends RequestVar[Box[Long]](Empty)
-  object changedAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
-  object newAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
-  object deleteAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
-
 
   val surveyId = menu.currentValue map {_.toLong} openOr 0L
 
@@ -44,11 +40,6 @@ class SurveySnippet extends Loggable {
       case _ => logger.error("couldn't delete survey with id %s" format questionId)
         //TODO: provide feedback on delete action
     }
-  }
-
-  def createAnswer(newAnswer: String, questionId: Long) = {
-    val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
-    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
   }
 
   def createQuestion(surveyId: Long, questionType: String) = {
@@ -85,19 +76,6 @@ class SurveySnippet extends Loggable {
     S.notice("send-survey-notice", "Survey Sent") //TODO: validate it actually sent
   }
 
-  def changeAnswer(newAnswer: String, answerId: Long) = {
-    AnswerService.changeAnswer(newAnswer, answerId)
-  }
-
-  def deleteAnswer(answerId: Long) = {
-    AnswerService.deleteAnswerById(answerId)
-  }
-
-  def removeAnswer(answerId: Long)(): JsCmd = {
-    deleteAnswers ::= answerId
-    JsCmds.Run("$('#" + answerId + "e').parent().remove()")
-  }
-
   def render() = {
     val survey = SurveyService.getSurveyById(surveyId)
     val questions = QuestionService.findAllSurveyQuestions(surveyId)
@@ -114,9 +92,9 @@ class SurveySnippet extends Loggable {
     "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
     "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _) &
-    "#multiple-choice" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "multipleChoice"))
-    "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "trueFalse"))
-    "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "ratingScale"))
+    "#multiple-choice" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "multipleChoice")) &
+    "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "trueFalse")) &
+    "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "ratingScale")) &
     "#free-response" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "freeResponse"))
   }
 }
