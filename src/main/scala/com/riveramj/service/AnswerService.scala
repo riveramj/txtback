@@ -68,16 +68,35 @@ object AnswerService extends Loggable {
   }
 
   def findAnswerIdByResponse(answerChoice: String, questionId: Long) = {
-    Answer.find(By(Answer.QuestionId, questionId), By(Answer.answerNumber,answerChoice.toInt))
+    Answer.find(By(Answer.QuestionId, questionId), By(Answer.answerNumber,answerChoice.toInt)) //TODO: This will blow up on non-int String
   }
 
-  def lookupAnswerChoice(answerChoice: String, questionId: Long) = {
-    val answer = AnswerService.findAnswerIdByResponse(answerChoice, questionId)
-    answer match {
-      case Full(possibleAnswer) =>
-        possibleAnswer.answerId.get
-      case Empty =>
-        -1L
+  def recordAnswer(answerChoice: String, questionId: Long) = {
+    val question = QuestionService.getQuestionById(questionId)
+    question.map(_.questionType.get) match {
+      case Full("choseOne") => {
+        AnswerService.findAnswerIdByResponse(answerChoice, questionId) match {
+          case Full(possibleAnswer) =>
+            answerChoice
+          case Empty =>
+            "-1"
+        }
+      }
+      case Full("trueFalse") =>
+        answerChoice.toLowerCase match {
+          case "true" | "false" => answerChoice.toLowerCase
+          case  _ => "-1"
+        }
+      case Full("ratingScale") =>
+        answerChoice.toInt match {
+          case 1|2|3|4|5 => answerChoice
+          case  _ => "-1"
+        }
+      case Full("freeResponse") =>
+        answerChoice.length match {
+          case length if length > 3 => answerChoice
+          case  _ => "-1"
+        }
     }
   }
 
