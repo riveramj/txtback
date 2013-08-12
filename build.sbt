@@ -8,7 +8,7 @@ version := "0.1-SNAPSHOT"
 
 organization := "com.riveramj"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.10.2"
 
 seq(webSettings :_*)
 
@@ -16,7 +16,7 @@ resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/s
                   "releases"  at "http://oss.sonatype.org/content/repositories/releases")
 
 libraryDependencies ++= {
-val liftVersion = "2.5-RC2"
+val liftVersion = "2.5.1"
   Seq(
     "c3p0"                   %  "c3p0"                 % "0.9.1.2",
     "org.dbunit"             %  "dbunit"               % "2.4.8",
