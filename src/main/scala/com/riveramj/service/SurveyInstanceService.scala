@@ -6,6 +6,7 @@ import net.liftweb.mapper.By
 import net.liftweb.util.Helpers._
 import com.riveramj.util.RandomIdGenerator._
 import org.joda.time.DateTime
+import com.riveramj.service.QuestionService.questionToSend
 
 
 object SurveyInstanceService extends Loggable {
@@ -97,7 +98,7 @@ object SurveyInstanceService extends Loggable {
         SurveyInstanceService.finishSurveyInstance(surveyInstance)
         "Thank you for completing our survey"
       case Full(question) =>
-        question.question.get
+        questionToSend(Full(question))
     }
     TwilioService.sendMessage(
       toPhoneNumber = surveyInstance.map(_.responderPhone.get) openOr(""),
