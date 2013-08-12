@@ -1,12 +1,13 @@
 package com.riveramj.snippet
 
-import net.liftweb.common.{Empty, Box}
+import net.liftweb.common.{Full, Empty, Box}
 import net.liftweb.util.Helpers._
 import net.liftweb.http.SHtml
 import com.riveramj.model.Question
 import com.riveramj.snippet.SurveySnippet._
 import com.riveramj.service.{AnswerService, QuestionService}
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
+import net.liftweb.util.ClearNodes
 
 class EditQuestionSnippet {
 
@@ -34,10 +35,6 @@ class EditQuestionSnippet {
   }
 
   def saveQuestion(question: Box[Question])() = {
-
-    println(changedAnswers + " changed")
-    println(newAnswers + " new")
-    println(deleteAnswers + " delete")
 
     changedAnswers.foreach {
       case (answerId, newAnswer) => changeAnswer(newAnswer, answerId)
@@ -92,19 +89,33 @@ class EditQuestionSnippet {
         renderer.setHtml()
       }
 
-      ".question " #> SHtml.text(question.map(_.question.get).openOr(""), questionText => question = question.map(q => q.question(questionText))) &
-        ".answer" #> answers.map { case (answerId, answer) =>
-          ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
-            ".answer-text" #> SHtml.text(answer, changeAnswer(_, answerId), "id" -> (answerId + "e"))
-        } &
-        ".new-answer" #> newAnswers.map { case (answerId, answer) =>
-          ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
-            ".answer-text" #> SHtml.text(answer, addAnswer(_, answerId), "id" -> (answerId + "e"))
-        } &
-        "#add-answer" #> SHtml.ajaxSubmit("Add Answer", addNewAnswer()) &
-        "#cancel-edit [onclick]" #> SHtml.ajaxInvoke(() => deleteAnswers = Nil ) &
-        "#reload-page [onclick]" #> SHtml.ajaxInvoke(reloadEditQuestion) & //TODO: drop the reload click
-        "#confirm-edit" #> SHtml.ajaxSubmit("Save Changes", saveQuestion(question))
+      def questionAnswers() = {
+
+        question.map(_.questionType.get) match {
+          case Full("choseOne") => {
+            ".answer" #> answers.map { case (answerId, answer) =>
+              ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
+                ".answer-text" #> SHtml.text(answer, changeAnswer(_, answerId), "id" -> (answerId + "e"))
+            } &
+              ".new-answer" #> newAnswers.map { case (answerId, answer) =>
+                ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
+                  ".answer-text" #> SHtml.text(answer, addAnswer(_, answerId), "id" -> (answerId + "e"))
+              } &
+              "#add-answer" #> SHtml.ajaxSubmit("Add Answer", addNewAnswer())
+          }
+          case _ =>
+            ".answer" #> ClearNodes &
+            ".new-answer" #> ClearNodes &
+            "#add-answer" #> ClearNodes
+        }
+      }
+
+      "#question" #> SHtml.text(question.map(_.question.get).openOr(""), questionText => question = question.map(q => q.question(questionText))) &
+      "#questionType" #> "Question Type: %s".format(question.map(_.questionType.get).openOr("")) &
+      questionAnswers &
+      "#cancel-edit [onclick]" #> SHtml.ajaxInvoke(() => deleteAnswers = Nil ) &
+      "#reload-page [onclick]" #> SHtml.ajaxInvoke(reloadEditQuestion) & //TODO: drop the reload click
+      "#confirm-edit" #> SHtml.ajaxSubmit("Save Changes", saveQuestion(question))
     })
   }
 
