@@ -94,4 +94,11 @@ object AnswerService extends Loggable {
     val answer = AnswerService.getAnswerById(answerId).openOrThrowException("Couldn't Find Answer")
     AnswerService.saveAnswer(answer.answer(newAnswer))
   }
+
+  def enumerateAnswers(question: Box[Question]) = {
+    val answers = findAllAnswersByQuestionId(question.map(_.questionId.get).openOr(0L))
+    answers.map { answer =>
+      "%s: %s".format(answer.answerNumber.get, answer.answer.get)
+    }.mkString(", ")
+  }
 }

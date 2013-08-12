@@ -92,7 +92,7 @@ class SurveySnippet extends Loggable {
     "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
     "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _) &
-    "#multiple-choice" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "multipleChoice")) &
+    "#multiple-choice" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "choseOne")) &
     "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "trueFalse")) &
     "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "ratingScale")) &
     "#free-response" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "freeResponse"))

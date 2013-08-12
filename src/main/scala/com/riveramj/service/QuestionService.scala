@@ -5,6 +5,7 @@ import com.riveramj.model._
 import com.riveramj.util.RandomIdGenerator._
 import net.liftweb.util.Helpers._
 import net.liftweb.mapper.By
+import com.riveramj.service.AnswerService._
 
 
 object QuestionService extends Loggable {
@@ -77,5 +78,19 @@ object QuestionService extends Loggable {
 
   def findQuestionByNumber(questionNumber: Long) = {
     Question.find(By(Question.questionNumber,questionNumber))
+  }
+
+  def questionToSend(question:Box[Question]) = {
+    val questionText = question.map(_.question.get).openOr("")
+    question.map(_.questionType.get) match {
+      case Full("choseOne") =>
+        "%s Respond: %s".format(questionText, enumerateAnswers(question))
+      case Full("trueFalse") =>
+        "True or False: %s".format(questionText)
+      case Full("freeResponse") =>
+        "Respond to the following: %s".format(questionText)
+      case Full("ratingScale") =>
+        "Rate the following on a 1 (disagree) - 5 (agree) scale: %s".format(questionText)
+    }
   }
 }

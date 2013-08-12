@@ -4,9 +4,8 @@ import net.liftweb.common._
 import com.riveramj.model._
 import com.riveramj.util.RandomIdGenerator._
 import net.liftweb.util.Helpers._
-import net.liftweb.common.Full
 import net.liftweb.mapper.By
-import net.liftweb.common.Full
+import com.riveramj.service.QuestionService.questionToSend
 
 
 object SurveyService extends Loggable {
@@ -77,6 +76,6 @@ object SurveyService extends Loggable {
   def startSurvey(surveyId: Long, toPhoneNumber: String) {
     val firstQuestion = QuestionService.getFirstQuestion(surveyId)
     SurveyInstanceService.createSurveyInstance(toPhoneNumber, surveyId, firstQuestion.map(_.questionId.get).openOr(0L))
-    TwilioService.sendMessage(toPhoneNumber,firstQuestion.map(_.question.get).openOr(""))
+    TwilioService.sendMessage(toPhoneNumber,questionToSend(firstQuestion))
   }
 }
