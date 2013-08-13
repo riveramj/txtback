@@ -13,13 +13,11 @@ import com.riveramj.service.AnswerService.createAnswer
 object  TestDataLoader extends Loggable {
   val surveyName = "questions about you"
   lazy val exampleSurveyId = SurveyService.getSurveyByName(surveyName) map(_.surveyId.get) getOrElse 0L
+  val company = createCompany("Company1")
+  val newCompanyId = company.map(company => company.companyId.get) openOr 0L
 
-  def createTestData() {
+  def createTestUsers() {
     logger.info("Creating Test Data")
-
-    val company = createCompany("Company1")
-
-    val newCompanyId = company.map(company => company.companyId.get) openOr 0L
 
     createSurveyor(
       firstName = "Mike",
@@ -28,6 +26,18 @@ object  TestDataLoader extends Loggable {
       companyId = newCompanyId,
       password = "password"
     )
+
+    createSurveyor(
+      firstName = "Calvin",
+      lastName = "Leach",
+      email = "cleach@magnetic-usa.com",
+      companyId = newCompanyId,
+      password = "password"
+    )
+
+
+  }
+  def createTestQuestions() {
 
     val survey = createSurvey(
       name = surveyName,

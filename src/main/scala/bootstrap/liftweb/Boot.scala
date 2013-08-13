@@ -81,12 +81,15 @@ class Boot extends Loggable {
     LiftRules.statelessDispatch.append(NewMessageListener)
 
     SurveyorService.getAllUsers match {
-      case users if users.isEmpty => TestDataLoader.createTestData()
+      case users if users.isEmpty => TestDataLoader.createTestUsers()
       case _ =>
     }
 
-    //SurveyService.startSurvey(TestDataLoader.exampleSurveyId,"4044090725")
-
+    if(Props.mode == Props.RunModes.Development)
+      SurveyService.getAllSurveys match {
+        case surveys if surveys.isEmpty => TestDataLoader.createTestQuestions()
+        case _ =>
+      }
 
   } //boot
 
