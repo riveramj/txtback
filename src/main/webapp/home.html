@@ -1,25 +1,13 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
   <form data-lift="home?form=post">
-    <ul>
-      <li>
-          <div>welcome home!</div>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <label for="company-name">Company Name</label>
-      </li>
-      <li>
-        <div id="company-name">Company 1</div>
-      </li>
-    </ul>
+    <h3 id="company-name">Company 1</h3>
     <ul id="survey-list">
       <li>
-        <div>Surveys</div>
+        <h4>Your Surveys</h4>
       </li>
       <li class="survey">
         <a href="/survey/survey2">Survey A</a>
-        <button type="button" class="delete-survey btn" >Delete</button>
+        <button type="button" class="delete-survey">Delete</button>
       </li>
       <li class="clearable">
         <a href="/survey/survey2">Survey B</a>
@@ -27,10 +15,17 @@
       <li class="clearable">
         <a href="/survey/survey3">Survey C</a>
       </li>
+    </ul>
+    <ul>
       <li>
-        <input id="survey-name" type="text" placeholder="Survey Name">
-        <button type="submit" id="create-survey" class="btn">Create Survey</button>
+        <div class="input-append">
+          <input id="survey-name" type="text" placeholder="Survey Name">
+          <button type="submit" id="create-survey" class="btn">Create Survey</button>
+        </div>
       </li>
     </ul>
   </form>
+  <tail>
+    <link rel="stylesheet" href="/static/css/home.css">
+  </tail>
 </div>

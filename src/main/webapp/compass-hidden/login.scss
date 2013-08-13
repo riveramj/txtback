@@ -1,0 +1,17 @@
+@import "common";
+
+h2 {
+  text-align: center;
+}
+
+#login-box {
+  border: 1px solid #e5e5e5;
+  width: 400px;
+  margin: 200px auto auto;
+  background: #f1f1f1;
+}
+
+#login-button {
+  @extend %btn;
+  @extend %btn-primary;
+}

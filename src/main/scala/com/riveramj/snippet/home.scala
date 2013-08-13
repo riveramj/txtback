@@ -42,7 +42,13 @@ class Home extends Loggable {
       "a *" #> survey.surveyName.get &
       "a [href]" #> ("/survey/" + survey.surveyId.get) &
       "a [id]" #> survey.surveyId.get &
-      ".delete-survey [onclick]" #> SHtml.ajaxInvoke(() => deleteSurvey(survey.surveyId.get))
+        ".delete-survey [onclick]" #> SHtml.ajaxInvoke(() => {
+          JsCmds.Confirm("Are you sure you want to delete the question?", {
+            SHtml.ajaxInvoke(() => {
+              deleteSurvey(survey.surveyId.get)
+            }).cmd
+          })
+        })
     } &
     "#survey-name" #> SHtml.text(surveyName,surveyName = _) &
     "#create-survey" #> SHtml.onSubmitUnit(process _)

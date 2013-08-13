@@ -1,0 +1,9 @@
+@import "common";
+
+.delete-survey {
+  @extend %action-icon;
+}
+
+.delete-survey:before {
+  content: ' ';
+}
