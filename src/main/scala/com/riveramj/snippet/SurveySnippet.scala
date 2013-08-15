@@ -42,8 +42,13 @@ class SurveySnippet extends Loggable {
     }
   }
 
-  def createQuestion(surveyId: Long, questionType: String) = {
-    QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, questionType, surveyId)
+  def createQuestion(surveyId: Long, questionType: String): JsCmd = {
+    if(newQuestion.nonEmpty) {
+      QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, questionType, surveyId)
+      S.notice("survey-question-created", "Question is required")
+    }
+    else
+      S.error("survey-question-created", "Question is required")
   }
 
   def questionAndAnswers(question: Question): CssSel = {
@@ -92,7 +97,7 @@ class SurveySnippet extends Loggable {
     "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
     "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _) &
-    "#multiple-choice" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "choseOne")) &
+    "#chose-one" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "choseOne")) &
     "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "trueFalse")) &
     "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "ratingScale")) &
     "#free-response" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "freeResponse"))
