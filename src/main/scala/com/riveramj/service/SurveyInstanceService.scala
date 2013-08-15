@@ -96,7 +96,8 @@ object SurveyInstanceService extends Loggable {
     val messageBody = nextQuestion match {
       case Empty =>
         SurveyInstanceService.finishSurveyInstance(surveyInstance)
-        "Thank you for completing our survey"
+        "Thank you for completing our survey. " +
+          "To create your own text message survy, visit txtbck.co"
       case Full(question) =>
         questionToSend(Full(question))
     }
