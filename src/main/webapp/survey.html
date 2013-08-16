@@ -1,5 +1,5 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
-  <div data-lift="surveySnippet?form=post">
+  <div data-lift="surveySnippet">
     <ul>
       <li>
         <h4 id="survey-name">Survey A</h4>
@@ -31,7 +31,9 @@
         <span href="#">Question C</span>
       </li>
     </ul>
-    <form>
+  </div>
+  <div>
+    <form data-lift="surveySnippet?form=post">
       <div class="input-append">
         <span data-lift="msg?id=survey-question-created">Question Created</span>
         <input id="new-question" type="text" placeholder="New Question">
@@ -49,7 +51,6 @@
         </div>
       </div>
     </form>
-    <br>
     <div class="input-append">
       <input id="phone-number" type="text" placeholder="Enter Phone Number">
       <button type="button" id="send-survey" class="btn">Send Survey</button>
