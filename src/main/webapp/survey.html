@@ -32,33 +32,31 @@
       </li>
     </ul>
   </div>
-  <div>
-    <form data-lift="surveySnippet?form=post">
-      <div class="input-append">
-        <span data-lift="msg?id=survey-question-created">Question Created</span>
-        <input id="new-question" type="text" placeholder="New Question">
-        <div class="btn-group">
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-            Create Question
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><button id="true-false" class="question-type">True or False</button></li>
-            <li><button id="chose-one" class="question-type">Chose One</button></li>
-            <li><button id="rating-scale" class="question-type">Rating Scala</button></li>
-            <li><button id="free-response" class="question-type">Free Response</button></li>
-          </ul>
-        </div>
-      </div>
-    </form>
+  <form data-lift="surveySnippet?form=post">
     <div class="input-append">
-      <input id="phone-number" type="text" placeholder="Enter Phone Number">
-      <button type="button" id="send-survey" class="btn">Send Survey</button>
+      <span data-lift="msg?id=survey-question-created">Question Created</span>
+      <input id="new-question" type="text" placeholder="New Question">
+      <div class="btn-group">
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+          Create Question
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><button id="true-false" class="question-type">True or False</button></li>
+          <li><button id="chose-one" class="question-type">Chose One</button></li>
+          <li><button id="rating-scale" class="question-type">Rating Scala</button></li>
+          <li><button id="free-response" class="question-type">Free Response</button></li>
+        </ul>
+      </div>
     </div>
-    <span data-lift="msg?id=send-survey-notice">Survey Sent</span>
-
-    <div data-lift="embed?what=edit-question"></div>
+  </form>
+  <div class="input-append">
+    <input id="phone-number" type="text" placeholder="Enter Phone Number">
+    <button type="button" id="send-survey" class="btn">Send Survey</button>
   </div>
+  <span data-lift="msg?id=send-survey-notice">Survey Sent</span>
+
+  <div data-lift="embed?what=edit-question"></div>
   <tail>
     <link rel="stylesheet" href="/static/css/survey.css">
   </tail>
