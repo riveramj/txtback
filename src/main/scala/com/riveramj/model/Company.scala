@@ -3,7 +3,11 @@ package com.riveramj.model
 import org.bson.types.ObjectId
 import net.liftweb.mongodb.{ObjectIdSerializer, MongoDocumentMeta, MongoDocument}
 
-case class Company(_id: ObjectId, name: String) extends MongoDocument[Company] {
+case class Company(
+  _id: ObjectId,
+  name: String
+)
+  extends MongoDocument[Company] {
   def meta = Company
 }
 
