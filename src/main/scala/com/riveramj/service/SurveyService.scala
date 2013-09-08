@@ -2,75 +2,48 @@ package com.riveramj.service
 
 import net.liftweb.common._
 import com.riveramj.model._
-import com.riveramj.util.RandomIdGenerator._
 import net.liftweb.util.Helpers._
-import net.liftweb.mapper.By
 import com.riveramj.service.QuestionService.questionToSend
-
+import org.bson.types.ObjectId
+import net.liftweb.json.JsonDSL._
 
 object SurveyService extends Loggable {
 
-  def createSurvey(name:String, companyId:Long) = {
-    val survey = Survey.create
-      .surveyName(name)
-      .companyId(companyId)
-      .surveyId(generateLongId())
+  def createSurvey(name: String, companyId: ObjectId) = {
+    val survey = Survey(
+      _id = ObjectId.get,
+      name = name,
+      companyId = companyId,
+      questions = Nil
+    )
 
-    tryo(saveSurvey(survey)) flatMap {
-      u => u match {
-        case Full(newSurvey:Survey) => Full(newSurvey)
-        case (failure: Failure) => failure
-        case _ => Failure("Unknown error")
-      }
-    }
+    saveSurvey(survey)
   }
 
-  def saveSurvey(survey:Survey):Box[Survey] = {
-
-    val uniqueConstraintPattern = """.*Unique(.+)""".r
-    val validateErrors = survey.validate
-
-    if (validateErrors.isEmpty) {
-      tryo(survey.saveMe()) match {
-        case Full(newSurvey:Survey) => Full(newSurvey)
-        case Failure(_, Full(err), _) => {
-          val error = err.getMessage.substring(0, err.getMessage.indexOf("\n"))
-          error match {
-            case uniqueConstraintPattern(x) => Failure("Survey Already Exists")
-            case _ => Failure("Unknown error")
-          }
-        }
-        case _ => Failure("Unknown error")
-      }
-    } else {
-      Failure("Validations Failed")
-    }
+  def saveSurvey(survey:Survey): Box[Survey] = {
+    survey.save
+    Survey.find(survey._id)
   }
 
-  def getSurveyById(surveyId: Long): Box[Survey] = {
-    Survey.find(By(Survey.surveyId, surveyId))
+  def getSurveyById(surveyId: ObjectId): Box[Survey] = {
+    Survey.find(surveyId)
   }
 
-  def deleteSurveyById(surveyId: Long ): Box[Boolean] = {
-    val survey = Survey.find(By(Survey.surveyId, surveyId))
-    val questions = QuestionService.findAllSurveyQuestions(surveyId)
-    val answers = questions.flatMap(question =>
-      AnswerService.findAllAnswersByQuestionId(question.questionId.get))
-    questions.map(_.delete_!)
-    answers.map(_.delete_!)
-    survey.map(_.delete_!)
+  def deleteSurveyById(surveyId: ObjectId) = {
+    val survey = getSurveyById(surveyId)
+    survey.map(_.delete)
   }
 
   def getSurveyByName(surveyName: String): Box[Survey] = {
-    Survey.find(By(Survey.surveyName, surveyName))
+    Survey.find("name" -> surveyName)
   }
 
-  def getAllSurveysByCompanyId(companyId: Long): List[Survey] = {
-    Survey.findAll(By(Survey.companyId, companyId))
+  def getAllSurveysByCompanyId(companyId: ObjectId): List[Survey] = {
+    Survey.findAll("_id" -> companyId)
   }
 
   def getAllSurveys = {
-    Survey.findAll()
+    Survey.findAll
   }
 
   def startSurvey(surveyId: Long, toPhoneNumber: String) {
