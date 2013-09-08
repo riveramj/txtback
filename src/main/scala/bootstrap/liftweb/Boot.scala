@@ -22,26 +22,6 @@ class Boot extends Loggable {
 
     MongoConfig.init
 
-    if (!DB.jndiJdbcConnAvailable_?) {
-      LiftRules.unloadHooks.append(C3P0DBVendor.shutDown _)
-
-      DB.defineConnectionManager(DefaultConnectionIdentifier, C3P0DBVendor)
-
-    }
-
-    Schemifier.schemify(
-      true,
-      Schemifier.infoF
-      _,
-      Answer,
-      Question,
-      Survey,
-      Company,
-      Surveyor,
-      QASet,
-      SurveyInstance
-    )
-
     // where to search snippet
     LiftRules.addToPackages("com.riveramj")
 
