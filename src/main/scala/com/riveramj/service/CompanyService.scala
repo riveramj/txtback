@@ -1,66 +1,42 @@
 package com.riveramj.service
 
 import net.liftweb.common._
-import com.riveramj.model.{Survey, Company}
-import com.riveramj.util.RandomIdGenerator._
-import net.liftweb.mapper.By
+import com.riveramj.model.Company
 import net.liftweb.util.Helpers._
-import org.apache.shiro.crypto.SecureRandomNumberGenerator
+import org.bson.types.ObjectId
+import net.liftweb.json.JsonDSL._
 
 object CompanyService extends Loggable {
-  private val rng = new SecureRandomNumberGenerator();
 
   def createCompany(name:String) = {
-    val company = Company.create
-      .companyName(name)
-      .companyId(generateLongId)
+    val company = Company(
+      ObjectId.get,
+      name
+    )
 
-    tryo(saveCompany(company)) flatMap {
-      u => u match {
-        case Full(newCompany:Company) => Full(newCompany)
-        case (failure: Failure) => failure
-        case _ => Failure("Unknown error")
-      }
-    }
+    saveCompany(company)
   }
 
-  def saveCompany(company:Company):Box[Company] = {
-
-    val uniqueConstraintPattern = """.*Unique(.+)""".r
-    val validateErrors = company.validate
-
-    if (validateErrors.isEmpty) {
-      tryo(company.saveMe()) match {
-        case Full(newCompany:Company) => Full(newCompany)
-        case Failure(_, Full(err), _) => {
-          val error = err.getMessage.substring(0, err.getMessage.indexOf("\n"))
-          error match {
-            case uniqueConstraintPattern(x) => Failure("Company Already Exists")
-            case _ => Failure("Unknown error")
-          }
-        }
-        case _ => Failure("Unknown error")
-      }
-    } else {
-      Failure("Validations Failed")
-    }
+  def saveCompany(company:Company): Box[Company] = {
+    company.save
+    Company.find(company._id)
   }
 
-  def getCompanyById(companyId: Long): Box[Company] = {
-    Company.find(By(Company.companyId, companyId))
+  def getCompanyById(companyId: ObjectId): Box[Company] = {
+    Company.find(companyId)
   }
 
-  def deleteCompanyById(companyId: Long): Box[Boolean] = {
-    val company = Company.find(By(Company.companyId, companyId))
-    company.map(_.delete_!)
+  def deleteCompanyById(companyId: ObjectId) = {
+    val company = getCompanyById(companyId)
+    company.map(_.delete)
   }
 
   def getCompanyByName(companyName: String): Box[Company] = {
-    Company.find(By(Company.companyName, companyName))
+    Company.find("name" -> companyName)
   }
 
   def getAllCompanies = {
-    Company.findAll()
+    Company.findAll
   }
 
 }
