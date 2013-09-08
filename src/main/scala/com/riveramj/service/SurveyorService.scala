@@ -1,84 +1,66 @@
 package com.riveramj.service
 
-import org.apache.shiro.crypto.SecureRandomNumberGenerator
 import com.riveramj.model.Surveyor
-import com.riveramj.util.RandomIdGenerator._
+
 import net.liftweb.util.Helpers._
 import net.liftweb.common._
-import net.liftweb.mapper.By
+import net.liftweb.json.JsonDSL._
+import org.bson.types.ObjectId
+
 import org.apache.shiro.crypto.hash.Sha256Hash
+import org.apache.shiro.crypto.SecureRandomNumberGenerator
+
 
 object SurveyorService extends Loggable {
 
-  def hashPassword(password: String, salt: String) : String = {
+  def hashPassword(password: String, salt: String): String = {
     new Sha256Hash(password, salt, 1024).toBase64
   }
 
-  private def getSalt : String = {
-    generateStringId
+  private def getSalt: String = {
+    val rng = new SecureRandomNumberGenerator()
+    rng.nextBytes(32).toBase64
   }
 
   def createSurveyor(
-                  firstName: String, lastName: String, email: String, 
-                  companyId: Long, password: String) = {
+    firstName: String, lastName: String, email: String,
+    companyId: ObjectId, password: String) = {
 
     val salt = getSalt
     val hashedPassword = hashPassword(password, salt)
     
-    val user = Surveyor.create
-      .firstName(firstName)
-      .lastName(lastName)
-      .email(email)
-      .companyId(companyId)
-      .userId(generateLongId)
-      .password(hashedPassword)
-      .salt(salt)
+    val user = Surveyor(
+      _id = ObjectId.get,
+      firstName = firstName,
+      lastName = lastName,
+      email = email,
+      companyId = companyId,
+      password = hashedPassword,
+      salt = salt
+    )
 
-    tryo(saveUser(user)) flatMap {
-      u => u match {
-        case Full(newUser:Surveyor) => Full(newUser)
-        case (failure: Failure) => failure
-        case _ => Failure("Unknown error")
-      }
-    }
+    saveUser(user)
   }
 
-  def saveUser(user:Surveyor):Box[Surveyor] = {
-
-    val uniqueConstraintPattern = """.*Unique(.+)""".r
-    val validateErrors = user.validate
-
-    if (validateErrors.isEmpty) {
-      tryo(user.saveMe()) match {
-        case Full(newUser:Surveyor) => Full(newUser)
-        case Failure(_, Full(err), _) => {
-          val error = err.getMessage.substring(0, err.getMessage.indexOf("\n"))
-          error match {
-            case uniqueConstraintPattern(x) => Failure("Surveyor Already Exists")
-            case _ => Failure("Unknown error")
-          }
-        }
-        case _ => Failure("Unknown error")
-      }
-    } else {
-      Failure("Validations Failed")
-    }
+  def saveUser(user:Surveyor): Box[Surveyor] = {
+    user.save
+    Surveyor.find(user._id)
   }
 
-  def getUserById(userId: Long): Box[Surveyor] = {
-    Surveyor.find(By(Surveyor.userId, userId))
+  def getUserById(userId: ObjectId): Box[Surveyor] = {
+    Surveyor.find(userId)
   }
 
-  def deleteUserById(userId: Long): Box[Boolean] = {
-    val user = Surveyor.find(By(Surveyor.userId, userId))
-    user.map(_.delete_!)
+  def deleteUserById(userId: ObjectId) = {
+    val user = getUserById(userId)
+    user.map(_.delete)
   }
 
   def getUserByEmail(email: String): Box[Surveyor] = {
-    Surveyor.find(By(Surveyor.email, email))
+    Surveyor.find("name" -> email)
   }
 
   def getAllUsers = {
-    Surveyor.findAll()
+    Surveyor.findAll
   }
 }
