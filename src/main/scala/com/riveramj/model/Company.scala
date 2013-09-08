@@ -1,19 +1,13 @@
 package com.riveramj.model
 
-import net.liftweb.mapper._
+import org.bson.types.ObjectId
+import net.liftweb.mongodb.{ObjectIdSerializer, MongoDocumentMeta, MongoDocument}
 
-class Company extends LongKeyedMapper[Company] with IdPK with OneToMany[Long, Company] {
-  def getSingleton = Company
-
-  object companyId extends MappedLong(this){
-    override def dbIndexed_? = true
-  }
-  object companyName extends MappedString(this, 140) {
-    override def dbIndexed_? = true
-  }
-
-  object surveys extends MappedOneToMany(Survey, Survey.companyId, OrderBy(Survey.id, Ascending))
-  object users extends MappedOneToMany(Surveyor, Surveyor.companyId, OrderBy(Surveyor.id, Ascending))
+case class Company(_id: ObjectId, name: String) extends MongoDocument[Company] {
+  def meta = Company
 }
 
-object Company extends Company with LongKeyedMetaMapper[Company]{}
+object Company extends MongoDocumentMeta[Company] {
+  override def collectionName = "company"
+  override def formats = super.formats + new ObjectIdSerializer
+}

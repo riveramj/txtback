@@ -15,16 +15,12 @@ import com.riveramj.model._
 import com.riveramj.util.Paths
 import com.riveramj.service.{SurveyService, SurveyorService}
 import com.riveramj.util.TestDataLoader
-import com.riveramj.service.TwilioService.sendMessage
 import com.riveramj.api.NewMessageListener
 
-
-/**
- * A class that's instantiated early and run.  It allows the application
- * to modify lift's environment
- */
 class Boot extends Loggable {
   def boot {
+
+    MongoConfig.init
 
     if (!DB.jndiJdbcConnAvailable_?) {
       LiftRules.unloadHooks.append(C3P0DBVendor.shutDown _)
