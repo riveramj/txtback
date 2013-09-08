@@ -11,7 +11,11 @@ object SurveyInstanceStatus {
   case object active extends SurveyInstanceStatus
 }
 
-case class QuestionAnswers(questionId: ObjectId, answer: String, responseDate: DateTime)
+case class QuestionAnswers(
+  questionId: ObjectId,
+  answer: String,
+  responseDate: DateTime
+)
 
 case class SurveyInstance(
   _id: ObjectId,

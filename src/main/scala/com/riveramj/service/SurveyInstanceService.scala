@@ -84,7 +84,7 @@ object SurveyInstanceService extends Loggable {
   }
 
   def getAllSurveyInstances = {
-    SurveyInstance.findAll()
+    SurveyInstance.findAll
   }
 
   def sendNextQuestion(surveyInstanceId: Long) {
