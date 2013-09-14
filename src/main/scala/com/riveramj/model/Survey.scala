@@ -11,7 +11,7 @@ object QuestionType {
   case object choseOne extends QuestionType
 }
 
-case class Questions(
+case class Question(
   _id: ObjectId,
   question: String,
   questionType: QuestionType,
@@ -29,7 +29,7 @@ case class Survey(
   _id: ObjectId,
   name: String,
   companyId: ObjectId,
-  questions: List[Questions]
+  questions: List[Question]
 
 )
   extends MongoDocument[Survey] {

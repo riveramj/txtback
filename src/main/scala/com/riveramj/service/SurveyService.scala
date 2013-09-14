@@ -46,6 +46,15 @@ object SurveyService extends Loggable {
     Survey.findAll
   }
 
+  def getAllQuestionsBySurveyId(surveyId: ObjectId): List[Question] = {
+    getSurveyById(surveyId).map(_.questions) openOr Nil
+  }
+
+  def getFirstQuestionBySurveyId(surveyId: ObjectId): String = {
+    val question = getSurveyById(surveyId).map(_.questions.filter(_.questionNumber == 1)) openOr Nil
+    question.headOption map(_.question) getOrElse ""
+  }
+
   def startSurvey(surveyId: Long, toPhoneNumber: String) {
     val firstQuestion = QuestionService.getFirstQuestion(surveyId)
     SurveyInstanceService.createSurveyInstance(toPhoneNumber, surveyId, firstQuestion.map(_.questionId.get).openOr(0L))

@@ -19,7 +19,7 @@ object CompanyService extends Loggable {
 
   def saveCompany(company:Company): Box[Company] = {
     company.save
-    Company.find(company._id)
+    getCompanyById(company._id)
   }
 
   def getCompanyById(companyId: ObjectId): Box[Company] = {
@@ -27,8 +27,7 @@ object CompanyService extends Loggable {
   }
 
   def deleteCompanyById(companyId: ObjectId) = {
-    val company = getCompanyById(companyId)
-    company.map(_.delete)
+    getCompanyById(companyId).map(_.delete)
   }
 
   def getCompanyByName(companyName: String): Box[Company] = {
