@@ -50,14 +50,17 @@ object SurveyService extends Loggable {
     getSurveyById(surveyId).map(_.questions) openOr Nil
   }
 
-  def getFirstQuestionBySurveyId(surveyId: ObjectId): String = {
+  def getFirstQuestionBySurveyId(surveyId: ObjectId): Box[Question] = {
     val question = getSurveyById(surveyId).map(_.questions.filter(_.questionNumber == 1)) openOr Nil
-    question.headOption map(_.question) getOrElse ""
+    question.headOption
   }
 
-  def startSurvey(surveyId: Long, toPhoneNumber: String) {
-    val firstQuestion = QuestionService.getFirstQuestion(surveyId)
-    SurveyInstanceService.createSurveyInstance(toPhoneNumber, surveyId, firstQuestion.map(_.questionId.get).openOr(0L))
+  def startSurvey(surveyId: ObjectId, toPhoneNumber: String) {
+    val firstQuestion = getFirstQuestionBySurveyId(surveyId)
+    SurveyInstanceService.createSurveyInstance(
+      toPhoneNumber,
+      surveyId,
+      firstQuestion.map(_._id) openOrThrowException "No first question")
     TwilioService.sendMessage(toPhoneNumber,questionToSend(firstQuestion))
   }
 }

@@ -1,11 +1,10 @@
 package com.riveramj.service
 
 import net.liftweb.common._
-import net.liftweb.mapper.By
 import com.riveramj.service.AnswerService._
 import com.riveramj.model.{Survey, Question, QuestionType}
 import org.bson.types.ObjectId
-
+import net.liftweb.json.JsonDSL._
 
 object QuestionService extends Loggable {
 
@@ -29,17 +28,19 @@ object QuestionService extends Loggable {
   }
 
   def getQuestionById(questionId: ObjectId): Box[Question] = {
-    val surveys = Survey.findAll
+    val survey = Survey.find("question._id" -> questionId)
+    val question  = survey.map(_.questions.filter(_._id == questionId)) getOrElse Nil
+    question.headOption
 
-    {
-      for {
-        survey <- surveys
-        question <- survey.questions
-          if question._id == questionId
-      }
-      yield
-        Full(question)
-    }.head
+//    {
+//      for {
+//        survey <- surveys
+//        question <- survey.questions
+//          if question._id == questionId
+//      }
+//      yield
+//        Full(question)
+//    }.head
   }
 
 //  def deleteQuestionById(questionId: ObjectId) = {
