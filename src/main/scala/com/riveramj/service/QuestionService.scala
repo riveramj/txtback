@@ -1,95 +1,73 @@
 package com.riveramj.service
 
 import net.liftweb.common._
-import com.riveramj.model._
-import com.riveramj.util.RandomIdGenerator._
-import net.liftweb.util.Helpers._
 import net.liftweb.mapper.By
 import com.riveramj.service.AnswerService._
+import com.riveramj.model.{Survey, Question, QuestionType}
+import org.bson.types.ObjectId
 
 
 object QuestionService extends Loggable {
 
-  def createQuestion(questionNumber:Long ,surveyQuestion:String, questionType: String, parentSurveyId:Long) = {
-    val question = Question.create
-      .question(surveyQuestion)
-      .questionType(questionType)
-      .surveyId(parentSurveyId)
-      .questionId(generateLongId())
-      .questionNumber(questionNumber)
+  def createQuestion(questionNumber: Int, question: String, questionType: QuestionType, surveyId: ObjectId) = {
+    val question = Question(
+      _id = ObjectId.get,
+      question = question,
+      questionType = questionType,
+      questionNumber = questionNumber,
+      answers = Nil
+    )
 
-    tryo(saveQuestion(question)) flatMap {
-      u => u match {
-        case Full(newQuestion:Question) => Full(newQuestion)
-        case (failure: Failure) => failure
-        case _ => Failure("Unknown error")
+    saveQuestion(question, surveyId)
+  }
+
+  def saveQuestion(question: Question, surveyId: ObjectId): Box[Question] = {
+    val survey = SurveyService.getSurveyById(surveyId)
+    val existingQuestions = survey.map(_.questions) openOr Nil
+    survey.map(_.copy(questions = existingQuestions :+ question).save)
+    getQuestionById(question._id)
+  }
+
+  def getQuestionById(questionId: ObjectId): Box[Question] = {
+    val surveys = Survey.findAll
+
+    {
+      for {
+        survey <- surveys
+        question <- survey.questions
+          if question._id == questionId
       }
-    }
+      yield
+        Full(question)
+    }.head
   }
 
-  def saveQuestion(question:Question):Box[Question] = {
+//  def deleteQuestionById(questionId: ObjectId) = {
+//    getQuestionById(questionId).map
+//  }
 
-    val uniqueConstraintPattern = """.*Unique(.+)""".r
-    val validateErrors = question.validate
-
-    if (validateErrors.isEmpty) {
-      tryo(question.saveMe()) match {
-        case Full(newQuestion:Question) => Full(newQuestion)
-        case Failure(_, Full(err), _) => {
-          val error = err.getMessage.substring(0, err.getMessage.indexOf("\n"))
-          error match {
-            case uniqueConstraintPattern(x) => Failure("Question Already Exists")
-            case _ => Failure("Unknown error")
-          }
-        }
-        case _ => Failure("Unknown error")
-      }
-    } else {
-      Failure("Validations Failed")
-    }
+  def getAllQuestions: List[Question] = {
+    Survey.findAll.flatMap(_.questions)
   }
 
-  def getQuestionById(questionId: Long): Box[Question] = {
-    Question.find(By(Question.questionId, questionId))
-  }
+//  def nextQuestionNumber(surveyId: Long) = {
+//    QuestionService.findAllSurveyQuestions(surveyId).length + 1
+//  }
 
-  def deleteQuestionById(questionId: Long): Box[Boolean] = {
-    val question = Question.find(By(Question.questionId, questionId))
-    val answers = AnswerService.findAllAnswersByQuestionId(questionId)
-    answers.map(_.delete_!)
-    question.map(_.delete_!)
-  }
-
-  def findAllSurveyQuestions(surveyId:Long): List[Question] = {
-    Question.findAll(By(Question.surveyId, surveyId))
-  }
-
-  def getAllQuestions = {
-    Question.findAll()
-  }
-
-  def nextQuestionNumber(surveyId: Long) = {
-    QuestionService.findAllSurveyQuestions(surveyId).length + 1
-  }
-
-  def getFirstQuestion(surveyId: Long) = {
-    Question.find(By(Question.surveyId,surveyId), By(Question.questionNumber,1))
-  }
-
-  def findQuestionByNumber(questionNumber: Long) = {
-    Question.find(By(Question.questionNumber,questionNumber))
-  }
+//  def findQuestionByNumber(questionNumber: Long) = {
+//    Question.find(By(Question.questionNumber,questionNumber))
+//  }
 
   def questionToSend(question:Box[Question]) = {
-    val questionText = question.map(_.question.get).openOr("")
-    question.map(_.questionType.get) match {
-      case Full("choseOne") =>
+    val questionText = question.map(_.question).openOr("")
+    question.map(_.questionType) match {
+      case Full(QuestionType.choseOne) =>
         "%s Respond: %s".format(questionText, enumerateAnswers(question))
-      case Full("trueFalse") =>
+      case Full(QuestionType.trueFalse) =>
         "True or False: %s".format(questionText)
-      case Full("freeResponse") =>
+      case Full(QuestionType.freeResponse) =>
         "Respond to the following: %s".format(questionText)
-      case Full("ratingScale") =>
+      case Full(QuestionType.ratingScale) =>
         "Rate the following on a 1 (disagree) - 5 (agree) scale: %s".format(questionText)
     }
   }
