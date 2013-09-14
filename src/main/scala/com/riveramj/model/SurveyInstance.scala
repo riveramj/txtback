@@ -8,7 +8,8 @@ import org.joda.time.DateTime
 sealed trait SurveyInstanceStatus
 object SurveyInstanceStatus {
   case object Inactive extends SurveyInstanceStatus
-  case object active extends SurveyInstanceStatus
+  case object Active extends SurveyInstanceStatus
+  case object Finished extends SurveyInstanceStatus
 }
 
 case class QuestionAnswers(
@@ -22,6 +23,7 @@ case class SurveyInstance(
   surveyId: ObjectId,
   responderPhone: String,
   status: SurveyInstanceStatus,
+  nextQuestionId: Option[ObjectId] = None,
   responses: List[QuestionAnswers]
 )
   extends MongoDocument[SurveyInstance] {
