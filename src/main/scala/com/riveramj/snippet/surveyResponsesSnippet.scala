@@ -5,9 +5,9 @@ import net.liftweb.util.Helpers._
 import net.liftweb.common._
 import net.liftweb.sitemap.Loc.TemplateBox
 import net.liftweb.http.Templates
-import com.riveramj.service.{QuestionService, QASetService, SurveyInstanceService, SurveyService}
+import com.riveramj.service.{QuestionService, SurveyInstanceService, SurveyService}
 import net.liftweb.util.ClearClearable
-import com.riveramj.model.QASet
+import org.bson.types.ObjectId
 
 object SurveyResponsesSnippet {
   lazy val menu = Menu.param[String]("responses","responses",
@@ -21,22 +21,22 @@ object SurveyResponsesSnippet {
 class SurveyResponsesSnippet extends Loggable {
   import SurveyResponsesSnippet._
 
-  val surveyId = menu.currentValue map {_.toLong} openOr 0L
+  val surveyId = menu.currentValue map {ObjectId.massageToObjectId(_)} openOrThrowException "no survey id"
   val survey = SurveyService.getSurveyById(surveyId)
 
-  def showQASetDetails(qaSets: List[QASet]) = {
-    ".qa-set" #> qaSets.map{ qaSet =>
-      findQuestionInfo(qaSet.QuestionId.get) &
-      ".answer *" #> qaSet.Response.get &
-      ".date-answered *" #> qaSet.dateAnswered.get.toString
-    }
-  }
+//  def showQASetDetails(qaSets: List[QASet]) = {
+//    ".qa-set" #> qaSets.map{ qaSet =>
+//      findQuestionInfo(qaSet.QuestionId.get) &
+//      ".answer *" #> qaSet.Response.get &
+//      ".date-answered *" #> qaSet.dateAnswered.get.toString
+//    }
+//  }
 
 
-  def findQuestionInfo(questionId: Long) = {
+  def findQuestionInfo(questionId: ObjectId) = {
     val question = QuestionService.getQuestionById(questionId)
-    ".question-number *" #> question.map(_.questionNumber.get) &
-    ".question *" #> question.map(_.question.get)
+    ".question-number *" #> question.map(_.questionNumber) &
+    ".question *" #> question.map(_.question)
   }
 
   def perSurveyResults() = {
@@ -44,23 +44,23 @@ class SurveyResponsesSnippet extends Loggable {
 
     ClearClearable andThen
     ".survey-instance" #> allSurveyInstances.map{ surveyInstance =>
-      ".phone-number *" #> surveyInstance.responderPhone.get &
-        ".status *" #> surveyInstance.status.get &
-        ".date-started *" #> surveyInstance.dateStarted.get.toString &
-        showQASetDetails(QASetService.findAllQASetsBySurveyInstance(surveyInstance.surveyInstanceId.get))
+      ".phone-number *" #> surveyInstance.responderPhone &
+        ".status *" #> surveyInstance.status
+//        ".date-started *" #> surveyInstance.dateStarted.get.toString &
+//        showQASetDetails(QASetService.findAllQASetsBySurveyInstance(surveyInstance.surveyInstanceId.get))
     }
   }
 
-  def perQuestionResults() = {
-    val allQASets = QASetService.findAllQASetsBySurveyId(surveyId)
-
-    ClearClearable andThen
-    ".questions" #> showQASetDetails(allQASets)
-  }
+//  def perQuestionResults() = {
+//    val allQASets = QASetService.findAllQASetsBySurveyId(surveyId)
+//
+//    ClearClearable andThen
+//    ".questions" #> showQASetDetails(allQASets)
+//  }
 
   def render() = {
     ClearClearable andThen
-    "#survey-name *" #> survey.map(_.surveyName.get) &
+    "#survey-name *" #> survey.map(_.name) &
     "#view-survey [href]" #> ("/survey/" + surveyId)
   }
 

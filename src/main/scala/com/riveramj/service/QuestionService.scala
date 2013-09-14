@@ -2,7 +2,7 @@ package com.riveramj.service
 
 import net.liftweb.common._
 import com.riveramj.service.AnswerService._
-import com.riveramj.model.{Survey, Question, QuestionType}
+import com.riveramj.model.{Answer, Survey, Question, QuestionType}
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
 
@@ -71,5 +71,9 @@ object QuestionService extends Loggable {
       case Full(QuestionType.ratingScale) =>
         "Rate the following on a 1 (disagree) - 5 (agree) scale: %s".format(questionText)
     }
+  }
+
+  def findAnswersByQuestionId(questionId: ObjectId): List[Answer] = {
+    getQuestionById(questionId) map(_.answers) getOrElse Nil
   }
 }
