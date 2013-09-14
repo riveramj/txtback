@@ -14,8 +14,6 @@ object TwilioService extends Loggable with WrapAsJava {
   val twilioClient = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
   val messageFactory = twilioClient.getAccount.getSmsFactory
 
-
-
   def sendMessage(toPhoneNumber: String, message: String, fromPhoneNumber: String = "7702123225") {
     val params = Map(
     "Body" -> message,
@@ -25,7 +23,4 @@ object TwilioService extends Loggable with WrapAsJava {
 
     messageFactory.create(mapAsJavaMap(params))
   }
-
-
-
 }

@@ -6,15 +6,14 @@ import com.riveramj.service.SurveyorService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.SurveyInstanceService.createSurveyInstance
-import com.riveramj.service.QASetService.createQASet
-import com.riveramj.service.{AnswerService, SurveyService, QuestionService}
-import com.riveramj.service.AnswerService.createAnswer
+import com.riveramj.service.{SurveyService, QuestionService}
+import com.riveramj.model.QuestionType
 
 object  TestDataLoader extends Loggable {
   val surveyName = "questions about you"
-  lazy val exampleSurveyId = SurveyService.getSurveyByName(surveyName) map(_.surveyId.get) getOrElse 0L
+  lazy val exampleSurveyId = SurveyService.getSurveyByName(surveyName) map(_._id)
   val company = createCompany("Company1")
-  val newCompanyId = company.map(company => company.companyId.get) openOr 0L
+  val newCompanyId = company.map(company => company._id).get
 
   def createTestUsers() {
     logger.info("Creating Test Data")
@@ -44,79 +43,79 @@ object  TestDataLoader extends Loggable {
       companyId = newCompanyId
     )
 
-    val newSurveyId = survey.map(survey => survey.surveyId.get) openOr 0L
+    val newSurveyId = survey.map(survey => survey._id).get
 
     val question1 = createQuestion(
-      parentSurveyId = newSurveyId,
-      surveyQuestion = "what type of pet do you have?",
-      questionType = "choseOne",
-      questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
+      question = "what type of pet do you have?",
+      questionType = QuestionType.choseOne,
+      questionNumber = 1,
+      surveyId = newSurveyId
     )
-    val question1Id = question1.map(question => question.questionId.get) openOr 0L
+    val question1Id = question1.map(question => question._id).get
 
-    createAnswer(
-      parentQuestionId = question1Id,
-      answerNumber = 1,
-      answerText = "dog"
-    )
-    createAnswer(
-      parentQuestionId = question1Id,
-      answerNumber = 2,
-      answerText = "cat"
-    )
-    createAnswer(
-      parentQuestionId = question1Id,
-      answerNumber = 3,
-      answerText = "none"
-    )
+//    createAnswer(
+//      parentQuestionId = question1Id,
+//      answerNumber = 1,
+//      answerText = "dog"
+//    )
+//    createAnswer(
+//      parentQuestionId = question1Id,
+//      answerNumber = 2,
+//      answerText = "cat"
+//    )
+//    createAnswer(
+//      parentQuestionId = question1Id,
+//      answerNumber = 3,
+//      answerText = "none"
+//    )
 
     val question2 = createQuestion(
-      parentSurveyId = newSurveyId,
-      surveyQuestion = "which state do you live in?",
-      questionType = "choseOne",
-      questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
+      question = "which state do you live in?",
+      questionType = QuestionType.choseOne,
+      questionNumber = 2,
+      surveyId = newSurveyId
     )
-    val question2Id = question2.map(question => question.questionId.get) openOr 0L
+    val question2Id = question2.map(question => question._id).get
 
-    createAnswer(
-      parentQuestionId = question2Id,
-      answerNumber = 1,
-      answerText = "georgia"
-    )
-    createAnswer(
-      parentQuestionId = question2Id,
-      answerNumber = 2,
-      answerText = "florida"
-    )
-    createAnswer(
-      parentQuestionId = question2Id,
-      answerNumber = 3,
-      answerText = "other"
-    )
+//    createAnswer(
+//      parentQuestionId = question2Id,
+//      answerNumber = 1,
+//      answerText = "georgia"
+//    )
+//    createAnswer(
+//      parentQuestionId = question2Id,
+//      answerNumber = 2,
+//      answerText = "florida"
+//    )
+//    createAnswer(
+//      parentQuestionId = question2Id,
+//      answerNumber = 3,
+//      answerText = "other"
+//    )
 
     val question3 = createQuestion(
-      parentSurveyId = newSurveyId,
-      surveyQuestion = "whats your favorite food",
-      questionType = "choseOne",
-      questionNumber = QuestionService.nextQuestionNumber(newSurveyId)
+      question = "whats your favorite food",
+      questionType = QuestionType.choseOne,
+      questionNumber = 3,
+      surveyId = newSurveyId
     )
-    val question3Id = question3.map(question => question.questionId.get) openOr 0L
+    val question3Id = question3.map(question => question._id).get
 
-    createAnswer(
-      parentQuestionId = question3Id,
-      answerNumber = 1,
-      answerText = "pizza"
-    )
-    createAnswer(
-      parentQuestionId = question3Id,
-      answerNumber = 2,
-      answerText = "hot dogs"
-    )
-    createAnswer(
-      parentQuestionId = question3Id,
-      answerNumber = 3,
-      answerText = "other"
-    )
+//    createAnswer(
+//      parentQuestionId = question3Id,
+//      answerNumber = 1,
+//      answerText = "pizza"
+//    )
+//    createAnswer(
+//      parentQuestionId = question3Id,
+//      answerNumber = 2,
+//      answerText = "hot dogs"
+//    )
+//    createAnswer(
+//      parentQuestionId = question3Id,
+//      answerNumber = 3,
+//      answerText = "other"
+//    )
 
     val surveyInstance = createSurveyInstance(
       responderPhone = "4044090725",
@@ -125,24 +124,8 @@ object  TestDataLoader extends Loggable {
     )
 
     val surveyInstanceId = surveyInstance.map(surveyInstance =>
-      surveyInstance.surveyInstanceId.get) openOr 0L
+      surveyInstance._id).get
 
-    createQASet(
-      surveyInstanceId = surveyInstanceId,
-      questionId = question1Id,
-      response = "1"
-    )
 
-    createQASet(
-      surveyInstanceId = surveyInstanceId,
-      questionId = question2Id,
-      response = "1"
-    )
-
-    createQASet(
-      surveyInstanceId = surveyInstanceId,
-      questionId = question3Id,
-      response = "2"
-    )
   }
 }

@@ -21,13 +21,12 @@ object NewMessageListener extends RestHelper with Loggable {
         case instances if instances.isEmpty =>
         case instances =>
           val surveyInstance = instances.head
-          AnswerService.recordAnswer(response, surveyInstance.currentQuestionId.get) match {
+          surveyInstance.currentQuestionId map(SurveyInstanceService.verifyAnswer(response, _) match {
             case "-1" =>
               SurveyInstanceService.answerNotFound(response, surveyInstance.currentQuestionId.get, surveyInstance.surveyInstanceId.get)
             case answer =>
-              QASetService.createQASet(surveyInstance.surveyInstanceId.get, surveyInstance.currentQuestionId.get, response)
-              SurveyInstanceService.sendNextQuestion(surveyInstance.surveyInstanceId.get)
-          }
+              SurveyInstanceService.sendNextQuestion(surveyInstance._id)
+          })
       }
       JString("ok")
     }

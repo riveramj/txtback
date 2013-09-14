@@ -16,10 +16,10 @@ case class Question(
   question: String,
   questionType: QuestionType,
   questionNumber: Int,
-  answers: List[Answers]
+  answers: List[Answer]
 )
 
-case class Answers(
+case class Answer(
   _id: ObjectId,
   answerNumber: Int,
   answer: String

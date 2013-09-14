@@ -23,6 +23,7 @@ case class SurveyInstance(
   surveyId: ObjectId,
   responderPhone: String,
   status: SurveyInstanceStatus,
+  currentQuestionId: Option[ObjectId] = None,
   nextQuestionId: Option[ObjectId] = None,
   responses: List[QuestionAnswers]
 )
