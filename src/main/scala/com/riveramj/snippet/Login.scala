@@ -19,7 +19,7 @@ class Login extends Loggable {
 
 
   def userCanLogIn_?(user:Surveyor, password:String): Box[Boolean] = {
-    if (user.password.get != hashPassword(password, user.salt.get)) {
+    if (user.password != hashPassword(password, user.salt)) {
       Full(false)
     } else {
       Full(true)
@@ -33,7 +33,7 @@ class Login extends Loggable {
     def login() = {
       getUserByEmail(email) match {
         case Full(user) =>
-          SecurityContext.logUserIn(user.userId.get)
+          SecurityContext.logUserIn(user._id)
           S.redirectTo("/home")
         case failure => logger.error("failure with info %s".format(failure)) //TODO: return message back if failed to login
 

@@ -45,7 +45,7 @@ class SurveyResponsesSnippet extends Loggable {
     ClearClearable andThen
     ".survey-instance" #> allSurveyInstances.map{ surveyInstance =>
       ".phone-number *" #> surveyInstance.responderPhone &
-        ".status *" #> surveyInstance.status
+        ".status *" #> surveyInstance.status.toString
 //        ".date-started *" #> surveyInstance.dateStarted.get.toString &
 //        showQASetDetails(QASetService.findAllQASetsBySurveyInstance(surveyInstance.surveyInstanceId.get))
     }

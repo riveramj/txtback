@@ -6,6 +6,7 @@ import net.liftweb.util.ControlHelpers._
 import com.riveramj.model.{Company, Surveyor}
 import com.riveramj.service.SurveyorService._
 import com.riveramj.service.CompanyService._
+import org.bson.types.ObjectId
 
 /**
  * Provides the security context information for the current session.
@@ -16,8 +17,8 @@ import com.riveramj.service.CompanyService._
  * instance of the user without retrieving a new one from Scribe.
  */
 object SecurityContext extends Loggable {
-  private object loggedInUserId extends SessionVar[Box[Long]](Empty)
-  private object loggedInCompanyId extends SessionVar[Box[Long]](Empty)
+  private object loggedInUserId extends SessionVar[Box[ObjectId]](Empty)
+  private object loggedInCompanyId extends SessionVar[Box[ObjectId]](Empty)
 
   private object loggedInUser extends RequestVar[Box[Surveyor]](Empty)
   private object loggedInUserCompany extends RequestVar[Box[Company]](Empty)
@@ -32,12 +33,12 @@ object SecurityContext extends Loggable {
     // never being accessed during a request.
     loggedInUser.is
 
-    logger.info("Logged user in [ %s ]".format(user.email.get ))
+    logger.info("Logged user in [ %s ]".format(user.email ))
   }
 
 
   def setCurrentUser(user: Surveyor) {
-    loggedInUserId(Full(user.userId.get))
+    loggedInUserId(Full(user._id))
     loggedInUser(Full(user))
   }
 
@@ -46,7 +47,7 @@ object SecurityContext extends Loggable {
     loggedInUser(Empty)
   }
 
-  def logUserIn(userId: Long): Boolean = {
+  def logUserIn(userId: ObjectId): Boolean = {
     getUserById(userId) match {
       case Full(user) =>
         logIn(user)
@@ -60,7 +61,7 @@ object SecurityContext extends Loggable {
     {
       for {
         user <- currentUser
-        email = user.email.get
+        email = user.email
       } yield {
         logger.info("Logged user out [" + email + "]")
         clearCurrentUser()
@@ -83,8 +84,8 @@ object SecurityContext extends Loggable {
   def currentUserName: Box[String] = {
     for {
       user <- currentUser
-      firstName = user.firstName.get
-      lastName = user.lastName.get
+      firstName = user.firstName
+      lastName = user.lastName
     } yield {
       firstName + " " + lastName
     }
@@ -92,8 +93,8 @@ object SecurityContext extends Loggable {
 
   def currentCompany : Box[Company] = {
     loggedInUserCompany.is or {
-      val currentCompanyId = currentUser.map(_.companyId.get)
-      val currentCompany = getCompanyById(currentCompanyId openOr 0L)
+      val currentCompanyId = currentUser.map(_.companyId)
+      val currentCompany = getCompanyById(currentCompanyId openOrThrowException "Not Valid Company")
 
       loggedInCompanyId(currentCompanyId)
       loggedInUserCompany(currentCompany)
@@ -102,7 +103,7 @@ object SecurityContext extends Loggable {
     }
   }
 
-  def currentCompanyId : Box[Long] = loggedInUserCompany map (_.companyId.get)
+  def currentCompanyId : Box[ObjectId] = loggedInUserCompany map (_._id)
 
   def loggedIn_? : Boolean = {
     currentUser.isDefined

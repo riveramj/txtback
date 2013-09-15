@@ -10,7 +10,7 @@ object AnswerService extends Loggable {
 
   def findAnswerIdByResponse(answerChoice: String, questionId: ObjectId): Box[Answer] = {
     val answers = QuestionService.findAnswersByQuestionId(questionId)
-    answers.filter(_.answerNumber == answerChoice).headOption
+    answers.filter(_.answerNumber == answerChoice.toInt).headOption
   }
 
 //  def findAllAnswersByQuestionId(questionId: ObjectId): List[Answer] = {

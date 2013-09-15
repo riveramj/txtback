@@ -46,7 +46,7 @@ object  TestDataLoader extends Loggable {
     val newSurveyId = survey.map(survey => survey._id).get
 
     val question1 = createQuestion(
-      question = "what type of pet do you have?",
+      questionText = "what type of pet do you have?",
       questionType = QuestionType.choseOne,
       questionNumber = 1,
       surveyId = newSurveyId
@@ -70,7 +70,7 @@ object  TestDataLoader extends Loggable {
 //    )
 
     val question2 = createQuestion(
-      question = "which state do you live in?",
+      questionText = "which state do you live in?",
       questionType = QuestionType.choseOne,
       questionNumber = 2,
       surveyId = newSurveyId
@@ -94,7 +94,7 @@ object  TestDataLoader extends Loggable {
 //    )
 
     val question3 = createQuestion(
-      question = "whats your favorite food",
+      questionText = "whats your favorite food",
       questionType = QuestionType.choseOne,
       questionNumber = 3,
       surveyId = newSurveyId

@@ -8,10 +8,10 @@ import net.liftweb.json.JsonDSL._
 
 object QuestionService extends Loggable {
 
-  def createQuestion(questionNumber: Int, question: String, questionType: QuestionType, surveyId: ObjectId) = {
+  def createQuestion(questionNumber: Int, questionText: String, questionType: QuestionType, surveyId: ObjectId) = {
     val question = Question(
       _id = ObjectId.get,
-      question = question,
+      question = questionText,
       questionType = questionType,
       questionNumber = questionNumber,
       answers = Nil
