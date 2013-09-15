@@ -7,7 +7,7 @@ import net.liftweb.util.Helpers._
 import com.riveramj.service.QuestionService.questionToSend
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
-
+import net.liftweb.json.Extraction
 
 
 object SurveyInstanceService extends Loggable {
@@ -42,11 +42,12 @@ object SurveyInstanceService extends Loggable {
   }
 
   def findAllSurveyInstancesBySurveyId(surveyId: ObjectId): List[SurveyInstance] = {
-    SurveyInstance.findAll("surveyId" -> surveyId)
+    SurveyInstance.findAll("surveyId" -> ("$oid" -> ("$oid" -> surveyId.toString)))
   }
 
   def findOpenSurveyInstancesByPhone(phone: String): List[SurveyInstance] = {
-    SurveyInstance.findAll(("responderPhone" -> phone) ~ ("status" -> SurveyInstanceStatus.Active))
+    implicit val formats = net.liftweb.json.DefaultFormats //TODO: da fuq?
+    SurveyInstance.findAll(("responderPhone" -> phone) ~ ("status" -> Extraction.decompose(SurveyInstanceStatus.Active)))
   }
 
   def getAllSurveyInstances = {

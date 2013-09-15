@@ -8,9 +8,9 @@ import net.liftweb.json.JsonDSL._
 
 object AnswerService extends Loggable {
 
-  def findAnswerIdByResponse(answerChoice: String, questionId: ObjectId) = {
+  def findAnswerIdByResponse(answerChoice: String, questionId: ObjectId): Box[Answer] = {
     val answers = QuestionService.findAnswersByQuestionId(questionId)
-    answers.filter(_.answerNumber == answerChoice)
+    answers.filter(_.answerNumber == answerChoice).headOption
   }
 
 //  def findAllAnswersByQuestionId(questionId: ObjectId): List[Answer] = {
@@ -36,7 +36,7 @@ object AnswerService extends Loggable {
   def verifyAnswer(answerChoice: String, questionId: ObjectId) = {
     val question = QuestionService.getQuestionById(questionId)
     question.map(_.questionType) match {
-      case Full("choseOne") => {
+      case Full(QuestionType.choseOne) => {
         AnswerService.findAnswerIdByResponse(answerChoice, questionId) match {
           case Full(possibleAnswer) =>
             answerChoice
@@ -44,21 +44,28 @@ object AnswerService extends Loggable {
             "-1"
         }
       }
-      case Full("trueFalse") =>
+      case Full(QuestionType.trueFalse) =>
         answerChoice.toLowerCase match {
           case "true" | "false" => answerChoice.toLowerCase
           case  _ => "-1"
         }
-      case Full("ratingScale") =>
+      case Full(QuestionType.ratingScale) =>
         answerChoice.toInt match {
           case 1|2|3|4|5 => answerChoice
           case  _ => "-1"
         }
-      case Full("freeResponse") =>
+      case Full(QuestionType.freeResponse) =>
         answerChoice.length match {
           case length if length > 3 => answerChoice
           case  _ => "-1"
         }
     }
+  }
+
+  def enumerateAnswers(question: Box[Question]) = {
+    val answers = question.map( q => QuestionService.findAnswersByQuestionId(q._id)) openOr Nil
+    answers.map { answer =>
+      "%s: %s".format(answer.answerNumber, answer.answer)
+    }.mkString(", ")
   }
 }

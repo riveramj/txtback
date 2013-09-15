@@ -8,6 +8,7 @@ import com.riveramj.snippet.SurveySnippet._
 import com.riveramj.service.{AnswerService, QuestionService}
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
 import net.liftweb.util.ClearNodes
+import org.bson.types.ObjectId
 
 class EditQuestionSnippet {
 
@@ -17,16 +18,16 @@ class EditQuestionSnippet {
   var deleteAnswers: List[Long] = Nil
 
   def changeAnswer(newAnswer: String, answerId: Long) = {
-    AnswerService.changeAnswer(newAnswer, answerId)
+//    AnswerService.changeAnswer(newAnswer, answerId)
   }
 
   def deleteAnswer(answerId: Long) = {
-    AnswerService.deleteAnswerById(answerId)
+//    AnswerService.deleteAnswerById(answerId)
   }
 
-  def createAnswer(newAnswer: String, questionId: Long) = {
+  def createAnswer(newAnswer: String, questionId: ObjectId) = {
     val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
-    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
+//    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
   }
 
   def removeAnswer(answerId: Long)(): JsCmd = {
@@ -34,16 +35,16 @@ class EditQuestionSnippet {
     JsCmds.Run("$('#" + answerId + "e').parent().remove()")
   }
 
-  def saveQuestion(question: Box[Question])() = {
+  def saveQuestion(question: Box[Question], surveyId: ObjectId)() = {
 
     changedAnswers.foreach {
       case (answerId, newAnswer) => changeAnswer(newAnswer, answerId)
     }
     newAnswers.foreach {
-      case (_, newAnswer) => createAnswer(newAnswer, question.map(_.questionId.get).openOr(0L))
+      case (_, newAnswer) => question.map(q => createAnswer(newAnswer, q._id))
     }
     deleteAnswers.foreach(deleteAnswer(_))
-    QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question")) //TODO: dont throw nasty exception
+    QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question"), surveyId) //TODO: dont throw nasty exception
 
     JE.JsRaw(
       "$('#edit-question').modal('hide');" +
@@ -53,7 +54,7 @@ class EditQuestionSnippet {
 
   def editQuestion() = {
 
-    var editId: Long = 0L
+    var editId: ObjectId = ObjectId.get
     var question: Box[Question] = Empty
     var answers: Map[Long, String] = Map()
 
@@ -82,7 +83,7 @@ class EditQuestionSnippet {
       def reloadEditQuestion() = {
         editId = editQuestionIdRV.is.openOr(0L)
         question = QuestionService.getQuestionById(editId)
-        answers = AnswerService.findAllAnswersByQuestionId(editId).flatMap{ answer =>
+        answers = QuestionService.findAnswersByQuestionId(editId).flatMap{ answer =>
           List(answer.answerId.get -> answer.answer.get)
         }.toMap
 
