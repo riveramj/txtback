@@ -32,6 +32,7 @@ object SurveyService extends Loggable {
   def deleteSurveyById(surveyId: ObjectId) = {
     val survey = getSurveyById(surveyId)
     survey.map(_.delete)
+    getSurveyById(surveyId).isEmpty
   }
 
   def getSurveyByName(surveyName: String): Box[Survey] = {

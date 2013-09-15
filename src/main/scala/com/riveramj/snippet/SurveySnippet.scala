@@ -21,6 +21,7 @@ object SurveySnippet {
   TemplateBox(() => Templates( "survey" :: Nil))
 
   object editQuestionIdRV extends RequestVar[Box[ObjectId]](Empty)
+  object surveyIdRV extends RequestVar[Box[ObjectId]](Empty)
   object changedAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
   object newAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
   object deleteAnswersRV extends RequestVar[Box[Map[Long, String]]](Empty)
@@ -33,6 +34,8 @@ class SurveySnippet extends Loggable {
   var toPhoneNumber = ""
 
   val surveyId = menu.currentValue map {ObjectId.massageToObjectId(_)} openOrThrowException "Not valid survey id"
+  surveyIdRV(Full(surveyId))
+  surveyIdRV.is
 
 //  def deleteQuestion(questionId: ObjectId):JsCmd = {
 //    QuestionService.deleteQuestionById(questionId) match {
@@ -57,7 +60,7 @@ class SurveySnippet extends Loggable {
     val answers = QuestionService.findAnswersByQuestionId(questionId)
 
     ".question *" #> question.question &
-    ".question [id]" #> questionId &
+    ".question [id]" #> questionId.toString &
     ".edit-question [onclick]" #> SHtml.ajaxInvoke(() => {
         editQuestionIdRV(Full(questionId))
         editQuestionIdRV.is
@@ -73,7 +76,7 @@ class SurveySnippet extends Loggable {
     ".answer" #> answers.map{ answer =>
       ".answer-number *" #> answer.answerNumber &
       ".answer-text *" #> answer.answer &
-      ".answer-text [id]" #> answer._id
+      ".answer-text [id]" #> answer._id.toString
     }
   }
 

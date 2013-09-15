@@ -3,25 +3,28 @@ package com.riveramj.snippet
 import net.liftweb.common.{Full, Empty, Box}
 import net.liftweb.util.Helpers._
 import net.liftweb.http.SHtml
-import com.riveramj.model.Question
+import com.riveramj.model.{QuestionType, Question}
 import com.riveramj.snippet.SurveySnippet._
 import com.riveramj.service.{AnswerService, QuestionService}
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
 import net.liftweb.util.ClearNodes
 import org.bson.types.ObjectId
+import com.riveramj.model.Question
+import net.liftweb.common.Full
 
 class EditQuestionSnippet {
 
   var toPhoneNumber = ""
-  var changedAnswers: Map[Long, String] = Map()
-  var newAnswers: Map[Long, String] = Map()
-  var deleteAnswers: List[Long] = Nil
+  var changedAnswers: Map[ObjectId, String] = Map()
+  var newAnswers: Map[ObjectId, String] = Map()
+  var deleteAnswers: List[ObjectId] = Nil
+  val surveyId = surveyIdRV.is openOrThrowException "Not Valid Survey"
 
-  def changeAnswer(newAnswer: String, answerId: Long) = {
+  def changeAnswer(newAnswer: String, answerId: ObjectId) = {
 //    AnswerService.changeAnswer(newAnswer, answerId)
   }
 
-  def deleteAnswer(answerId: Long) = {
+  def deleteAnswer(answerId: ObjectId) = {
 //    AnswerService.deleteAnswerById(answerId)
   }
 
@@ -30,12 +33,12 @@ class EditQuestionSnippet {
 //    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
   }
 
-  def removeAnswer(answerId: Long)(): JsCmd = {
+  def removeAnswer(answerId: ObjectId)(): JsCmd = {
     deleteAnswers ::= answerId
     JsCmds.Run("$('#" + answerId + "e').parent().remove()")
   }
 
-  def saveQuestion(question: Box[Question], surveyId: ObjectId)() = {
+  def saveQuestion(question: Box[Question])() = {
 
     changedAnswers.foreach {
       case (answerId, newAnswer) => changeAnswer(newAnswer, answerId)
@@ -55,14 +58,14 @@ class EditQuestionSnippet {
   def editQuestion() = {
 
     var editId: ObjectId = ObjectId.get
-    var question: Box[Question] = Empty
-    var answers: Map[Long, String] = Map()
+    var editQuestion: Box[Question] = Empty
+    var answers: Map[ObjectId, String] = Map()
 
-    def changeAnswer(answer: String, answerId: Long) = {
+    def changeAnswer(answer: String, answerId: ObjectId) = {
       changedAnswers += (answerId -> answer)
       answer
     }
-    def addAnswer(answer: String, questionId: Long) = {
+    def addAnswer(answer: String, questionId: ObjectId) = {
       newAnswers += (questionId -> answer)
       answer
     }
@@ -76,15 +79,15 @@ class EditQuestionSnippet {
             case(answerId, _) => answerId != id
           }
         }
-        newAnswers += (newAnswers.size + 1L -> "")
+        newAnswers += (ObjectId.get -> "")
         renderer.setHtml()
       }
 
       def reloadEditQuestion() = {
-        editId = editQuestionIdRV.is.openOr(0L)
-        question = QuestionService.getQuestionById(editId)
+        editId = editQuestionIdRV.is openOrThrowException "Not valid id"
+        editQuestion = QuestionService.getQuestionById(editId)
         answers = QuestionService.findAnswersByQuestionId(editId).flatMap{ answer =>
-          List(answer.answerId.get -> answer.answer.get)
+          List(answer._id -> answer.answer)
         }.toMap
 
         renderer.setHtml()
@@ -92,8 +95,8 @@ class EditQuestionSnippet {
 
       def questionAnswers() = {
 
-        question.map(_.questionType.get) match {
-          case Full("choseOne") => {
+        editQuestion.map(_.questionType) match {
+          case Full(QuestionType.choseOne) => {
             ".answer" #> answers.map { case (answerId, answer) =>
               ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
                 ".answer-text" #> SHtml.text(answer, changeAnswer(_, answerId), "id" -> (answerId + "e"))
@@ -111,12 +114,12 @@ class EditQuestionSnippet {
         }
       }
 
-      "#question" #> SHtml.text(question.map(_.question.get).openOr(""), questionText => question = question.map(q => q.question(questionText))) &
-      "#questionType" #> "Question Type: %s".format(question.map(_.questionType.get).openOr("")) &
+      "#question" #> SHtml.text(editQuestion.map(_.question).openOr(""), questionText => editQuestion = editQuestion.map(q => q)) &
+      "#questionType" #> "Question Type: %s".format(editQuestion.map(_.questionType).openOr("")) &
       questionAnswers &
       "#cancel-edit [onclick]" #> SHtml.ajaxInvoke(() => deleteAnswers = Nil ) &
       "#reload-page [onclick]" #> SHtml.ajaxInvoke(reloadEditQuestion) & //TODO: drop the reload click
-      "#confirm-edit" #> SHtml.ajaxSubmit("Save Changes", saveQuestion(question))
+      "#confirm-edit" #> SHtml.ajaxSubmit("Save Changes", saveQuestion(editQuestion))
     })
   }
 
