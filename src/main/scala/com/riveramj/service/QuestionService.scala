@@ -28,7 +28,7 @@ object QuestionService extends Loggable {
   }
 
   def getQuestionById(questionId: ObjectId): Box[Question] = {
-    val survey = Survey.find("question._id" -> questionId)
+    val survey = Survey.find("question._id" -> ("$oid" -> questionId.toString))
     val question  = survey.map(_.questions.filter(_._id == questionId)) getOrElse Nil
     question.headOption
 

@@ -39,7 +39,7 @@ object SurveyService extends Loggable {
   }
 
   def getAllSurveysByCompanyId(companyId: ObjectId): List[Survey] = {
-    Survey.findAll("_id" -> companyId)
+    Survey.findAll("_id" -> ("$oid" -> companyId.toString))
   }
 
   def getAllSurveys = {

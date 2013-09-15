@@ -1,6 +1,5 @@
 package bootstrap.liftweb
 
-import _root_.com.riveramj.db.C3P0DBVendor
 import net.liftweb._
 import util._
 
@@ -8,10 +7,7 @@ import common._
 import http._
 import sitemap._
 import net.liftweb.http.js.jquery._
-import net.liftweb.mapper._
 import net.liftweb.http.Html5Properties
-import net.liftweb.mapper.Schemifier
-import com.riveramj.model._
 import com.riveramj.util.Paths
 import com.riveramj.service.{SurveyService, SurveyorService}
 import com.riveramj.util.TestDataLoader
