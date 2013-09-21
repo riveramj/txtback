@@ -8,6 +8,42 @@ import net.liftweb.json.JsonDSL._
 
 object AnswerService extends Loggable {
 
+  def createAnswer(number: Int, answer: String, questionId: ObjectId) = {
+    val ans = Answer(
+      _id = ObjectId.get(),
+      answerNumber = number,
+      answer = answer
+    )
+
+    saveAnswer(ans, questionId)
+  }
+
+  def saveAnswer(answer: Answer, questionId: ObjectId) = { //TODO: This is a cluster
+    val question = QuestionService.getQuestionById(questionId)
+    val existingAnswers = question.map(_.answers) openOr Nil
+    val updatedQuestion = question.map(_.copy(answers = existingAnswers :+ answer))
+    val survey = SurveyService.getSurveyByQuestionId(question.map(_._id) openOrThrowException "no questionId")
+    val existingQuestions = survey.map(_.questions) openOr Nil
+    val updatedSurvey = survey.map(_.copy(questions =
+      existingQuestions.filter(_._id != questionId) :+ updatedQuestion.openOrThrowException("Something went horribly wrong"))) openOrThrowException "Something went boom"
+    updatedQuestion.map { newQ =>
+      Survey.update("questions._id" -> ("$oid" -> questionId.toString), updatedSurvey)
+    }
+    getAnswerById(answer._id)
+  }
+
+  def getAnswerById(answerId: ObjectId) = {
+    val survey = Survey.find("questions.answers._id" -> ("$oid" -> answerId.toString))
+    val answer = survey.map { s =>
+      s.questions.collect {
+        case q: Question => q.answers
+      } flatten
+    } getOrElse Nil
+
+    val answers = answer.filter(_._id == answerId)
+    answers.headOption
+  }
+
   def findAnswerIdByResponse(answerChoice: String, questionId: ObjectId): Box[Answer] = {
     val answers = QuestionService.findAnswersByQuestionId(questionId)
     answers.filter(_.answerNumber == answerChoice.toInt).headOption

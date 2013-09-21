@@ -64,4 +64,8 @@ object SurveyService extends Loggable {
       firstQuestion.map(_._id) openOrThrowException "No first question")
     TwilioService.sendMessage(toPhoneNumber,questionToSend(firstQuestion))
   }
+
+  def getSurveyByQuestionId(questionId: ObjectId): Box[Survey] = {
+    Survey.find("questions._id" -> ("$oid" -> questionId.toString))
+  }
 }

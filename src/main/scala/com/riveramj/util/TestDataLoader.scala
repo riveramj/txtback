@@ -6,7 +6,7 @@ import com.riveramj.service.SurveyorService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.SurveyInstanceService.createSurveyInstance
-import com.riveramj.service.{SurveyService, QuestionService}
+import com.riveramj.service.{AnswerService, SurveyService, QuestionService}
 import com.riveramj.model.QuestionType
 
 object  TestDataLoader extends Loggable {
@@ -54,21 +54,21 @@ object  TestDataLoader extends Loggable {
 
     val question1Id = question1.map(question => question._id).get
 
-//    createAnswer(
-//      parentQuestionId = question1Id,
-//      answerNumber = 1,
-//      answerText = "dog"
-//    )
-//    createAnswer(
-//      parentQuestionId = question1Id,
-//      answerNumber = 2,
-//      answerText = "cat"
-//    )
-//    createAnswer(
-//      parentQuestionId = question1Id,
-//      answerNumber = 3,
-//      answerText = "none"
-//    )
+    AnswerService.createAnswer(
+      questionId = question1Id,
+      number = 1,
+      answer = "dog"
+    )
+    AnswerService.createAnswer(
+      questionId = question1Id,
+      number = 2,
+      answer = "cat"
+    )
+    AnswerService.createAnswer(
+      questionId = question1Id,
+      number = 3,
+      answer = "none"
+    )
 
     val question2 = createQuestion(
       questionText = "which state do you live in?",
@@ -78,21 +78,21 @@ object  TestDataLoader extends Loggable {
     )
     val question2Id = question2.map(question => question._id).get
 
-//    createAnswer(
-//      parentQuestionId = question2Id,
-//      answerNumber = 1,
-//      answerText = "georgia"
-//    )
-//    createAnswer(
-//      parentQuestionId = question2Id,
-//      answerNumber = 2,
-//      answerText = "florida"
-//    )
-//    createAnswer(
-//      parentQuestionId = question2Id,
-//      answerNumber = 3,
-//      answerText = "other"
-//    )
+    AnswerService.createAnswer(
+      questionId = question2Id,
+      number = 1,
+      answer = "georgia"
+    )
+    AnswerService.createAnswer(
+      questionId = question2Id,
+      number = 2,
+      answer = "florida"
+    )
+    AnswerService.createAnswer(
+      questionId = question2Id,
+      number = 3,
+      answer = "other"
+    )
 
     val question3 = createQuestion(
       questionText = "whats your favorite food",
@@ -102,21 +102,21 @@ object  TestDataLoader extends Loggable {
     )
     val question3Id = question3.map(question => question._id).get
 
-//    createAnswer(
-//      parentQuestionId = question3Id,
-//      answerNumber = 1,
-//      answerText = "pizza"
-//    )
-//    createAnswer(
-//      parentQuestionId = question3Id,
-//      answerNumber = 2,
-//      answerText = "hot dogs"
-//    )
-//    createAnswer(
-//      parentQuestionId = question3Id,
-//      answerNumber = 3,
-//      answerText = "other"
-//    )
+    AnswerService.createAnswer(
+      questionId = question3Id,
+      number = 1,
+      answer = "pizza"
+    )
+    AnswerService.createAnswer(
+      questionId = question3Id,
+      number = 2,
+      answer = "hot dogs"
+    )
+    AnswerService.createAnswer(
+      questionId = question3Id,
+      number = 3,
+      answer = "other"
+    )
 
     val surveyInstance = createSurveyInstance(
       responderPhone = "4044090725",
