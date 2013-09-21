@@ -76,7 +76,7 @@ object SurveyService extends Loggable {
 
   def deleteAnswerById(answerId: ObjectId, surveyId: ObjectId, questionId: ObjectId) = {
     val question = QuestionService.getQuestionById(questionId) openOrThrowException "Not valid question"
-    val updatedQuestion = question.copy(answers = question.answers.filter(_ != answerId))
+    val updatedQuestion = question.copy(answers = question.answers.filter(_._id != answerId))
     val survey = getSurveyById(surveyId) openOrThrowException "Not Valid Survey"
     updateSurvey(
       "questions._id" -> ("$oid" -> questionId.toString),

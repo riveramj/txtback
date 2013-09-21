@@ -19,13 +19,14 @@ class EditQuestionSnippet {
   var newAnswers: Map[ObjectId, String] = Map()
   var deleteAnswers: List[ObjectId] = Nil
   val surveyId = surveyIdRV.is openOrThrowException "Not Valid Survey"
+  val questionId = editQuestionIdRV.is openOrThrowException "Bad Question Id"
 
   def changeAnswer(newAnswer: String, answerId: ObjectId) = {
 //    AnswerService.changeAnswer(newAnswer, answerId)
   }
 
   def deleteAnswer(answerId: ObjectId, surveyId: ObjectId) = {
-    SurveyService.deleteAnswerById(answerId, surveyId)
+    SurveyService.deleteAnswerById(answerId, surveyId, questionId)
   }
 
   def createAnswer(newAnswer: String, questionId: ObjectId) = {
@@ -56,8 +57,6 @@ class EditQuestionSnippet {
   }
 
   def editQuestion() = {
-
-    var editId: ObjectId = ObjectId.get
     var editQuestion: Box[Question] = Empty
     var answers: Map[ObjectId, String] = Map()
 
@@ -84,9 +83,8 @@ class EditQuestionSnippet {
       }
 
       def reloadEditQuestion() = {
-        editId = editQuestionIdRV.is openOrThrowException "Not valid id"
-        editQuestion = QuestionService.getQuestionById(editId)
-        answers = QuestionService.findAnswersByQuestionId(editId).flatMap{ answer =>
+        editQuestion = QuestionService.getQuestionById(questionId)
+        answers = QuestionService.findAnswersByQuestionId(questionId).flatMap{ answer =>
           List(answer._id -> answer.answer)
         }.toMap
 
