@@ -48,9 +48,9 @@ object QuestionService extends Loggable {
     Survey.findAll.flatMap(_.questions)
   }
 
-//  def nextQuestionNumber(surveyId: Long) = {
-//    QuestionService.findAllSurveyQuestions(surveyId).length + 1
-//  }
+  def nextQuestionNumber(surveyId: ObjectId) = {
+    SurveyService.getAllQuestionsBySurveyId(surveyId).length + 1
+  }
 
 //  def findQuestionByNumber(questionNumber: Long) = {
 //    Question.find(By(Question.questionNumber,questionNumber))

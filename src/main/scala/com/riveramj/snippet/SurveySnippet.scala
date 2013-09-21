@@ -7,7 +7,7 @@ import net.liftweb.sitemap._
 import net.liftweb.common._
 import net.liftweb.sitemap.Loc.TemplateBox
 import net.liftweb.http._
-import com.riveramj.model.Question
+import com.riveramj.model.{QuestionType, Question}
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
 import net.liftweb.http.js.JsCmds.Noop
 import org.bson.types.ObjectId
@@ -46,9 +46,9 @@ class SurveySnippet extends Loggable {
     }
   }
 
-  def createQuestion(surveyId: ObjectId, questionType: String): JsCmd = {
+  def createQuestion(surveyId: ObjectId, questionType: QuestionType): JsCmd = {
     if(newQuestion.nonEmpty) {
-//      QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, questionType, surveyId)
+      QuestionService.createQuestion(QuestionService.nextQuestionNumber(surveyId), newQuestion, questionType, surveyId)
       S.notice("survey-question-created", "Question Created")
     }
     else
@@ -66,13 +66,13 @@ class SurveySnippet extends Loggable {
         editQuestionIdRV.is
         Noop
       }) &
-//    ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => {
-//      JsCmds.Confirm("Are you sure you want to delete the question?", {
-//        SHtml.ajaxInvoke(() => {
-//          deleteQuestion(questionId)
-//        }).cmd
-//      })
-//    }) &
+    ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => {
+      JsCmds.Confirm("Are you sure you want to delete the question?", {
+        SHtml.ajaxInvoke(() => {
+          deleteQuestion(questionId)
+        }).cmd
+      })
+    }) &
     ".answer" #> answers.map{ answer =>
       ".answer-number *" #> answer.answerNumber &
       ".answer-text *" #> answer.answer &
