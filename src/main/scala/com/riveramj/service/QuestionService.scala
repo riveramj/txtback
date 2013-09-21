@@ -42,6 +42,7 @@ object QuestionService extends Loggable {
       "questions._id" -> ("$oid" -> questionId.toString),
       survey.copy(questions = filteredQuestions)
     )
+    getQuestionById(questionId)
   }
 
   def getAllQuestions: List[Question] = {

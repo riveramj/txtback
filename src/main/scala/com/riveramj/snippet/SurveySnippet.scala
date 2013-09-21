@@ -39,7 +39,7 @@ class SurveySnippet extends Loggable {
 
   def deleteQuestion(questionId: ObjectId):JsCmd = {
     QuestionService.deleteQuestionById(questionId) match {
-      case Full(true) =>
+      case Empty =>
         JsCmds.Run("$('#" + questionId + "').parent().remove()")
       case _ => logger.error("couldn't delete survey with id %s" format questionId)
         //TODO: provide feedback on delete action
@@ -101,9 +101,9 @@ class SurveySnippet extends Loggable {
     "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
     "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _) &
-    "#chose-one" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "choseOne")) &
-    "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "trueFalse")) &
-    "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "ratingScale")) &
-    "#free-response" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, "freeResponse"))
+    "#chose-one" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.choseOne)) &
+    "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.trueFalse)) &
+    "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.ratingScale)) &
+    "#free-response" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.freeResponse))
   }
 }
