@@ -27,7 +27,7 @@ object AnswerService extends Loggable {
     val updatedSurvey = survey.map(_.copy(questions =
       existingQuestions.filter(_._id != questionId) :+ updatedQuestion.openOrThrowException("Something went horribly wrong"))) openOrThrowException "Something went boom"
     updatedQuestion.map { newQ =>
-      Survey.update("questions._id" -> ("$oid" -> questionId.toString), updatedSurvey)
+      SurveyService.updateSurvey("questions._id" -> ("$oid" -> questionId.toString), updatedSurvey)
     }
     getAnswerById(answer._id)
   }

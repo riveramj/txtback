@@ -6,6 +6,7 @@ import net.liftweb.util.Helpers._
 import com.riveramj.service.QuestionService.questionToSend
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
+import net.liftweb.json.JsonAST.JObject
 
 object SurveyService extends Loggable {
 
@@ -23,6 +24,10 @@ object SurveyService extends Loggable {
   def saveSurvey(survey:Survey): Box[Survey] = {
     survey.save
     Survey.find(survey._id)
+  }
+
+  def updateSurvey(query: JObject, survey: Survey) = {
+    Survey.update(query, survey)
   }
 
   def getSurveyById(surveyId: ObjectId): Box[Survey] = {
