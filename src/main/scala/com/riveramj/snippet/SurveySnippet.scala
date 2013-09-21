@@ -37,14 +37,14 @@ class SurveySnippet extends Loggable {
   surveyIdRV(Full(surveyId))
   surveyIdRV.is
 
-//  def deleteQuestion(questionId: ObjectId):JsCmd = {
-//    QuestionService.deleteQuestionById(questionId) match {
-//      case Full(true) =>
-//        JsCmds.Run("$('#" + questionId + "').parent().remove()")
-//      case _ => logger.error("couldn't delete survey with id %s" format questionId)
-//        //TODO: provide feedback on delete action
-//    }
-//  }
+  def deleteQuestion(questionId: ObjectId):JsCmd = {
+    QuestionService.deleteQuestionById(questionId) match {
+      case Full(true) =>
+        JsCmds.Run("$('#" + questionId + "').parent().remove()")
+      case _ => logger.error("couldn't delete survey with id %s" format questionId)
+        //TODO: provide feedback on delete action
+    }
+  }
 
   def createQuestion(surveyId: ObjectId, questionType: String): JsCmd = {
     if(newQuestion.nonEmpty) {

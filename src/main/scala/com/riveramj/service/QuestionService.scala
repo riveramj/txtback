@@ -34,9 +34,15 @@ object QuestionService extends Loggable {
     question.headOption
   }
 
-//  def deleteQuestionById(questionId: ObjectId) = {
-//    getQuestionById(questionId).map
-//  }
+  def deleteQuestionById(questionId: ObjectId) = {
+    getQuestionById(questionId)
+    val survey = SurveyService.getSurveyByQuestionId(questionId) openOrThrowException "No Valid Survey"
+    val filteredQuestions = survey.questions.filter(_._id != questionId)
+    SurveyService.updateSurvey(
+      "questions._id" -> ("$oid" -> questionId.toString),
+      survey.copy(questions = filteredQuestions)
+    )
+  }
 
   def getAllQuestions: List[Question] = {
     Survey.findAll.flatMap(_.questions)
