@@ -19,16 +19,14 @@ object AnswerService extends Loggable {
   }
 
   def saveAnswer(answer: Answer, questionId: ObjectId) = { //TODO: This is a cluster
-    val question = QuestionService.getQuestionById(questionId)
-    val existingAnswers = question.map(_.answers) openOr Nil
-    val updatedQuestion = question.map(_.copy(answers = existingAnswers :+ answer))
-    val survey = SurveyService.getSurveyByQuestionId(question.map(_._id) openOrThrowException "no questionId")
-    val existingQuestions = survey.map(_.questions) openOr Nil
-    val updatedSurvey = survey.map(_.copy(questions =
-      existingQuestions.filter(_._id != questionId) :+ updatedQuestion.openOrThrowException("Something went horribly wrong"))) openOrThrowException "Something went boom"
-    updatedQuestion.map { newQ =>
-      SurveyService.updateSurvey("questions._id" -> ("$oid" -> questionId.toString), updatedSurvey)
-    }
+    val question = QuestionService.getQuestionById(questionId) openOrThrowException "Bad Question"
+    val updatedQuestion = question.copy(answers = question.answers :+ answer)
+    val survey = SurveyService.getSurveyByQuestionId(question._id) openOrThrowException "no questionId"
+    val updatedSurvey = survey.copy(questions =
+        survey.questions.filter(_._id != questionId) :+ updatedQuestion
+    )
+    SurveyService.updateSurvey("questions._id" -> ("$oid" -> questionId.toString), updatedSurvey)
+
     getAnswerById(answer._id)
   }
 

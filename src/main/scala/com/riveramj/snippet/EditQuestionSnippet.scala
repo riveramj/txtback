@@ -5,7 +5,7 @@ import net.liftweb.util.Helpers._
 import net.liftweb.http.SHtml
 import com.riveramj.model.{QuestionType, Question}
 import com.riveramj.snippet.SurveySnippet._
-import com.riveramj.service.{AnswerService, QuestionService}
+import com.riveramj.service.{SurveyService, AnswerService, QuestionService}
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
 import net.liftweb.util.ClearNodes
 import org.bson.types.ObjectId
@@ -24,13 +24,13 @@ class EditQuestionSnippet {
 //    AnswerService.changeAnswer(newAnswer, answerId)
   }
 
-  def deleteAnswer(answerId: ObjectId) = {
-//    AnswerService.deleteAnswerById(answerId)
+  def deleteAnswer(answerId: ObjectId, surveyId: ObjectId) = {
+    SurveyService.deleteAnswerById(answerId, surveyId)
   }
 
   def createAnswer(newAnswer: String, questionId: ObjectId) = {
     val nextAnswerNumber = AnswerService.findNextAnswerNumber(questionId)
-//    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
+    AnswerService.createAnswer(nextAnswerNumber, newAnswer, questionId)
   }
 
   def removeAnswer(answerId: ObjectId)(): JsCmd = {
@@ -46,7 +46,7 @@ class EditQuestionSnippet {
     newAnswers.foreach {
       case (_, newAnswer) => question.map(q => createAnswer(newAnswer, q._id))
     }
-    deleteAnswers.foreach(deleteAnswer(_))
+    deleteAnswers.foreach(deleteAnswer(_, surveyId))
     QuestionService.saveQuestion(question.openOrThrowException("Couldn't Save Question"), surveyId) //TODO: dont throw nasty exception
 
     JE.JsRaw(
