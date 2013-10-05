@@ -22,9 +22,9 @@ object QuestionService extends Loggable {
   }
 
   def saveQuestion(question: Question, surveyId: ObjectId): Box[Question] = {
-    val survey = SurveyService.getSurveyById(surveyId)
-    val existingQuestions = survey.map(_.questions) openOr Nil
-    survey.map(_.copy(questions = existingQuestions :+ question).save)
+    val survey = SurveyService.getSurveyById(surveyId) openOrThrowException "Bad Survey"
+    val updatedSurvey = survey.copy(questions = survey.questions.filter(_._id != question._id):+ question)
+    SurveyService.updateSurvey(updatedSurvey)
     getQuestionById(question._id)
   }
 

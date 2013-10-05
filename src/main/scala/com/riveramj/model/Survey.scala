@@ -50,16 +50,6 @@ object Survey extends MongoDocumentMeta[Survey] {
     val question  = survey.map(_.questions.filter(_._id == questionId)) getOrElse Nil
     question.headOption
   }
-
-  def saveQuestion(question: Question, surveyId: ObjectId): Box[Question] = {
-    val survey = SurveyService.getSurveyById(surveyId)
-    val existingQuestions = survey.map(_.questions) openOr Nil
-    survey.map { actualSurvey =>
-      val updatedSurvey = actualSurvey.copy(questions = existingQuestions :+ question)
-      updatedSurvey.save
-    }
-    getQuestionById(question._id)
-  }
 }
 
 class QuestionTypeSerializer extends Serializer[QuestionType] {

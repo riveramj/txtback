@@ -57,7 +57,7 @@ object SurveyorService extends Loggable {
   }
 
   def getUserByEmail(email: String): Box[Surveyor] = {
-    Surveyor.find("name" -> email)
+    Surveyor.find("email" -> email)
   }
 
   def getAllUsers = {

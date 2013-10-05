@@ -27,7 +27,16 @@ object SurveyService extends Loggable {
   }
 
   def updateSurvey(query: JObject, survey: Survey) = {
+    println(survey + " one to be inserted")
+    println(Survey.find("_id" -> ("$oid" -> survey._id.toString)) + " +_+_+_+_+_+_ in update survey")
+
     Survey.update(query, survey)
+  }
+
+  def updateSurvey(survey: Survey) = {
+    println(survey + " one to be inserted")
+    println(Survey.find("_id" -> ("$oid" -> survey._id.toString)) + " +_+_+_+_+_+_ in update survey")
+    Survey.update("_id" -> ("$oid" -> survey._id.toString), survey)
   }
 
   def getSurveyById(surveyId: ObjectId): Box[Survey] = {
@@ -45,7 +54,7 @@ object SurveyService extends Loggable {
   }
 
   def getAllSurveysByCompanyId(companyId: ObjectId): List[Survey] = {
-    Survey.findAll("_id" -> ("$oid" -> companyId.toString))
+    Survey.findAll("companyId" -> ("$oid" -> companyId.toString))
   }
 
   def getAllSurveys = {
