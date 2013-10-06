@@ -27,12 +27,10 @@ object SurveyService extends Loggable {
   }
 
   def updateSurvey(query: JObject, survey: Survey) = {
-    println(survey + " one to be inserted111111")
     Survey.update(query, survey)
   }
 
   def updateSurvey(survey: Survey) = {
-    println(survey + " one to be inserted222222")
     Survey.update("_id" -> ("$oid" -> survey._id.toString), survey)
   }
 
