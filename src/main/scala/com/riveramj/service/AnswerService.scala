@@ -19,7 +19,6 @@ object AnswerService extends Loggable {
   }
 
   def saveAnswer(answer: Answer, questionId: ObjectId) = { //TODO: This is a cluster
-    println(" question id is: " + questionId)
     val question = QuestionService.getQuestionById(questionId) openOrThrowException "Bad Question"
     val updatedQuestion = question.copy(answers = question.answers :+ answer)
     val survey = SurveyService.getSurveyByQuestionId(question._id) openOrThrowException "no questionId"
