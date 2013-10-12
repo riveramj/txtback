@@ -57,7 +57,7 @@ object SurveyService extends Loggable {
   }
 
   def getAllQuestionsBySurveyId(surveyId: ObjectId): Seq[Question] = {
-    getSurveyById(surveyId).map(_.questions) openOr Nil
+    getSurveyById(surveyId).map(_.questions.sortBy(_.questionNumber)) openOr Nil
   }
 
   def getFirstQuestionBySurveyId(surveyId: ObjectId): Box[Question] = {
