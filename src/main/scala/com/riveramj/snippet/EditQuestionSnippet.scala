@@ -20,24 +20,6 @@ class EditQuestionSnippet {
     var currentQuestion: Box[Question] = Empty
     var currentAnswers: Seq[Answer] = Nil
 
-    def removeAnswer(answerId: ObjectId)(): JsCmd = {
-
-      currentQuestion = currentQuestion.map { question =>
-        val removedAnswerNumber = question.answers.filter(_._id == answerId).map(_.answerNumber).head
-        val updatedAnswers = question.answers.filter(_._id != answerId)
-        val correctedAnswerNumbers = updatedAnswers.map { answer =>
-          if(answer.answerNumber > removedAnswerNumber)
-            answer.copy(answerNumber = answer.answerNumber - 1)
-          else
-            answer.copy(answerNumber = answer.answerNumber)
-        }
-
-        question.copy(answers = correctedAnswerNumbers)
-      }
-
-      JsCmds.Run("$('#" + answerId + "e').parent().remove()")
-    }
-
     def updateAnswer(newAnswer: String, answerId: ObjectId) = {
       currentQuestion = currentQuestion.map { question =>
 
@@ -79,6 +61,24 @@ class EditQuestionSnippet {
         renderer.setHtml()
       }
 
+      def removeAnswer(answerId: ObjectId)(): JsCmd = {
+        currentQuestion = currentQuestion.map { question =>
+          val removedAnswerNumber = question.answers.filter(_._id == answerId).map(_.answerNumber).head
+          val updatedAnswers = question.answers.filter(_._id != answerId)
+          val correctedAnswerNumbers = updatedAnswers.map { answer =>
+            if(answer.answerNumber > removedAnswerNumber)
+              answer.copy(answerNumber = answer.answerNumber - 1)
+            else
+              answer.copy(answerNumber = answer.answerNumber)
+          }
+
+          question.copy(answers = correctedAnswerNumbers)
+        }
+        val q = currentQuestion openOrThrowException "Bad Question"
+        currentAnswers = q.answers
+        renderer.setHtml()
+      }
+
       def reloadEditQuestion() = {
         editId = editQuestionIdRV.is openOrThrowException "Bad Question"
         currentQuestion = QuestionService.getQuestionById(editId)
@@ -91,7 +91,8 @@ class EditQuestionSnippet {
           case Full(QuestionType.choseOne) => {
             ".answer" #> currentAnswers.map {
               answer =>
-                ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answer._id)) &
+                ".delete-answer" #> SHtml.ajaxSubmit("-", removeAnswer(answer._id)) &
+                ".question-number *" #> answer.answerNumber &
                 ".answer-text" #> SHtml.text(answer.answer, updateAnswer(_, answer._id), "id" -> (answer._id + "e"))
             } &            
             "#add-answer" #> SHtml.ajaxSubmit("Add Answer", addNewAnswer())
