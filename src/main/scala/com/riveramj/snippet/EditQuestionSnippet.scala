@@ -23,8 +23,16 @@ class EditQuestionSnippet {
     def removeAnswer(answerId: ObjectId)(): JsCmd = {
 
       currentQuestion = currentQuestion.map { question =>
+        val removedAnswerNumber = question.answers.filter(_._id == answerId).map(_.answerNumber).head
         val updatedAnswers = question.answers.filter(_._id != answerId)
-        question.copy(answers = updatedAnswers)
+        val correctedAnswerNumbers = updatedAnswers.map { answer =>
+          if(answer.answerNumber > removedAnswerNumber)
+            answer.copy(answerNumber = answer.answerNumber - 1)
+          else
+            answer.copy(answerNumber = answer.answerNumber)
+        }
+
+        question.copy(answers = correctedAnswerNumbers)
       }
 
       JsCmds.Run("$('#" + answerId + "e').parent().remove()")
@@ -59,7 +67,11 @@ class EditQuestionSnippet {
           question.copy(answers =
             question.answers :+ Answer(
               _id = ObjectId.get ,
-              answerNumber = AnswerService.findNextAnswerNumber(editId),
+              answerNumber =   //TODO: This needs to be cleaned up
+                if(currentAnswers.nonEmpty)
+                  currentAnswers.last.answerNumber + 1
+                else
+                  1,
               answer = ""))
         }
         val q = currentQuestion openOrThrowException "Bad Question"
