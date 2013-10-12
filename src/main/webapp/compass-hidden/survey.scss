@@ -1,6 +1,6 @@
 @import "common";
 
-.edit-question, .delete-question, .delete-answer, .delete-new-answer, .add-answer {
+.edit-question, .delete-question, .delete-answer, .add-answer {
   @extend %action-icon;
 }
 
@@ -24,7 +24,7 @@
   width: 90%;
 }
 
-.delete-answer, .delete-new-answer {
+.delete-answer {
   width: 12px;
   color: red;
 
