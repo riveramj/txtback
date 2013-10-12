@@ -18,7 +18,7 @@ class EditQuestionSnippet {
   def editQuestion() = {
     var editId: ObjectId = ObjectId.get
     var currentQuestion: Box[Question] = Empty
-    var currentAnswers: Map[ObjectId, String] = Map()
+    var currentAnswers: Seq[Answer] = Nil
 
     def removeAnswer(answerId: ObjectId)(): JsCmd = {
 
@@ -63,28 +63,24 @@ class EditQuestionSnippet {
               answer = ""))
         }
         val q = currentQuestion openOrThrowException "Bad Question"
-        currentAnswers = q.answers.flatMap(answer => Map(answer._id -> answer.answer)).toMap
+        currentAnswers = q.answers
         renderer.setHtml()
       }
 
       def reloadEditQuestion() = {
         editId = editQuestionIdRV.is openOrThrowException "Bad Question"
         currentQuestion = QuestionService.getQuestionById(editId)
-        currentAnswers = QuestionService.findAnswersByQuestionId(editId).flatMap { answer =>
-          Map(answer._id -> answer.answer)
-        }.toMap
-
+        currentAnswers = QuestionService.findAnswersByQuestionId(editId)
         renderer.setHtml()
       }
 
       def questionAnswers() = {
-
         currentQuestion.map(_.questionType) match {
           case Full(QuestionType.choseOne) => {
             ".answer" #> currentAnswers.map {
-              case (answerId, answer) =>
-                ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answerId)) &
-                ".answer-text" #> SHtml.text(answer, updateAnswer(_, answerId), "id" -> (answerId + "e"))
+              answer =>
+                ".delete-answer [onclick]" #> SHtml.ajaxInvoke(removeAnswer(answer._id)) &
+                ".answer-text" #> SHtml.text(answer.answer, updateAnswer(_, answer._id), "id" -> (answer._id + "e"))
             } &            
             "#add-answer" #> SHtml.ajaxSubmit("Add Answer", addNewAnswer())
           }
