@@ -71,7 +71,7 @@ object QuestionService extends Loggable {
     }
   }
 
-  def findAnswersByQuestionId(questionId: ObjectId): List[Answer] = {
+  def findAnswersByQuestionId(questionId: ObjectId): Seq[Answer] = {
     getQuestionById(questionId) map(_.answers) getOrElse Nil
   }
 }

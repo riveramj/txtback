@@ -21,7 +21,7 @@ case class Question(
   question: String,
   questionType: QuestionType,
   questionNumber: Int,
-  answers: List[Answer]
+  answers: Seq[Answer]
 )
 
 case class Answer(
@@ -34,7 +34,7 @@ case class Survey(
   _id: ObjectId,
   name: String,
   companyId: ObjectId,
-  questions: List[Question]
+  questions: Seq[Question]
 
 )
   extends MongoDocument[Survey] {

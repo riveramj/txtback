@@ -56,7 +56,7 @@ object SurveyService extends Loggable {
     Survey.findAll
   }
 
-  def getAllQuestionsBySurveyId(surveyId: ObjectId): List[Question] = {
+  def getAllQuestionsBySurveyId(surveyId: ObjectId): Seq[Question] = {
     getSurveyById(surveyId).map(_.questions) openOr Nil
   }
 
