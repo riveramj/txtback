@@ -26,7 +26,7 @@ case class SurveyInstance(
   status: SurveyInstanceStatus,
   currentQuestionId: Option[ObjectId] = None,
   nextQuestionId: Option[ObjectId] = None,
-  responses: List[QuestionAnswers]
+  responses: Seq[QuestionAnswers]
 )
   extends MongoDocument[SurveyInstance] {
   def meta = SurveyInstance
