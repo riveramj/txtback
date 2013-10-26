@@ -66,7 +66,9 @@ object SurveyService extends Loggable {
   }
 
   def startSurvey(surveyId: ObjectId, toPhoneNumber: String) {
+    println("in survey")
     val firstQuestion = getFirstQuestionBySurveyId(surveyId)
+    println("first question " + firstQuestion)
     SurveyInstanceService.createSurveyInstance(
       toPhoneNumber,
       surveyId,
