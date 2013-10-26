@@ -18,6 +18,7 @@ object SurveyInstanceService extends Loggable {
       surveyId = surveyId,
       responderPhone = responderPhone,
       status = SurveyInstanceStatus.Active,
+      currentQuestionId = Some(questionId),
       responses = Nil
     )
 
@@ -46,8 +47,11 @@ object SurveyInstanceService extends Loggable {
   }
 
   def findOpenSurveyInstancesByPhone(phone: String): List[SurveyInstance] = {
-    implicit val formats = net.liftweb.json.DefaultFormats //TODO: da fuq?
-    SurveyInstance.findAll(("responderPhone" -> phone) ~ ("status" -> Extraction.decompose(SurveyInstanceStatus.Active)))
+    // TODO: the below should probably work. for now this will be a work around
+    // implicit val formats = net.liftweb.json.DefaultFormats 
+//     SurveyInstance.findAll(("responderPhone" -> phone) ~ ("status" -> Extraction.decompose(SurveyInstanceStatus.Active)))
+   val surveys = SurveyInstance.findAll("responderPhone" -> phone)
+   surveys.filter(_.status == SurveyInstanceStatus.Active)
   }
 
   def getAllSurveyInstances = {
@@ -57,10 +61,11 @@ object SurveyInstanceService extends Loggable {
   def sendNextQuestion(surveyInstanceId: ObjectId) {
     val surveyInstance = getSurveyInstanceById(surveyInstanceId)
     val nextQuestionId = surveyInstance flatMap(_.nextQuestionId)
+    println(nextQuestionId + " fooooooo")
     val nextQuestion = nextQuestionId flatMap { questionId =>
       QuestionService.getQuestionById(questionId)
     }
-
+    println(nextQuestion + " fooooooo")
     val messageBody = nextQuestion match {
       case Empty =>
         surveyInstance map(SurveyInstanceService.finishSurveyInstance(_))

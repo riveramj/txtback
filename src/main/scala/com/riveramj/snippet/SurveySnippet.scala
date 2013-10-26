@@ -85,7 +85,7 @@ class SurveySnippet extends Loggable {
     S.notice("send-survey-notice", "Survey Sent") //TODO: validate it actually sent
   }
 
-  def render() = {
+  def renderQuestions() = {
     val survey = SurveyService.getSurveyById(surveyId)
     val questions = SurveyService.getAllQuestionsBySurveyId(surveyId)
 
@@ -96,11 +96,17 @@ class SurveySnippet extends Loggable {
     "#survey-name *" #> survey.map(_.name) &
     "#view-responses [href]" #> ("/survey/" + surveyId + "/responses") &
     "#question-list" #> questions.map{ question =>
-        questionAndAnswers(question)
-      } &
-    "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
+      questionAndAnswers(question)
+    } 
+  }
+
+  def sendSurvey() = {
     "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
-    "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _) &
+    "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _)
+  }
+
+  def createNewQuestion() = {
+    "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
     "#chose-one" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.choseOne)) &
     "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.trueFalse)) &
     "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.ratingScale)) &
