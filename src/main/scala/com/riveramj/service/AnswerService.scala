@@ -68,12 +68,9 @@ object AnswerService extends Loggable {
   }
 
   def verifyAnswer(answerChoice: String, questionId: ObjectId) = {
-    println("answerChoice = " + answerChoice )
-    println("questionId = " + questionId)
     val question = QuestionService.getQuestionById(questionId)
     question.map(_.questionType) match {
       case Full(QuestionType.choseOne) => {
-        println("got here1")
         AnswerService.findAnswerIdByResponse(answerChoice, questionId) match {
           case Full(possibleAnswer) =>
             println("got here 1a")

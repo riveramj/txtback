@@ -27,7 +27,8 @@ case class Question(
 case class Answer(
   _id: ObjectId,
   answerNumber: Int,
-  answer: String
+  answer: String,
+  nextQuestionId: Option[ObjectId] = None
 )
 
 case class Survey(

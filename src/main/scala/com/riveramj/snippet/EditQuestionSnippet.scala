@@ -46,14 +46,16 @@ class EditQuestionSnippet {
 
       def addNewAnswer()() = {
         currentQuestion = currentQuestion.map { question =>
+          
+          val nextAnswerNumber = if(currentAnswers.nonEmpty)
+            currentAnswers.last.answerNumber + 1
+          else
+            1
+
           question.copy(answers =
             question.answers :+ Answer(
-              _id = ObjectId.get ,
-              answerNumber =   //TODO: This needs to be cleaned up
-                if(currentAnswers.nonEmpty)
-                  currentAnswers.last.answerNumber + 1
-                else
-                  1,
+              _id = ObjectId.get,
+              answerNumber = nextAnswerNumber,  //TODO: This needs to be cleaned up
               answer = ""))
         }
         val q = currentQuestion openOrThrowException "Bad Question"
