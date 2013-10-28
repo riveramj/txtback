@@ -1,5 +1,4 @@
 import com.typesafe.startscript.StartScriptPlugin
-import com.openstudy.sbt.ResourceManagementPlugin._
 
 seq(StartScriptPlugin.startScriptForClassesSettings: _*)
 
