@@ -19,18 +19,12 @@ object NewMessageListener extends RestHelper with Loggable {
       val surveyInstances = SurveyInstanceService.findOpenSurveyInstancesByPhone(fromPhone)
       surveyInstances match {
         case instances if instances.isEmpty =>
-          println("we got here1")
         case instances =>
-          println("we got here2")
           val surveyInstance = instances.head
-          println(surveyInstance + "oooooooooooo") 
-          println(surveyInstance.currentQuestionId + " ========")
           surveyInstance.currentQuestionId map(AnswerService.verifyAnswer(response, _) match {
             case "-1" =>
-              println("we got here11")
               SurveyInstanceService.answerNotFound(response, surveyInstance.currentQuestionId.get, surveyInstance._id)
             case answer =>
-              println("we got here22")
               SurveyInstanceService.sendNextQuestion(surveyInstance._id)
           })
       }
