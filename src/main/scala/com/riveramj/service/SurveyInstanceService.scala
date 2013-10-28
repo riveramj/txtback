@@ -1,7 +1,7 @@
 package com.riveramj.service
 
 import net.liftweb.common._
-import com.riveramj.model.{SurveyInstanceStatus, SurveyInstance}
+import com.riveramj.model._
 import net.liftweb.mapper.By
 import net.liftweb.util.Helpers._
 import com.riveramj.service.QuestionService.questionToSend
@@ -43,7 +43,7 @@ object SurveyInstanceService extends Loggable {
   }
 
   def findAllSurveyInstancesBySurveyId(surveyId: ObjectId): List[SurveyInstance] = {
-    SurveyInstance.findAll("surveyId" -> ("$oid" -> ("$oid" -> surveyId.toString)))
+    SurveyInstance.findAll("surveyId" -> ("$oid" -> surveyId.toString))
   }
 
   def findOpenSurveyInstancesByPhone(phone: String): List[SurveyInstance] = {
@@ -58,29 +58,35 @@ object SurveyInstanceService extends Loggable {
     SurveyInstance.findAll
   }
 
-  def sendNextQuestion(surveyInstanceId: ObjectId) {
-    val surveyInstance = getSurveyInstanceById(surveyInstanceId)
-    val nextQuestionId = surveyInstance flatMap(_.nextQuestionId)
-    println(nextQuestionId + " fooooooo")
-    val nextQuestion = nextQuestionId flatMap { questionId =>
-      QuestionService.getQuestionById(questionId)
+  def findNextQuestion(currentQuestionId: ObjectId, surveyId: ObjectId): Box[Question] = {
+    val currentQuestion = QuestionService.getQuestionById(currentQuestionId)
+    currentQuestion.flatMap { question =>
+      val questionNumber = question.questionNumber + 1
+      val survey = SurveyService.getAllQuestionsBySurveyId(surveyId)     
+      survey.filter{_.questionNumber == questionNumber}.headOption
     }
+  }
+
+  def sendNextQuestion(surveyInstanceId: ObjectId) {
+    val surveyInstance = getSurveyInstanceById(surveyInstanceId) openOrThrowException "bad id"
+    val nextQuestion = surveyInstance.currentQuestionId.flatMap { id => 
+     findNextQuestion(id, surveyInstance.surveyId)
+   } 
+    
     println(nextQuestion + " fooooooo")
     val messageBody = nextQuestion match {
-      case Empty =>
-        surveyInstance map(SurveyInstanceService.finishSurveyInstance(_))
+      case None =>
+        SurveyInstanceService.finishSurveyInstance(surveyInstance)
         "Thank you for completing our survey. " +
           "To create your own text message survy, visit txtbck.co"
-      case Full(question) =>
+      case Some(question) =>
         questionToSend(Full(question))
     }
     TwilioService.sendMessage(
-      toPhoneNumber = surveyInstance.map(_.responderPhone) openOr "",
+      toPhoneNumber = surveyInstance.responderPhone,
       message = messageBody
     )
-    surveyInstance.map{ instance =>
-      saveSurveyInstance(instance.copy()) //todo: Update next question id
-    }
+    saveSurveyInstance(surveyInstance) //todo: Update next question id
   }
 
   def answerNotFound(response: String, questionId: ObjectId, surveyInstanceId: ObjectId) = {
