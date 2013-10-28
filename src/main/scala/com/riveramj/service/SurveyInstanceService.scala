@@ -12,13 +12,13 @@ import net.liftweb.json.Extraction
 
 object SurveyInstanceService extends Loggable {
 
-  def createSurveyInstance(responderPhone: String, surveyId: ObjectId, questionId: ObjectId) = {
+  def createSurveyInstance(responderPhone: String, surveyId: ObjectId, currentQuestionId: ObjectId) = {
     val surveyInstance = SurveyInstance(
       _id = ObjectId.get(),
       surveyId = surveyId,
       responderPhone = responderPhone,
       status = SurveyInstanceStatus.Active,
-      currentQuestionId = Some(questionId),
+      currentQuestionId = Some(currentQuestionId),
       responses = Nil
     )
 
@@ -58,22 +58,11 @@ object SurveyInstanceService extends Loggable {
     SurveyInstance.findAll
   }
 
-  def findNextQuestion(currentQuestionId: ObjectId, surveyId: ObjectId): Box[Question] = {
-    val currentQuestion = QuestionService.getQuestionById(currentQuestionId)
-    currentQuestion.flatMap { question =>
-      val questionNumber = question.questionNumber + 1
-      val survey = SurveyService.getAllQuestionsBySurveyId(surveyId)     
-      survey.filter{_.questionNumber == questionNumber}.headOption
-    }
-  }
-
   def sendNextQuestion(surveyInstanceId: ObjectId) {
     val surveyInstance = getSurveyInstanceById(surveyInstanceId) openOrThrowException "bad id"
-    val nextQuestion = surveyInstance.currentQuestionId.flatMap { id => 
-     findNextQuestion(id, surveyInstance.surveyId)
-   } 
-    
-    println(nextQuestion + " fooooooo")
+    println(surveyInstance + " fooooo")
+    val nextQuestion = surveyInstance.nextQuestionId.flatMap(QuestionService.getQuestionById(_))
+    println(nextQuestion + " barrrr")
     val messageBody = nextQuestion match {
       case None =>
         SurveyInstanceService.finishSurveyInstance(surveyInstance)
@@ -82,11 +71,13 @@ object SurveyInstanceService extends Loggable {
       case Some(question) =>
         questionToSend(Full(question))
     }
+
     TwilioService.sendMessage(
       toPhoneNumber = surveyInstance.responderPhone,
       message = messageBody
     )
-    saveSurveyInstance(surveyInstance) //todo: Update next question id
+    val updatedInstance = QuestionService.updateCurrentNextQuestionId(surveyInstance)
+    saveSurveyInstance(updatedInstance) //todo: Update next question id
   }
 
   def answerNotFound(response: String, questionId: ObjectId, surveyInstanceId: ObjectId) = {
@@ -103,5 +94,9 @@ object SurveyInstanceService extends Loggable {
         )
       }
     }
+  }
+
+  def updateSurveyInstance(surveyInstance: SurveyInstance) = {
+    SurveyInstance.update("_id" -> ("$oid" -> surveyInstance._id.toString), surveyInstance)
   }
 }
