@@ -2,7 +2,7 @@ package com.riveramj.service
 
 import net.liftweb.common._
 import com.riveramj.service.AnswerService._
-import com.riveramj.model.{Answer, Survey, Question, QuestionType}
+import com.riveramj.model._
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
 import com.mongodb.{BasicDBObject, DBObject}
@@ -74,4 +74,30 @@ object QuestionService extends Loggable {
   def findAnswersByQuestionId(questionId: ObjectId): Seq[Answer] = {
     getQuestionById(questionId) map(_.answers.sortBy(_.answerNumber)) getOrElse Nil
   }
+
+  def findNextQuestion(currentQuestionId: ObjectId, surveyId: ObjectId): Box[Question] = {
+    val currentQuestion = QuestionService.getQuestionById(currentQuestionId) openOrThrowException "Bad question"
+    val questionNumber = currentQuestion.questionNumber + 1
+    val survey = SurveyService.getAllQuestionsBySurveyId(surveyId)     
+    println(    survey.filter{_.questionNumber == questionNumber}.headOption + "output2")
+    survey.filter{_.questionNumber == questionNumber}.headOption
+  }
+
+  def updateCurrentNextQuestionId(surveyInstance: SurveyInstance): SurveyInstance = {
+   val surveyId = surveyInstance.surveyId
+   println(surveyId + " surveyId") 
+   val currentQuestionId = surveyInstance.currentQuestionId.get  
+   println(currentQuestionId + " currentquestionId")
+   val nextQuestionId = findNextQuestion(currentQuestionId, surveyId).map(_._id)
+   println(nextQuestionId + " nextQuestionId")
+   println(surveyInstance.copy(
+     currentQuestionId = surveyInstance.nextQuestionId, 
+     nextQuestionId = nextQuestionId
+   ) 
+ + " output")
+   surveyInstance.copy(
+     currentQuestionId = surveyInstance.nextQuestionId, 
+     nextQuestionId = nextQuestionId
+   ) 
+ }
 }

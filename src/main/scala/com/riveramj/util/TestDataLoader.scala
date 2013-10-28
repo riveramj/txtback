@@ -5,7 +5,7 @@ import com.riveramj.service.CompanyService.createCompany
 import com.riveramj.service.SurveyorService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
-import com.riveramj.service.SurveyInstanceService.createSurveyInstance
+import com.riveramj.service.SurveyInstanceService._
 import com.riveramj.service.{AnswerService, SurveyService, QuestionService}
 import com.riveramj.model.QuestionType
 
@@ -121,10 +121,12 @@ object  TestDataLoader extends Loggable {
     val surveyInstance = createSurveyInstance(
       responderPhone = "4044090725",
       surveyId = newSurveyId,
-      questionId = question1Id
+      currentQuestionId = question1Id
     )
 
     val surveyInstanceId = surveyInstance.map(surveyInstance =>
       surveyInstance._id).get
+
+    deleteSurveyInstanceById(surveyInstanceId)
   }
 }

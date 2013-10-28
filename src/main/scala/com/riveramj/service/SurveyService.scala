@@ -66,14 +66,22 @@ object SurveyService extends Loggable {
   }
 
   def startSurvey(surveyId: ObjectId, toPhoneNumber: String) {
-    println("in survey")
-    val firstQuestion = getFirstQuestionBySurveyId(surveyId)
-    println("first question " + firstQuestion)
-    SurveyInstanceService.createSurveyInstance(
+    val firstQuestion = getFirstQuestionBySurveyId(surveyId) openOrThrowException "No first question"
+    val surveyInstance = SurveyInstanceService.createSurveyInstance(
       toPhoneNumber,
       surveyId,
-      firstQuestion.map(_._id) openOrThrowException "No first question")
-    TwilioService.sendMessage(toPhoneNumber,questionToSend(firstQuestion))
+      firstQuestion._id)
+
+    val nextQuestion = QuestionService.findNextQuestion(firstQuestion._id, surveyId)
+    surveyInstance.map{ instance => 
+      val updatedInstance = instance.copy(
+        nextQuestionId = nextQuestion.map(_._id)
+      )
+      SurveyInstanceService.updateSurveyInstance(updatedInstance)
+    } 
+    
+    
+    TwilioService.sendMessage(toPhoneNumber,questionToSend(Full(firstQuestion)))
   }
 
   def getSurveyByQuestionId(questionId: ObjectId): Box[Survey] = {
