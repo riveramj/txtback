@@ -70,17 +70,9 @@ object SurveyService extends Loggable {
     val surveyInstance = SurveyInstanceService.createSurveyInstance(
       toPhoneNumber,
       surveyId,
-      firstQuestion._id)
+      firstQuestion._id
+    )
 
-    val nextQuestion = QuestionService.findNextQuestion(firstQuestion._id, surveyId)
-    surveyInstance.map{ instance => 
-      val updatedInstance = instance.copy(
-        nextQuestionId = nextQuestion.map(_._id)
-      )
-      SurveyInstanceService.updateSurveyInstance(updatedInstance)
-    } 
-    
-    
     TwilioService.sendMessage(toPhoneNumber,questionToSend(Full(firstQuestion)))
   }
 
