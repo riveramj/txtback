@@ -73,10 +73,8 @@ object AnswerService extends Loggable {
       case Full(QuestionType.choseOne) => {
         AnswerService.findAnswerIdByResponse(answerChoice, questionId) match {
           case Full(possibleAnswer) =>
-            println("got here 1a")
             answerChoice
           case Empty =>
-            println("got here 1b")
             "-1"
         }
       }

@@ -4,7 +4,7 @@ import net.liftweb.common._
 import com.riveramj.model._
 import net.liftweb.mapper.By
 import net.liftweb.util.Helpers._
-import com.riveramj.service.QuestionService.questionToSend
+import com.riveramj.service.QuestionService._
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json.Extraction
@@ -60,24 +60,24 @@ object SurveyInstanceService extends Loggable {
 
   def sendNextQuestion(surveyInstanceId: ObjectId) {
     val surveyInstance = getSurveyInstanceById(surveyInstanceId) openOrThrowException "bad id"
-    println(surveyInstance + " fooooo")
-    val nextQuestion = surveyInstance.nextQuestionId.flatMap(QuestionService.getQuestionById(_))
-    println(nextQuestion + " barrrr")
+    
+    val nextQuestion = findNextQuestion(surveyInstance) 
+    
     val messageBody = nextQuestion match {
-      case None =>
+      case Empty =>
         SurveyInstanceService.finishSurveyInstance(surveyInstance)
         "Thank you for completing our survey. " +
           "To create your own text message survy, visit txtbck.co"
-      case Some(question) =>
+      case Full(question) =>
         questionToSend(Full(question))
     }
-
+    
+    updateCurrentQuestion(surveyInstance, nextQuestion)
+    
     TwilioService.sendMessage(
       toPhoneNumber = surveyInstance.responderPhone,
       message = messageBody
     )
-    val updatedInstance = QuestionService.updateCurrentNextQuestionId(surveyInstance)
-    saveSurveyInstance(updatedInstance) //todo: Update next question id
   }
 
   def answerNotFound(response: String, questionId: ObjectId, surveyInstanceId: ObjectId) = {
@@ -94,6 +94,14 @@ object SurveyInstanceService extends Loggable {
         )
       }
     }
+  }
+
+  def updateCurrentQuestion(surveyInstance: SurveyInstance, question: Box[Question]) {
+    val updatedInstance = surveyInstance.copy(
+    currentQuestionId = question.map(_._id)  
+    ) 
+    
+    updateSurveyInstance(updatedInstance)  
   }
 
   def updateSurveyInstance(surveyInstance: SurveyInstance) = {

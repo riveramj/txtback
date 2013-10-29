@@ -75,29 +75,13 @@ object QuestionService extends Loggable {
     getQuestionById(questionId) map(_.answers.sortBy(_.answerNumber)) getOrElse Nil
   }
 
-  def findNextQuestion(currentQuestionId: ObjectId, surveyId: ObjectId): Box[Question] = {
-    val currentQuestion = QuestionService.getQuestionById(currentQuestionId) openOrThrowException "Bad question"
+  def findNextQuestion(surveyInstance:SurveyInstance): Box[Question] = {
+    val currentQuestionId = surveyInstance.currentQuestionId.get
+    val currentQuestion = getQuestionById(currentQuestionId) openOrThrowException "Bad question"
     val questionNumber = currentQuestion.questionNumber + 1
-    val survey = SurveyService.getAllQuestionsBySurveyId(surveyId)     
-    println(    survey.filter{_.questionNumber == questionNumber}.headOption + "output2")
-    survey.filter{_.questionNumber == questionNumber}.headOption
+    val survey = SurveyService.getAllQuestionsBySurveyId(surveyInstance.surveyId)     
+    survey.collect{
+      case question if question.questionNumber == questionNumber => question
+    }.headOption
   }
-
-  def updateCurrentNextQuestionId(surveyInstance: SurveyInstance): SurveyInstance = {
-   val surveyId = surveyInstance.surveyId
-   println(surveyId + " surveyId") 
-   val currentQuestionId = surveyInstance.currentQuestionId.get  
-   println(currentQuestionId + " currentquestionId")
-   val nextQuestionId = findNextQuestion(currentQuestionId, surveyId).map(_._id)
-   println(nextQuestionId + " nextQuestionId")
-   println(surveyInstance.copy(
-     currentQuestionId = surveyInstance.nextQuestionId, 
-     nextQuestionId = nextQuestionId
-   ) 
- + " output")
-   surveyInstance.copy(
-     currentQuestionId = surveyInstance.nextQuestionId, 
-     nextQuestionId = nextQuestionId
-   ) 
- }
 }
