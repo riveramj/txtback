@@ -2,7 +2,7 @@ package com.riveramj.model
 
 import org.bson.types.ObjectId
 import net.liftweb.mongodb._
-import org.joda.time.DateTime
+import java.util.Date
 import net.liftweb.json.{TypeInfo, Formats, Serializer}
 import net.liftweb.json.JsonDSL._
 
@@ -13,10 +13,10 @@ object SurveyInstanceStatus {
   case object Finished extends SurveyInstanceStatus
 }
 
-case class QuestionAnswers(
+case class QuestionAnswer(
   questionId: ObjectId,
   answer: String,
-  responseDate: DateTime
+  responseDate: Date
 )
 
 case class SurveyInstance(
@@ -26,7 +26,7 @@ case class SurveyInstance(
   status: SurveyInstanceStatus,
   currentQuestionId: Option[ObjectId] = None,
   nextQuestionId: Option[ObjectId] = None,
-  responses: Seq[QuestionAnswers]
+  responses: Seq[QuestionAnswer]
 )
   extends MongoDocument[SurveyInstance] {
   def meta = SurveyInstance

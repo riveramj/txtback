@@ -8,6 +8,7 @@ import com.riveramj.service.QuestionService._
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json.Extraction
+import java.util.Date
 
 
 object SurveyInstanceService extends Loggable {
@@ -26,7 +27,9 @@ object SurveyInstanceService extends Loggable {
   }
 
   def finishSurveyInstance(surveyInstance: SurveyInstance) = {
-    saveSurveyInstance(surveyInstance.copy(status = SurveyInstanceStatus.Finished))
+    val finishedInstance = surveyInstance.copy(status = SurveyInstanceStatus.Finished)
+    updateSurveyInstance(finishedInstance)
+    finishedInstance
   }
 
   def saveSurveyInstance(surveyInstance: SurveyInstance): Box[SurveyInstance] = {
@@ -59,13 +62,13 @@ object SurveyInstanceService extends Loggable {
   }
 
   def sendNextQuestion(surveyInstanceId: ObjectId) {
-    val surveyInstance = getSurveyInstanceById(surveyInstanceId) openOrThrowException "bad id"
+    var surveyInstance = getSurveyInstanceById(surveyInstanceId) openOrThrowException "bad id"
     
     val nextQuestion = findNextQuestion(surveyInstance) 
     
     val messageBody = nextQuestion match {
       case Empty =>
-        SurveyInstanceService.finishSurveyInstance(surveyInstance)
+        surveyInstance = SurveyInstanceService.finishSurveyInstance(surveyInstance)
         "Thank you for completing our survey. " +
           "To create your own text message survy, visit txtbck.co"
       case Full(question) =>
@@ -106,5 +109,18 @@ object SurveyInstanceService extends Loggable {
 
   def updateSurveyInstance(surveyInstance: SurveyInstance) = {
     SurveyInstance.update("_id" -> ("$oid" -> surveyInstance._id.toString), surveyInstance)
+  }
+
+  def recordAnswer(surveyInstance: SurveyInstance, response: String) {
+    surveyInstance.currentQuestionId.map { questionId => 
+      val questionAnswer = QuestionAnswer(
+        questionId = questionId,
+        answer = response,
+        responseDate = new Date()
+      )
+      updateSurveyInstance(surveyInstance.copy(
+        responses = surveyInstance.responses :+ questionAnswer
+      ))
+    }
   }
 }

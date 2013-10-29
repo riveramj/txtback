@@ -25,6 +25,7 @@ object NewMessageListener extends RestHelper with Loggable {
             case "-1" =>
               SurveyInstanceService.answerNotFound(response, surveyInstance.currentQuestionId.get, surveyInstance._id)
             case answer =>
+              SurveyInstanceService.recordAnswer(surveyInstance, response)
               SurveyInstanceService.sendNextQuestion(surveyInstance._id)
           })
       }
