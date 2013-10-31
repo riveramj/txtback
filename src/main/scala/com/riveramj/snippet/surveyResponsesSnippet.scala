@@ -64,9 +64,20 @@ class SurveyResponsesSnippet extends Loggable {
   }
 
   def render() = {
+    def findStartedSurveys(surveyId: ObjectId) = {
+      SurveyInstanceService.findAllSurveyInstancesBySurveyId(surveyId).length 
+    }
+
+    def findFinishedSurveys(surveyId: ObjectId) = {
+      SurveyInstanceService.findAllSurveyInstancesBySurveyId(surveyId).filter { instance => instance.status == SurveyInstanceStatus.Finished }.length
+    }
+    
+    
     ClearClearable andThen
     "#survey-name *" #> survey.map(_.name) &
-    "#view-survey [href]" #> ("/survey/" + surveyId)
+    "#view-survey [href]" #> ("/survey/" + surveyId) &
+    "#started-surveys *" #> findStartedSurveys(surveyId) & 
+    "#finished-surveys *" #>  findFinishedSurveys(surveyId)
   }
 
 }
