@@ -25,12 +25,9 @@ class SurveyResponsesSnippet extends Loggable {
   val surveyId = menu.currentValue map {ObjectId.massageToObjectId(_)} openOrThrowException "no survey id"
   val survey = SurveyService.getSurveyById(surveyId)
 
-  def showSurveyAnswers(responses:Seq[QuestionAnswer]) = {
-    ".qa-set" #> responses.map{ response =>
-      showSurveyQuestions(response.questionId) &
+  def showSurveyAnswers(response:QuestionAnswer) = {
       ".answer *" #> response.answer &
       ".date-answered *" #> response.responseDate.toString
-    }
   }
 
   def showSurveyQuestions(questionId: ObjectId) = {
@@ -45,18 +42,26 @@ class SurveyResponsesSnippet extends Loggable {
     ClearClearable andThen
     ".survey-instance" #> allSurveyInstances.map{ surveyInstance =>
       ".phone-number *" #> surveyInstance.responderPhone &
-        ".status *" #> surveyInstance.status.toString &
-        ".date-started *" #> surveyInstance.dateStarted.toString &
-        showSurveyAnswers(surveyInstance.responses)
+      ".status *" #> surveyInstance.status.toString &
+      ".date-started *" #> surveyInstance.dateStarted.toString &
+      ".qa-set" #> surveyInstance.responses.map{ response =>
+        showSurveyQuestions(response.questionId) &
+        showSurveyAnswers(response) 
+      }
     }
   }
 
-//  def perQuestionResults() = {
-//    val allQASets = QASetService.findAllQASetsBySurveyId(surveyId)
-//
-//    ClearClearable andThen
-//    ".questions" #> showQASetDetails(allQASets)
-//  }
+  def perQuestionResults() = {
+    val surveyInstances = SurveyInstanceService.findAllSurveyInstancesBySurveyId(surveyId)
+    val responses = surveyInstances.flatMap(_.responses).sortBy(_.questionId)
+
+    
+    ClearClearable andThen
+    ".qa-set" #> responses.map{ response =>
+      showSurveyQuestions(response.questionId) &
+      showSurveyAnswers(response)      
+    }
+  }
 
   def render() = {
     ClearClearable andThen
