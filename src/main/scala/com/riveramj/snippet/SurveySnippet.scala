@@ -81,7 +81,8 @@ class SurveySnippet extends Loggable {
   }
 
   def startSurvey:JsCmd = {
-    SurveyService.startSurvey(surveyId,toPhoneNumber)
+    val phoneNumbers = toPhoneNumber.split("""[, ;]""")
+    phoneNumbers.map(SurveyService.startSurvey(surveyId,_))
     S.notice("send-survey-notice", "Survey Sent") //TODO: validate it actually sent
   }
 
@@ -101,7 +102,7 @@ class SurveySnippet extends Loggable {
   }
 
   def sendSurvey() = {
-    "#phone-number" #> SHtml.ajaxText(toPhoneNumber, toPhoneNumber = _) &
+    "#phone-number" #> SHtml.ajaxTextarea(toPhoneNumber, toPhoneNumber = _) &
     "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _)
   }
 
