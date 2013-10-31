@@ -26,6 +26,7 @@ case class SurveyInstance(
   status: SurveyInstanceStatus,
   currentQuestionId: Option[ObjectId] = None,
   nextQuestionId: Option[ObjectId] = None,
+  dateStarted: Date,
   responses: Seq[QuestionAnswer]
 )
   extends MongoDocument[SurveyInstance] {
