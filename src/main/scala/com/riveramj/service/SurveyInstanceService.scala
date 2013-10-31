@@ -20,6 +20,7 @@ object SurveyInstanceService extends Loggable {
       responderPhone = responderPhone,
       status = SurveyInstanceStatus.Active,
       currentQuestionId = Some(currentQuestionId),
+      dateStarted = new Date(),
       responses = Nil
     )
 
