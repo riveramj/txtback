@@ -5,9 +5,10 @@ import net.liftweb.util.Helpers._
 import net.liftweb.common._
 import net.liftweb.sitemap.Loc.TemplateBox
 import net.liftweb.http.Templates
-import com.riveramj.service.{QuestionService, SurveyInstanceService, SurveyService}
+import com.riveramj.service._
 import net.liftweb.util.ClearClearable
 import org.bson.types.ObjectId
+import com.riveramj.model._
 
 object SurveyResponsesSnippet {
   lazy val menu = Menu.param[String]("responses","responses",
@@ -24,16 +25,15 @@ class SurveyResponsesSnippet extends Loggable {
   val surveyId = menu.currentValue map {ObjectId.massageToObjectId(_)} openOrThrowException "no survey id"
   val survey = SurveyService.getSurveyById(surveyId)
 
-//  def showQASetDetails(qaSets: List[QASet]) = {
-//    ".qa-set" #> qaSets.map{ qaSet =>
-//      findQuestionInfo(qaSet.QuestionId.get) &
-//      ".answer *" #> qaSet.Response.get &
-//      ".date-answered *" #> qaSet.dateAnswered.get.toString
-//    }
-//  }
+  def showSurveyAnswers(responses:Seq[QuestionAnswer]) = {
+    ".qa-set" #> responses.map{ response =>
+      showSurveyQuestions(response.questionId) &
+      ".answer *" #> response.answer &
+      ".date-answered *" #> response.responseDate.toString
+    }
+  }
 
-
-  def findQuestionInfo(questionId: ObjectId) = {
+  def showSurveyQuestions(questionId: ObjectId) = {
     val question = QuestionService.getQuestionById(questionId)
     ".question-number *" #> question.map(_.questionNumber) &
     ".question *" #> question.map(_.question)
@@ -45,9 +45,9 @@ class SurveyResponsesSnippet extends Loggable {
     ClearClearable andThen
     ".survey-instance" #> allSurveyInstances.map{ surveyInstance =>
       ".phone-number *" #> surveyInstance.responderPhone &
-        ".status *" #> surveyInstance.status.toString
-//        ".date-started *" #> surveyInstance.dateStarted.get.toString &
-//        showQASetDetails(QASetService.findAllQASetsBySurveyInstance(surveyInstance.surveyInstanceId.get))
+        ".status *" #> surveyInstance.status.toString &
+        ".date-started *" #> surveyInstance.dateStarted.toString &
+        showSurveyAnswers(surveyInstance.responses)
     }
   }
 
