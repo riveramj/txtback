@@ -8,7 +8,7 @@ version := "0.1-SNAPSHOT"
 
 organization := "com.riveramj"
 
-scalaVersion := "2.10.2"
+scalaVersion := "2.10.3"
 
 seq(webSettings :_*)
 
