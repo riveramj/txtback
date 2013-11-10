@@ -16,7 +16,7 @@ resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/s
                   "releases"  at "http://oss.sonatype.org/content/repositories/releases")
 
 libraryDependencies ++= {
-val liftVersion = "2.5.1"
+val liftVersion = "2.6-M2"
   Seq(
     "ch.qos.logback"         %  "logback-classic"      % "0.9.26",
     "org.apache.shiro"       %  "shiro-core"           % "1.2.0",
