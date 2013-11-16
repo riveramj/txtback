@@ -1,0 +1,47 @@
+<div data-lift="surround?with=login-template;at=content">
+  <div id="signup-box">
+    <h3>Create your TxtBack Account</h3>
+    <form  id="signup">
+      <ul id="user-info">
+        <li>
+          <fieldset>
+            <legend>Name</legend>
+            <label>
+              <span>First name</span>
+              <input placeholder="First" id="first-name" type="text">
+            </label>
+            <label>
+              <span>Last name</span>
+              <input placeholder="Last" id="last-name" type="text">
+            </label> 
+          </fieldset>
+        </li>
+        <li>
+          <label data-lift="Loc.general-email">
+            Email
+            <input id="email" type="text" autofocus placeholder="Email" data-lift="Loc.general-email?attr=placeholder">
+          </label>
+        </li>
+        <li>
+          <label data-lift="Loc.user-password">
+            Create a Password
+            <input id="password" type="password" placeholder="Password" data-lift="Loc.user-password?attr=placeholder">
+          </label>
+        </li>
+        <li>
+          <label data-lift="Loc.user-company">
+            Company
+            <input id="company" placeholder="Company" data-lift="Loc.user-company?attr=placeholder" type="text">
+          </label>
+        </li>
+
+        <li class="submit">
+          <button type="submit" data-lift="Loc.user-login" id="signup">Log In</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+  <div id="create-account">
+    <a href="/login">Already have an account? Login</a>
+  </div>
+</div>
