@@ -1,17 +1,17 @@
 @import "common";
 
-h2 {
+h2, h3 {
   text-align: center;
 }
 
-#login-box {
+#login-box, #signup-box {
   border: 1px solid #e5e5e5;
   width: 400px;
   margin: 200px auto auto;
   background: #f1f1f1;
 }
 
-#login-button {
+#login-button, button#signup {
   @extend %btn;
   @extend %btn-primary;
 }
@@ -20,4 +20,52 @@ h2 {
   text-align: center;
   margin-top: 20px;
   font-size: 16px;
+}
+
+#first-name, #last-name  {
+  width: 150px;
+  padding: 0 8px;
+  height: 29px;
+  display: inline-block;
+}
+
+#first-name {
+  margin-right: 5px;
+}
+
+#email, #password, #company {
+  margin-top: 5px;
+  width: 331px;
+}
+
+
+#signup-box {
+  input {
+    margin-bottom: 0;
+  }
+
+  label {
+    display: inline-block;
+    margin-bottom: 0;
+
+    span {
+      display: none;
+    }
+  }
+
+  legend {
+    border: none;
+    margin: 0 0 5px;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1;
+  }
+}
+
+#user-info {
+  margin: 0 25px;
+
+  li {
+    margin-bottom: 20px;
+  }
 }
