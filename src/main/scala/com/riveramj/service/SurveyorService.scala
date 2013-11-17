@@ -24,7 +24,7 @@ object SurveyorService extends Loggable {
 
   def createSurveyor(
     firstName: String, lastName: String, email: String,
-    companyId: ObjectId, password: String) = {
+    companyId: Option[ObjectId], password: String) = {
 
     val salt = getSalt
     val hashedPassword = hashPassword(password, salt)

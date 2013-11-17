@@ -93,7 +93,7 @@ object SecurityContext extends Loggable {
 
   def currentCompany : Box[Company] = {
     loggedInUserCompany.is or {
-      val currentCompanyId = currentUser.map(_.companyId)
+      val currentCompanyId = currentUser.flatMap(_.companyId)
       val currentCompany = getCompanyById(currentCompanyId openOrThrowException "Not Valid Company")
 
       loggedInCompanyId(currentCompanyId)

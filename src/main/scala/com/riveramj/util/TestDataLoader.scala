@@ -22,7 +22,7 @@ object  TestDataLoader extends Loggable {
       firstName = "Mike",
       lastName = "Rivera",
       email = "rivera.mj@gmail.com",
-      companyId = newCompanyId,
+      companyId = Some(newCompanyId),
       password = "password"
     )
 
@@ -30,7 +30,7 @@ object  TestDataLoader extends Loggable {
       firstName = "Calvin",
       lastName = "Leach",
       email = "cleach@magnetic-usa.com",
-      companyId = newCompanyId,
+      companyId = Some(newCompanyId),
       password = "password"
     )
 
