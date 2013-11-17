@@ -5,6 +5,7 @@ import com.riveramj.model.Company
 import net.liftweb.util.Helpers._
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
+import java.util.regex._
 
 object CompanyService extends Loggable {
 
@@ -31,7 +32,8 @@ object CompanyService extends Loggable {
   }
 
   def getCompanyByName(companyName: String): Box[Company] = {
-    Company.find("name" -> companyName)
+    val pattern = Pattern.compile(companyName, Pattern.CASE_INSENSITIVE)
+    Company.find("name" -> (("$regex" -> pattern.pattern) ~ ("$flags" -> pattern.flags)))
   }
 
   def getAllCompanies = {
