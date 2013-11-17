@@ -7,6 +7,7 @@ import com.riveramj.service.QuestionService.questionToSend
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json.JsonAST.JObject
+import java.util.regex._
 
 object SurveyService extends Loggable {
 
@@ -45,7 +46,8 @@ object SurveyService extends Loggable {
   }
 
   def getSurveyByName(surveyName: String): Box[Survey] = {
-    Survey.find("name" -> surveyName)
+    val pattern = Pattern.compile(surveyName, Pattern.CASE_INSENSITIVE)
+    Survey.find("name" -> (("$regex" -> pattern.pattern) ~ ("$flags" -> pattern.flags)))
   }
 
   def getAllSurveysByCompanyId(companyId: ObjectId): List[Survey] = {

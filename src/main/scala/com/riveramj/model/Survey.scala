@@ -1,7 +1,7 @@
 package com.riveramj.model
 
 import org.bson.types.ObjectId
-import net.liftweb.mongodb.{ObjectIdSerializer, MongoDocumentMeta, MongoDocument}
+import net.liftweb.mongodb._
 import com.riveramj.service.SurveyService
 import net.liftweb.common.Box
 import net.liftweb.json.JsonDSL._
@@ -44,7 +44,7 @@ case class Survey(
 
 object Survey extends MongoDocumentMeta[Survey] {
   override def collectionName = "survey"
-  override def formats = super.formats + new ObjectIdSerializer + new QuestionTypeSerializer
+  override def formats = super.formats + new ObjectIdSerializer + new QuestionTypeSerializer + new PatternSerializer
 
   def getQuestionById(questionId: ObjectId): Box[Question] = {
     val survey = Survey.find("question._id" -> ("$oid" -> questionId.toString))
