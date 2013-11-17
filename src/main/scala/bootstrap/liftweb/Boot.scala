@@ -12,13 +12,13 @@ import com.riveramj.util.Paths
 import com.riveramj.service.{SurveyService, SurveyorService}
 import com.riveramj.util.TestDataLoader
 import com.riveramj.api.NewMessageListener
-import javax.mail.{Authenticator, PasswordAuthentication}
 
 class Boot extends Loggable {
   def boot {
 
     MongoConfig.init
-
+    MailConfig.init
+    
     // where to search snippet
     LiftRules.addToPackages("com.riveramj")
 
@@ -63,17 +63,6 @@ class Boot extends Loggable {
           case surveys if surveys.isEmpty => TestDataLoader.createTestQuestions()
           case _ =>
         }
-
-
-      (Props.get("mail.user"), Props.get("mail.password")) match {
-        case (Full(username), Full(password)) =>
-        Mailer.authenticator = Full(new Authenticator() {
-          override def getPasswordAuthentication = new
-          PasswordAuthentication(username, password)
-        })
-        case _ => throw new Exception("Username/password not supplied for Mailer.")
-      }
-
     } //boot
 
   } //Boot
