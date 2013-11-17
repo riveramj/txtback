@@ -48,7 +48,7 @@ h2, h3 {
     display: inline-block;
     margin-bottom: 0;
 
-    span {
+    .field-label {
       display: none;
     }
   }
@@ -68,4 +68,8 @@ h2, h3 {
   li {
     margin-bottom: 20px;
   }
+}
+
+.error {
+  color: #ff0000;
 }

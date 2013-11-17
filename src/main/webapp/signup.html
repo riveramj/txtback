@@ -1,17 +1,19 @@
 <div data-lift="surround?with=login-template;at=content">
   <div id="signup-box">
     <h3>Create your TxtBack Account</h3>
-    <form  id="signup">
+    <form data-lift="Signup?form=post" id="registration">
       <ul id="user-info">
         <li>
           <fieldset>
             <legend>Name</legend>
             <label>
-              <span>First name</span>
-              <input placeholder="First" id="first-name" type="text">
+              <span class="field-label">First name</span>
+              <span data-lift="Msg?id=first-name-error&noticeClass=notice&errorClass=error"></span>
+              <input placeholder="First" id="first-name" type="text">            
             </label>
             <label>
-              <span>Last name</span>
+              <span class="field-label">Last name</span>
+              <span data-lift="Msg?id=last-name-error&noticeClass=notice&errorClass=error"></span>
               <input placeholder="Last" id="last-name" type="text">
             </label> 
           </fieldset>
@@ -19,29 +21,32 @@
         <li>
           <label data-lift="Loc.general-email">
             Email
+            <span data-lift="Msg?id=email-error&noticeClass=notice&errorClass=error"></span>
             <input id="email" type="text" autofocus placeholder="Email" data-lift="Loc.general-email?attr=placeholder">
           </label>
         </li>
         <li>
           <label data-lift="Loc.user-password">
             Create a Password
+            <span data-lift="Msg?id=password-error&noticeClass=notice&errorClass=error"></span>
             <input id="password" type="password" placeholder="Password" data-lift="Loc.user-password?attr=placeholder">
           </label>
         </li>
         <li>
           <label data-lift="Loc.user-company">
             Company
+            <span data-lift="Msg?id=company-error&noticeClass=notice&errorClass=error"></span>
             <input id="company" placeholder="Company" data-lift="Loc.user-company?attr=placeholder" type="text">
           </label>
         </li>
 
         <li class="submit">
-          <button type="submit" data-lift="Loc.user-login" id="signup">Log In</button>
+          <button data-lift="Loc.user-signup" id="signup">Sign Up</button>
         </li>
       </ul>
     </form>
   </div>
   <div id="create-account">
-    <a href="/login">Already have an account? Login</a>
+    <a href="/login">Already have an account?</a>
   </div>
 </div>
