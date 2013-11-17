@@ -1,6 +1,6 @@
 import com.openstudy.sbt.ResourceManagementPlugin._
 
-name := "TxtBck"
+name := "TxtBack"
 
 version := "0.1-SNAPSHOT"
 

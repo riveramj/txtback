@@ -71,7 +71,7 @@ object SurveyInstanceService extends Loggable {
       case Empty =>
         surveyInstance = SurveyInstanceService.finishSurveyInstance(surveyInstance)
         "Thank you for completing our survey. " +
-          "To create your own text message survy, visit txtbck.co"
+          "To create your own text message survy, visit txtback.co"
       case Full(question) =>
         questionToSend(Full(question))
     }
