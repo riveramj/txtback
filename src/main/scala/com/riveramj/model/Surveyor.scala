@@ -1,7 +1,7 @@
 package com.riveramj.model
 
 import org.bson.types.ObjectId
-import net.liftweb.mongodb.{ObjectIdSerializer, MongoDocumentMeta, MongoDocument}
+import net.liftweb.mongodb._
 
 case class Surveyor(
   _id: ObjectId,
@@ -18,5 +18,5 @@ case class Surveyor(
 
 object Surveyor extends MongoDocumentMeta[Surveyor] {
   override def collectionName = "surveyor"
-  override def formats = super.formats + new ObjectIdSerializer
+  override def formats = super.formats + new ObjectIdSerializer + new PatternSerializer
 }
