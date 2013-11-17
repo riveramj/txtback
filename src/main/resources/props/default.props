@@ -1,4 +1,9 @@
-db.driver=com.mysql.jdbc.Driver
-db.url=jdbc:mysql://localhost:3306/txtbckdev
-db.user=tbadmin
-db.password=Tb101
+mail.smtp.host=smtp.mandrillapp.com
+mail.smtp.port=587
+mail.smtp.auth=true
+mail.smtp.starttls.enable=true
+mail.user=rivera.mj@gmail.com
+mail.password=Rpso2NOZdDyriwzWT1bTAA
+mail.debug=false
+
+server.url=http://localhost:8080/

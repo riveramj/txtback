@@ -1,4 +1,9 @@
-db.driver=com.mysql.jdbc.Driver
-db.url=jdbc:mysql://aa1ucer39m7z4hz.cjyscqqvvtmi.us-west-2.rds.amazonaws.com:3306/txtbck
-db.user=tbadmin
-db.password=Txtbck101
+mail.smtp.host=smtp.mandrillapp.com
+mail.smtp.port=587
+mail.smtp.auth=true
+mail.smtp.starttls.enable=true
+mail.user=rivera.mj@gmail.com
+mail.password=rv_ug7m9VMi7pCSTrl0gQQ
+mail.debug=false
+
+server.url=https://txtback.co/
