@@ -29,10 +29,14 @@ object ValidationService extends Loggable {
   }
 
   def checkDuplicateCompany(companyName: String, errorId: String): Box[ValidationError] = {
-    getCompanyByName(companyName) match {
-      case Full(company) => Full(ValidationError(errorId, S ? "Company Already Exists"))
-      case _ => Empty
+    if(companyName.nonEmpty) {
+      getCompanyByName(companyName) match {
+        case Full(company) => Full(ValidationError(errorId, S ? "Company Already Exists"))
+        case _ => Empty
+      }
     }
+    else
+      Empty
   }
 
   def checkEmail(email: String, errorId: String): Box[ValidationError] = {
