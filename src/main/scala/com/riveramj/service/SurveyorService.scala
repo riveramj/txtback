@@ -9,6 +9,7 @@ import org.bson.types.ObjectId
 
 import org.apache.shiro.crypto.hash.Sha256Hash
 import org.apache.shiro.crypto.SecureRandomNumberGenerator
+import java.util.regex._
 
 
 object SurveyorService extends Loggable {
@@ -57,7 +58,8 @@ object SurveyorService extends Loggable {
   }
 
   def getUserByEmail(email: String): Box[Surveyor] = {
-    Surveyor.find("email" -> email)
+    val pattern = Pattern.compile(email, Pattern.CASE_INSENSITIVE)
+    Surveyor.find("email" -> (("$regex" -> pattern.pattern) ~ ("$flags" -> pattern.flags)))
   }
 
   def getAllUsers = {
