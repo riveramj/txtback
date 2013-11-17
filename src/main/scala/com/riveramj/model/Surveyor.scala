@@ -10,7 +10,7 @@ case class Surveyor(
   email: String,
   password: String,
   salt: String,
-  companyId: ObjectId
+  companyId: Option[ObjectId] = None
 )
   extends MongoDocument[Surveyor] {
   def meta = Surveyor
