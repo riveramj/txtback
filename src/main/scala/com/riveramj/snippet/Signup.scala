@@ -10,6 +10,7 @@ import net.liftweb.common._
 import net.liftweb.http.js.JsCmds
 import com.riveramj.service.ValidationService._
 import com.riveramj.model.Company
+import com.riveramj.util.SecurityContext
 
 
 object Signup {
@@ -49,7 +50,9 @@ class Signup extends Loggable with StatefulSnippet {
           password = password,
           companyId = company.map(_._id)
         )
-        user
+        
+        user.map( newUser => SecurityContext.logUserIn(newUser._id))
+        S.redirectTo("/home")
       }
       else {
         for (error <- validateFields) {
