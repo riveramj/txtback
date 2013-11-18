@@ -6,6 +6,6 @@ mail.user=rivera.mj@gmail.com
 mail.password=rv_ug7m9VMi7pCSTrl0gQQ
 mail.debug=false
 
-from.email=info@txtback.co
+info.email=info@txtback.co
 
 server.url=https://txtback.co/
