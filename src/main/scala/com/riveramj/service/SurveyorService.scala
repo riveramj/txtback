@@ -1,6 +1,8 @@
 package com.riveramj.service
 
 import com.riveramj.model.Surveyor
+import com.riveramj.service.MailService._
+import net.liftweb.util.Props
 
 import net.liftweb.util.Helpers._
 import net.liftweb.common._
@@ -23,13 +25,11 @@ object SurveyorService extends Loggable {
     rng.nextBytes(32).toBase64
   }
 
-  def createSurveyor(
-    firstName: String, lastName: String, email: String,
-    companyId: Option[ObjectId], password: String) = {
+  def createSurveyor(firstName: String, lastName: String, email: String, companyId: Option[ObjectId], password: String) = {
 
     val salt = getSalt
     val hashedPassword = hashPassword(password, salt)
-    
+
     val user = Surveyor(
       _id = ObjectId.get,
       firstName = firstName,
@@ -40,7 +40,9 @@ object SurveyorService extends Loggable {
       salt = salt
     )
 
-    saveUser(user)
+    val newUser = saveUser(user)
+    confirmUserEmail(newUser)
+    newUser
   }
 
   def saveUser(user:Surveyor): Box[Surveyor] = {
@@ -64,5 +66,19 @@ object SurveyorService extends Loggable {
 
   def getAllUsers = {
     Surveyor.findAll
+  }
+
+  def confirmUserEmail(user: Box[Surveyor]) = {
+    val fromEmail = Props.get("info.email") match {
+      case Full(email) => email
+      case _ => throw new Exception("Info email not supplied")
+    }
+
+    sendMail(
+      from = fromEmail,
+      to = user.map(_.email).openOr(""),
+      subject = "Welcome to TxtBack! Please confirm your email",
+      body = "Welcome to TxtBack! Please confirm your email"
+    )
   }
 }
