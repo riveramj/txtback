@@ -26,15 +26,6 @@ object  TestDataLoader extends Loggable {
       password = "password"
     )
 
-    createSurveyor(
-      firstName = "Calvin",
-      lastName = "Leach",
-      email = "cleach@magnetic-usa.com",
-      companyId = Some(newCompanyId),
-      password = "password"
-    )
-
-
   }
   def createTestQuestions() {
 
