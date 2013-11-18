@@ -10,6 +10,7 @@ case class Surveyor(
   email: String,
   password: String,
   salt: String,
+  verified: Boolean = false,
   companyId: Option[ObjectId] = None
 )
   extends MongoDocument[Surveyor] {
