@@ -99,6 +99,7 @@ object SecurityContext extends Loggable {
       loggedInCompanyId(currentCompanyId)
       loggedInUserCompany(currentCompany)
 
+      loggedInCompanyId.is
       loggedInUserCompany.is
     }
   }

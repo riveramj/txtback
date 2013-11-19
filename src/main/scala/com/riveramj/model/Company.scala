@@ -5,7 +5,8 @@ import net.liftweb.mongodb._
 
 case class Company(
   _id: ObjectId,
-  name: String
+  name: String,
+  shadow: Boolean = false
 )
   extends MongoDocument[Company] {
   def meta = Company
