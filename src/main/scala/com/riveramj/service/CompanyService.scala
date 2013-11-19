@@ -9,10 +9,11 @@ import java.util.regex._
 
 object CompanyService extends Loggable {
 
-  def createCompany(name:String) = {
+  def createCompany(name: String, shadow: Boolean = false) = {
     val company = Company(
       ObjectId.get,
-      name
+      name,
+      shadow
     )
 
     saveCompany(company)

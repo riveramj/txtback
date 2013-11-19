@@ -38,10 +38,10 @@ class Signup extends Loggable with StatefulSnippet {
 
       if(validateFields.isEmpty) {
         val company: Box[Company] = 
-          if(!companyName.isEmpty)
+          if(companyName.nonEmpty)
             createCompany(companyName)
           else
-            Empty
+            createCompany(companyName, true)
 
         val user = createSurveyor(
           firstName = firstName,
