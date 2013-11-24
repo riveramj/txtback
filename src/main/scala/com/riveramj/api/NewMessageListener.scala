@@ -10,6 +10,8 @@ object NewMessageListener extends RestHelper with Loggable {
   serve("api" / "textMessage" prefix {
     case "newMessage"  :: _ Post req =>
     {
+      logger.info("new message is:")
+      logger.info(req)
       val fromPhone = req.param("From") match {
         case Full(phone) if phone.startsWith("+1") => phone.substring(2)
         case Full(phone) => phone
