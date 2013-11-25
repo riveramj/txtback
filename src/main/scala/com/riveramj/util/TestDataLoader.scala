@@ -112,7 +112,8 @@ object  TestDataLoader extends Loggable {
     val surveyInstance = createSurveyInstance(
       responderPhone = "4044090725",
       surveyId = newSurveyId,
-      currentQuestionId = question1Id
+      currentQuestionId = question1Id,
+      companyPhoneNumber = "7702123225"
     )
 
     val surveyInstanceId = surveyInstance.map(surveyInstance =>

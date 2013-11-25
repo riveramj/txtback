@@ -13,11 +13,12 @@ import java.util.Date
 
 object SurveyInstanceService extends Loggable {
 
-  def createSurveyInstance(responderPhone: String, surveyId: ObjectId, currentQuestionId: ObjectId) = {
+  def createSurveyInstance(responderPhone: String, surveyId: ObjectId, currentQuestionId: ObjectId, companyPhoneNumber: String) = {
     val surveyInstance = SurveyInstance(
       _id = ObjectId.get(),
       surveyId = surveyId,
       responderPhone = responderPhone,
+      companyPhone = companyPhoneNumber,
       status = SurveyInstanceStatus.Active,
       currentQuestionId = Some(currentQuestionId),
       dateStarted = new Date(),
