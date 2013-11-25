@@ -67,12 +67,13 @@ object SurveyService extends Loggable {
     question.headOption
   }
 
-  def startSurvey(surveyId: ObjectId, toPhoneNumber: String) {
+  def startSurvey(surveyId: ObjectId, toPhoneNumber: String, companyPhoneNumber: String) {
     val firstQuestion = getFirstQuestionBySurveyId(surveyId) openOrThrowException "No first question"
     val surveyInstance = SurveyInstanceService.createSurveyInstance(
-      toPhoneNumber,
-      surveyId,
-      firstQuestion._id
+      responderPhone = toPhoneNumber,
+      surveyId = surveyId,
+      currentQuestionId = firstQuestion._id,
+      companyPhoneNumber = companyPhoneNumber
     )
 
     TwilioService.sendMessage(toPhoneNumber,questionToSend(Full(firstQuestion)))
