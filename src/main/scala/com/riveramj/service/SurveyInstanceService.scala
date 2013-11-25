@@ -51,11 +51,11 @@ object SurveyInstanceService extends Loggable {
     SurveyInstance.findAll("surveyId" -> ("$oid" -> surveyId.toString))
   }
 
-  def findOpenSurveyInstancesByPhone(phone: String): List[SurveyInstance] = {
+  def findOpenSurveyInstancesByPhone(fromPhone: String, toPhone: String): List[SurveyInstance] = {
     // TODO: the below should probably work. for now this will be a work around
     // implicit val formats = net.liftweb.json.DefaultFormats 
 //     SurveyInstance.findAll(("responderPhone" -> phone) ~ ("status" -> Extraction.decompose(SurveyInstanceStatus.Active)))
-   val surveys = SurveyInstance.findAll("responderPhone" -> phone)
+   val surveys = SurveyInstance.findAll(("responderPhone" -> fromPhone) ~ ("companyPhone" -> toPhone))
    surveys.filter(_.status == SurveyInstanceStatus.Active)
   }
 
