@@ -16,9 +16,13 @@ object NewMessageListener extends RestHelper with Loggable {
         case Full(phone) if phone.startsWith("+1") => phone.substring(2)
         case Full(phone) => phone
       }
+      val toPhone = req.param("To") match {
+        case Full(phone) if phone.startsWith("+1") => phone.substring(2)
+        case Full(phone) => phone
+      }
       val response = req.param("Body") openOr ""
 
-      val surveyInstances = SurveyInstanceService.findOpenSurveyInstancesByPhone(fromPhone)
+      val surveyInstances = SurveyInstanceService.findOpenSurveyInstancesByPhone(fromPhone, toPhone)
       surveyInstances match {
         case instances if instances.isEmpty =>
         case instances =>
