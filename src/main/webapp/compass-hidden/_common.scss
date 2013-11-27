@@ -5,12 +5,14 @@
 @import "compass";
 @import "compass/css3";
 
-ul{
-  list-style: none;
+#main {
+  max-width: 1000px;
+  margin: auto;
 }
 
-table {
-  width: 800px !important;
+ul {
+  list-style: none;
+  margin: 0;
 }
 
 //Extends
