@@ -1,12 +1,9 @@
 target
-.idea
-.idea_modules
 project/project
 project/target
-lift_proto.db.h2.db
 console.devmode.log
-lift_proto.db.lock.db
 .sass-cache/
 css/
+js/
 .env
 *.pem
