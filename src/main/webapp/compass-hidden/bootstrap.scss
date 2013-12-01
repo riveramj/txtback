@@ -7,7 +7,6 @@
 @import "print";
 
 // Core CSS
-@import "scaffolding";
 @import "type";
 @import "code";
 @import "grid";
@@ -17,22 +16,17 @@
 
 // Components
 @import "component-animations";
-@import "glyphicons";
 @import "dropdowns";
 @import "button-groups";
 @import "input-groups";
 @import "navs";
 @import "navbar";
-@import "breadcrumbs";
 @import "pagination";
 @import "pager";
 @import "labels";
-@import "badges";
-@import "jumbotron";
 @import "thumbnails";
 @import "alerts";
 @import "progress-bars";
-@import "media";
 @import "list-group";
 @import "panels";
 @import "wells";
@@ -40,9 +34,6 @@
 
 // Components w/ JavaScript
 @import "modals";
-@import "tooltip";
-@import "popovers";
-@import "carousel";
 
 // Utility classes
 @import "utilities";
