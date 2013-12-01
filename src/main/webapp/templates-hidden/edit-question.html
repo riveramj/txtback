@@ -1,34 +1,30 @@
-<lift:children>
-<div id="edit-question" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-     data-lift="EditQuestionSnippet.editQuestion">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Edit Question</h3>
-  </div>
-  <div class="modal-body">
-    <form data-lift="form.ajax">
-      <input type="text" id="question" href="#">
-      <div id="questionType">Question Type: Chose One</div>
-      <ul id="answer-list">
-        <li class="answer">
-          <button class="delete-answer">Delete</button>
-          <span class="question-number">1</span>
-          <input type="text" class="answer-text">
-        </li>
-      </ul>
-
-      <div class="modal-footer">
-        <button class="btn" id="add-answer" aria-hidden="true">Add Answer</button>
-        <button class="btn" id="cancel-edit" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <button class="btn btn-primary" id="confirm-edit" type="submit">Save changes</button>
+<div id="edit-question" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-lift="EditQuestionSnippet.editQuestion">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Edit Question</h3>
       </div>
-    </form>
-    <button id="reload-page" style="display: none" type="button">Reload Page</button>
+      <div class="modal-body">
+        <form data-lift="form.ajax">
+          <input type="text" id="question" href="#">
+          <div id="questionType">Question Type: Chose One</div>
+          <ul id="answer-list">
+            <li class="answer">
+              <button class="delete-answer">Delete</button>
+              <span class="question-number">1</span>
+              <input type="text" class="answer-text">
+            </li>
+          </ul>
+
+          <div class="modal-footer">
+            <button class="btn" id="add-answer" aria-hidden="true">Add Answer</button>
+            <button class="btn" id="cancel-edit" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-primary" id="confirm-edit" type="submit">Save changes</button>
+          </div>
+        </form>
+        <button id="reload-page" style="display: none" type="button">Reload Page</button>
+      </div>
+    </div>
   </div>
 </div>
-
-<tail>
-  <script src="/static/js/survey.js" type="text/javascript"></script>
-</tail>
-
-</lift:children>

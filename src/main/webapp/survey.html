@@ -30,7 +30,7 @@
     </ul>
   </div>
   <form data-lift="SurveySnippet.createNewQuestion?form=post">
-    <div class="input-append">
+    <div class="input-group">
       <span data-lift="msg?id=survey-question-created">Question Created</span>
       <input id="new-question" type="text" placeholder="New Question">
       <div class="btn-group">
@@ -48,7 +48,7 @@
     </div>
     <div><span id="question-length">0</span>/162</div>
   </form>
-  <div class="input-append" data-lift="SurveySnippet.sendSurvey">
+  <div class="input-group" data-lift="SurveySnippet.sendSurvey">
     <textarea id="phone-number" type="text" placeholder="Enter Phone Number"></textarea>
     <button type="button" id="send-survey" class="btn">Send Survey</button>
   </div>
@@ -57,5 +57,6 @@
   <div data-lift="embed?what=edit-question"></div>
   <tail>
     <link rel="stylesheet" href="/static/css/survey.css">
+    <script src="/static/js/survey.js" type="text/javascript"></script>
   </tail>
 </div>
