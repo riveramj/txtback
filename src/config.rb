@@ -1,7 +1,7 @@
 # Require any additional compass plugins here.
 #
 # Set this to the root of your project when deployed:
-http_path = (environment == :production) ? "http://my.dev.elemica.com/" : "/"
+http_path = (environment == :production) ? "http://txtback.co/" : "/"
 project_path = "src/main/webapp"
 css_dir = "static/css"
 sass_dir = "compass-hidden"
