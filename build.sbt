@@ -1,4 +1,7 @@
+import sbt._
+import Keys._
 import com.openstudy.sbt.ResourceManagementPlugin._
+import com.earldouglas.xsbtwebplugin._
 
 name := "TxtBack"
 
@@ -11,6 +14,17 @@ scalaVersion := "2.10.3"
 seq(webSettings :_*)
 
 seq(resourceManagementSettings :_*)
+
+seq(
+        targetJavaScriptDirectory in ResourceCompile <<= (PluginKeys.webappResources in Compile) apply { resources => (resources / "static" / "js").get(0) },
+        scriptDirectories in ResourceCompile <<= (PluginKeys.webappResources in Compile) map { resources => (resources / "javascript").get },
+        styleDirectories in ResourceCompile <<= (PluginKeys.webappResources in Compile) map { resources => (resources / "static" / "css").get },
+        // This is the same as the target above. Currently in production, we don't
+        // deploy compressed scripts to S3, so we need them to live in the
+        // same static files directory as we put dev JS files in during
+        // development.
+        compressedTarget in ResourceCompile <<= (PluginKeys.webappResources in Compile) apply { resources => (resources / "static").get(0) }
+      )
 
 resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
                   "releases"  at "http://oss.sonatype.org/content/repositories/releases")
