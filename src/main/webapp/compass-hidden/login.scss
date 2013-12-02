@@ -24,6 +24,22 @@ button#login, button#signup {
   
 }
 
+#login {
+  width: 337px;
+}
+
+#email, #password {
+  height: 44px;
+  border: 1px solid #d9d9d9;
+  margin-top: 0;
+}
+
+.email, .password {
+  label {
+    display: none;
+  }
+}
+
 #create-account {
   text-align: center;
   margin-top: 20px;
