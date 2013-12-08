@@ -45,7 +45,7 @@ class Login extends Loggable {
 
     "#email" #> SHtml.text(email, email= _) &
     "#password" #> SHtml.password(password, password = _) &
-    "type=submit" #> SHtml.onSubmitUnit(login)
+    ".login button" #> SHtml.onSubmitUnit(login)
   }
 
 }
