@@ -1,12 +1,12 @@
 @import "common";
 
-h2, h3 {
+h2 {
   text-align: center;
 }
 
 #company-name {
   text-align: center;
-  margin-top: 8%;
+  margin-top: 6%;
   font-size: 28px;
 }
 
@@ -29,7 +29,7 @@ h2, h3 {
 
 button.login {
   margin-top: 10px;
-  height: 48px;
+  height: 46px;
   width: 100%;
   @extend %btn;
 }
