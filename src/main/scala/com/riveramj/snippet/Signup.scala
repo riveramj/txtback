@@ -66,6 +66,6 @@ class Signup extends Loggable with StatefulSnippet {
     "#company" #> SHtml.text(companyName, companyName = _) &
     "#email" #> SHtml.text(email, email = _) &
     "#password" #> SHtml.password(password, password = _) &
-    "#signup" #> SHtml.onSubmitUnit(createUser)
+    ".signup button" #> SHtml.onSubmitUnit(createUser)
   }
 }
