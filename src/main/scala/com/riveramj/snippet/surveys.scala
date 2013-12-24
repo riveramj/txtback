@@ -10,13 +10,13 @@ import net.liftweb.http.js.{JsCmd, JsCmds}
 import net.liftweb.common.{Loggable, Full}
 import org.bson.types.ObjectId
 
-object Home {
-  val menu = Menu.i("home") / "home"
+object Surveys {
+  val menu = Menu.i("surveys") / "surveys"
 }
 
-class Home extends Loggable {
+class Surveys extends Loggable {
 
-  def render() = {
+  def list() = {
 
     var surveyName = ""
 

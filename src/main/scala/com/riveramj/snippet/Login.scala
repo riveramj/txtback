@@ -34,7 +34,7 @@ class Login extends Loggable {
         case Full(user) =>
           if(userCanLogIn_?(user, password)) {
             SecurityContext.logUserIn(user._id)
-            S.redirectTo("/home")
+            S.redirectTo("/surveys")
           }
           else
            S.redirectTo("/login") 
