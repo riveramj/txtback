@@ -5,9 +5,9 @@ import net.liftweb.util.Helpers._
 import com.riveramj.util.SecurityContext
 import com.riveramj.service.SurveyService
 import net.liftweb.util.ClearClearable
-import net.liftweb.http.SHtml
+import net.liftweb.http._
 import net.liftweb.http.js.{JsCmd, JsCmds}
-import net.liftweb.common.{Loggable, Full}
+import net.liftweb.common._
 import org.bson.types.ObjectId
 
 object Surveys {
@@ -49,11 +49,18 @@ class Surveys extends Loggable {
     var surveyName = ""
 
     def createSurvey() = {
-      SurveyService.createSurvey(surveyName,currentCompanyId)
+      SurveyService.createSurvey(surveyName,currentCompanyId) match {
+        case Full(survey) => 
+          S.notice("Survey Created")
+        case error =>
+          logger.error(s"error creating survey: $error")
+          S.error("Internal error. Please try again.")
+      }
     }
-
+    
+    SHtml.makeFormsAjax andThen
     "#survey-name" #> SHtml.text(surveyName,surveyName = _) &
-    "#create-survey" #> SHtml.onSubmitUnit(createSurvey _)
+    "#create-survey" #> SHtml.ajaxOnSubmit(createSurvey _)
     
   }
 }
