@@ -15,18 +15,11 @@ object Surveys {
 }
 
 class Surveys extends Loggable {
+  val currentCompany = SecurityContext.currentCompany
+  val currentCompanyId = SecurityContext.currentCompanyId openOrThrowException "Not valid Company"
 
   def list() = {
-
-    var surveyName = ""
-
-    val currentCompany = SecurityContext.currentCompany
-    val currentCompanyId = SecurityContext.currentCompanyId openOrThrowException "Not valid Company"
     val surveys = SurveyService.getAllSurveysByCompanyId(currentCompanyId)
-
-    def process() = {
-      SurveyService.createSurvey(surveyName,currentCompanyId)
-    }
 
     def deleteSurvey(surveyId: ObjectId): JsCmd = {
       SurveyService.deleteSurveyById(surveyId) match {
@@ -34,7 +27,6 @@ class Surveys extends Loggable {
           JsCmds.Run("$('#" + surveyId + "').parent().remove()")
         case _ => logger.error("couldn't delete survey with id %s" format surveyId)
       }
-
     }
 
     ClearClearable andThen
@@ -50,8 +42,18 @@ class Surveys extends Loggable {
             }).cmd
           })
         })
-    } &
+    }
+  }
+
+  def create() = {
+    var surveyName = ""
+
+    def createSurvey() = {
+      SurveyService.createSurvey(surveyName,currentCompanyId)
+    }
+
     "#survey-name" #> SHtml.text(surveyName,surveyName = _) &
-    "#create-survey" #> SHtml.onSubmitUnit(process _)
+    "#create-survey" #> SHtml.onSubmitUnit(createSurvey _)
+    
   }
 }

@@ -1,5 +1,5 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
-  <form data-lift="surveys.list?form=post">
+  <section data-lift="surveys.list">
     <ul id="survey-list">
       <li class="survey">
         <a href="/survey/survey2">Survey A</a>
@@ -12,15 +12,17 @@
         <a href="/survey/survey3">Survey C</a>
       </li>
     </ul>
-    <ul>
-      <li>
-        <div class="input-group">
-          <input id="survey-name" type="text" placeholder="Survey Name">
-          <button type="submit" id="create-survey">Create Survey</button>
-        </div>
-      </li>
-    </ul>
-  </form>
+  </section>
+
+  <section data-lift="surveys.create">
+    <form>
+      <div class="input-group">
+        <input id="survey-name" type="text" placeholder="Survey Name">
+        <button type="submit" id="create-survey">Create Survey</button>
+      </div>
+    </form>
+  </section>
+
   <tail>
     <link rel="stylesheet" href="/static/css/home.css">
   </tail>
