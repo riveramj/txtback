@@ -1,8 +1,9 @@
 @import "compass";
 @import "compass/css3";
-@import "variables";
-@import "mixins";
-@import "normalize";
+@import "twitterBootstrap/variables";
+@import "twitterBootstrap/mixins";
+@import "twitterBootstrap/normalize";
+@import "fontAwesome/font-awesome.scss";
 
 #main {
   max-width: 1000px;

@@ -3,13 +3,17 @@
 #main-nav {
   width: 100%; 
   margin: 0 auto;
-  padding: 10px;
+  padding: 20px 10px 10px;
   max-width: 1000px;
   text-align: right;
+
+  a {
+    color: black;
+  }
+  
 }
 
 #nav-links {
-  margin-top: 10px;
   display: inline-block;
 
   li {

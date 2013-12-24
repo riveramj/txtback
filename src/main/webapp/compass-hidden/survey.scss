@@ -5,11 +5,11 @@
 }
 
 .edit-question:before {
-  content: ' ';
+  content: $fa-var-pencil + ' ';
 }
 
 .delete-question:before {
-  content: ' ';
+  content: $fa-var-trash-o + ' ';
 }
 
 #answer-list {
@@ -29,7 +29,7 @@
   color: red;
 
   &:before {
-    content: ' ';
+    content: $fa-var-minus + ' ';
   }
 }
 
@@ -38,7 +38,7 @@
   color: green;
 
   &:before {
-    content: ' ';
+    content: $fa-var-plus + ' ';
   }
 }
 

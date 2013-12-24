@@ -5,5 +5,5 @@
 }
 
 .delete-survey:before {
-  content: ' ';
+  content: $fa-var-trash-o + ' ';
 }
