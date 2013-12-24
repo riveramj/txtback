@@ -11,13 +11,13 @@ import com.riveramj.util.PathHelpers.loggedIn
 object Paths {
   // Roots.
   val index          = Menu.i("index")   / "index" >>
-    EarlyResponse(() => Full(RedirectResponse(Home.menu.loc.calcDefaultHref)))
+    EarlyResponse(() => Full(RedirectResponse(Surveys.menu.loc.calcDefaultHref)))
 
   def siteMap = SiteMap(
     index,
     Login.menu,
     Signup.menu,
-    Home.menu >> loggedIn,
+    Surveys.menu >> loggedIn,
     SurveySnippet.menu,
     SurveyResponsesSnippet.menu
   )
