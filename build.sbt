@@ -33,6 +33,7 @@ libraryDependencies ++= {
 val liftVersion = "2.6-M2"
   Seq(
     "ch.qos.logback"         %  "logback-classic"      % "1.0.13",
+    "org.apache.shiro"       %  "shiro-core"           % "1.2.0",
     "org.eclipse.jetty"      %  "jetty-webapp"         % "8.0.1.v20110908" % "container; compile->default",
     "com.twilio.sdk"         % "twilio-java-sdk"       % "3.3.15"          % "compile",
     "net.liftweb"            %% "lift-json"            % liftVersion       % "compile->default",
