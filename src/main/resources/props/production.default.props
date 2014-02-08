@@ -3,9 +3,9 @@ mail.smtp.port=587
 mail.smtp.auth=true
 mail.smtp.starttls.enable=true
 mail.user=rivera.mj@gmail.com
-mail.password=rv_ug7m9VMi7pCSTrl0gQQ
+mail.password=yGhiUH8AhEMYgqZVX0LJ5w
 mail.debug=false
 
 info.email=info@txtback.co
 
-server.url=https://txtback.co/txtback/
+server.url=https://txtback.co/
