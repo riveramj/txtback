@@ -8,6 +8,10 @@ import com.twilio.sdk.resource.list.SmsList
 import net.liftweb.common.Loggable
 import scala.collection.convert.WrapAsJava
 
+import net.liftweb._
+import common._
+import util.Props
+
 object TwilioService extends Loggable with WrapAsJava {
   val ACCOUNT_SID = "AC7b257aff635e86c50a87e5755bf0fd79" //TODO: put in props file
   val AUTH_TOKEN = "82dca0784a423ff566696aa495f702b0" //TODO: put in props file
@@ -21,6 +25,9 @@ object TwilioService extends Loggable with WrapAsJava {
     "From" -> fromPhoneNumber
     )
 
-    messageFactory.create(mapAsJavaMap(params))
+    if(Props.mode == Props.RunModes.Test || Props.mode == Props.RunModes.Production)
+      messageFactory.create(mapAsJavaMap(params))  
+    else
+      logger.info(params)
   }
 }
