@@ -12,30 +12,29 @@ object NewMessageListener extends RestHelper with Loggable {
     {
       logger.info("new message is:")
       logger.info(req)
-      val fromPhone = req.param("From") match {
-        case Full(phone) if phone.startsWith("+1") => phone.substring(2)
-        case Full(phone) => phone
-      }
-      val toPhone = req.param("To") match {
-        case Full(phone) if phone.startsWith("+1") => phone.substring(2)
-        case Full(phone) => phone
-      }
+
+      val fromPhone = PhoneNumberService.formatPhoneNumber(req.param("From").openOr(""))
+      
+      val toPhone = PhoneNumberService.formatPhoneNumber(req.param("To").openOr(""))
+
       val response = req.param("Body") openOr ""
 
       val surveyInstances = SurveyInstanceService.findOpenSurveyInstancesByPhone(fromPhone, toPhone)
       surveyInstances match {
         case instances if instances.isEmpty =>
+          JString("no matches")
         case instances =>
           val surveyInstance = instances.head
           surveyInstance.currentQuestionId map(AnswerService.verifyAnswer(response, _) match {
             case "-1" =>
               SurveyInstanceService.answerNotFound(response, surveyInstance.currentQuestionId.get, surveyInstance._id)
+              JString("answer not found")
             case answer =>
               SurveyInstanceService.recordAnswer(surveyInstance, response)
               SurveyInstanceService.sendNextQuestion(surveyInstance._id)
+              JString("ok. next question sent")
           })
       }
-      JString("ok")
     }
   })
 
