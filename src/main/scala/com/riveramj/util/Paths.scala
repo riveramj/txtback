@@ -16,6 +16,7 @@ object Paths {
   def siteMap = SiteMap(
     index,
     Login.menu,
+    Account.menu,
     Signup.menu,
     Surveys.menu >> loggedIn,
     SurveySnippet.menu,
