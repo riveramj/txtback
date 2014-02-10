@@ -11,6 +11,8 @@ import org.bson.types.ObjectId
 import com.riveramj.model._
 
 object SurveyResponsesSnippet {
+  import com.riveramj.util.PathHelpers.loggedIn
+
   lazy val menu = Menu.param[String]("responses","responses",
     Full(_),
     (id) => id

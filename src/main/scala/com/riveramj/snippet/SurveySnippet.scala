@@ -13,6 +13,8 @@ import net.liftweb.http.js.JsCmds.Noop
 import org.bson.types.ObjectId
 
 object SurveySnippet {
+  import com.riveramj.util.PathHelpers.loggedIn
+
   lazy val menu = Menu.param[String]("survey","survey",
     Full(_),
     (id) => id
