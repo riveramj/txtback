@@ -11,7 +11,10 @@ import net.liftweb.common._
 import org.bson.types.ObjectId
 
 object Surveys {
-  val menu = Menu.i("surveys") / "surveys"
+  import com.riveramj.util.PathHelpers.loggedIn
+  
+  val menu = Menu.i("surveys") / "surveys" >>
+  loggedIn
 }
 
 class Surveys extends Loggable {

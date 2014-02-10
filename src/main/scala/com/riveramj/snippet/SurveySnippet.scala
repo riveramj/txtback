@@ -17,7 +17,7 @@ object SurveySnippet {
     Full(_),
     (id) => id
   ) / "survey" / * >>
-    //loggedIn >>
+  loggedIn >>
   TemplateBox(() => Templates( "survey" :: Nil))
 
   object editQuestionIdRV extends RequestVar[Box[ObjectId]](Empty)
