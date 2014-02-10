@@ -48,7 +48,6 @@ class Account extends Loggable {
         )
 
         saveUser(updatedUser)
-        SecurityContext.setCurrentUser(user)
       }
       else {
         for (error <- validateFields) {
