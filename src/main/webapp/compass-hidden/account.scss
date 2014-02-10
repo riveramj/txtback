@@ -1,0 +1,91 @@
+@import "common";
+
+h3 {
+  text-align: center;
+}
+
+button.save-user {
+  @extend %btn;
+  height: 46px;
+  padding: 15px;
+  line-height: 1;
+}
+
+.name {
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  legend {
+    border: none;
+    margin: 0 0 5px;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1;
+  }
+}
+
+#first-name, #last-name  {
+  width: 180px;
+  display: inline-block;
+}
+
+#first-name {
+  margin-right: 5px;
+}
+
+#email, #first-name, #last-name {
+  height: 44px;
+  border: 1px solid #d9d9d9;
+  margin: 5px 0 0;
+  padding: 0 8px;
+}
+
+#email {
+  width: 382px;  
+}
+
+#main {
+ h3 {
+    margin-top: 0;
+  }
+
+  width: 400px;
+  margin: 30px auto auto;
+  padding: 35px;
+  
+  border: 1px solid #e5e5e5;
+  background: #f1f1f1;
+
+  label {
+    display: inline-block;
+    margin-bottom: 0;
+  }
+}
+
+.field-label {
+      display: none;
+}
+
+#user-info {
+  margin: 0;
+  padding: 0;
+}
+
+.error {
+  color: #ff0000;
+}
+
+#sign-in {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+li.name, li.email {
+  margin-bottom: 20px;
+}
+
+li.save-user {
+  text-align: right;
+}
