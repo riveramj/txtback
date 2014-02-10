@@ -15,7 +15,7 @@ object SurveyResponsesSnippet {
     Full(_),
     (id) => id
   ) / "survey" / * / "responses" >>
-    //loggedIn >>
+    loggedIn >>
     TemplateBox(() => Templates("responses" :: Nil))
 }
 
