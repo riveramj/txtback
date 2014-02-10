@@ -1,0 +1,36 @@
+<div id="main" data-lift="surround?with=default-template;at=content">
+  <form data-lift="account.edit" id="registration">
+    <ul id="user-info">
+      <li class="name">
+        <fieldset class="name">
+          <legend>Name</legend>
+          <label>
+            <span class="field-label">First name</span>
+            <span data-lift="Msg?id=first-name-error&noticeClass=notice&errorClass=error"></span>
+            <input placeholder="First" id="first-name" type="text">            
+          </label>
+          <label>
+            <span class="field-label">Last name</span>
+            <span data-lift="Msg?id=last-name-error&noticeClass=notice&errorClass=error"></span>
+            <input placeholder="Last" id="last-name" type="text">
+          </label> 
+        </fieldset>
+      </li>
+      <li class="email">
+        <label data-lift="Loc.general-email">
+          Email
+          <span data-lift="Msg?id=email-error&noticeClass=notice&errorClass=error"></span>
+          <input id="email" type="text" autofocus placeholder="Email" data-lift="Loc.general-email?attr=placeholder">
+        </label>
+      </li>
+      <li class="save-user">
+        <button data-lift="Loc.user-saveUser" class="save-user">Save User</button>
+      </li>
+    </ul>
+  </form>
+
+  <tail>
+    <link rel="stylesheet" href="/static/css/home.css">
+    <script type="text/javascript" src="/static/js/surveys.js"></script>
+  </tail>
+</div>
