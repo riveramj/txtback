@@ -3,3 +3,8 @@ resolvers += "Sonatype Repository" at "https://oss.sonatype.org/content/reposito
 addSbtPlugin("com.earldouglas" % "xsbt-web-plugin" % "0.4.2")
 
 addSbtPlugin("com.openstudy" %% "sbt-resource-management" % "0.4.1-SNAPSHOT")
+
+//Assembly
+resolvers += Resolver.url("artifactory", url("http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases"))(Resolver.ivyStylePatterns)
+
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.10.0")
