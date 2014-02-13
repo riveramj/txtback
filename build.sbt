@@ -2,6 +2,7 @@ import sbt._
 import Keys._
 import com.openstudy.sbt.ResourceManagementPlugin._
 import com.earldouglas.xsbtwebplugin._
+import AssemblyKeys._
 
 name := "TxtBack"
 
@@ -12,6 +13,10 @@ organization := "com.riveramj"
 scalaVersion := "2.10.3"
 
 seq(webSettings :_*)
+
+assemblySettings
+
+mainClass in assembly := Some("bootstrap.liftweb.Start")
 
 seq(resourceManagementSettings :_*)
 
@@ -34,7 +39,8 @@ val liftVersion = "2.6-M2"
   Seq(
     "ch.qos.logback"         %  "logback-classic"      % "1.0.13",
     "org.apache.shiro"       %  "shiro-core"           % "1.2.0",
-    "org.eclipse.jetty"      %  "jetty-webapp"         % "8.0.1.v20110908" % "container; compile->default",
+    "org.eclipse.jetty"      %  "jetty-webapp"         % "8.1.0.v20120127" % "container,compile",
+    "org.eclipse.jetty"      %  "jetty-webapp"         % "8.1.0.v20120127" % "container; compile->default",
     "com.twilio.sdk"         % "twilio-java-sdk"       % "3.3.15"          % "compile",
     "net.liftweb"            %% "lift-json"            % liftVersion       % "compile->default",
     "net.liftweb"            %% "lift-mongodb"         % liftVersion       % "compile->default",
@@ -42,6 +48,19 @@ val liftVersion = "2.6-M2"
     "net.liftweb"            %% "lift-mapper"          % liftVersion       % "compile",
     "org.specs2"             %% "specs2"               % "1.14"            % "test"
   )
+}
+
+/* streamlined generation of self serving embedded jetty jar */
+resourceGenerators in Compile <+= (resourceManaged, baseDirectory) map
+{ (managedBase, base) =>
+  val webappBase = base / "src" / "main" / "webapp"
+  for {
+    (from, to) <- webappBase ** "*" x rebase(webappBase, managedBase /
+      "main" / "webapp")
+  } yield {
+    Sync.copy(from, to)
+    to
+  }
 }
 
 parallelExecution in Test := false
