@@ -25,9 +25,13 @@ object TwilioService extends Loggable with WrapAsJava {
     "From" -> fromPhoneNumber
     )
 
-    if(Props.mode == Props.RunModes.Test || Props.mode == Props.RunModes.Production)
+    if(Props.mode == Props.RunModes.Test || Props.mode == Props.RunModes.Production) {
+     println("in test -----------------") 
       messageFactory.create(mapAsJavaMap(params))  
-    else
+    }
+    else {
+      println("fail -----------------") 
       logger.info(params)
+    }
   }
 }
