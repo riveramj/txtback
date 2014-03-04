@@ -34,7 +34,7 @@ case class Answer(
 case class Survey(
   _id: ObjectId,
   name: String,
-  companyId: ObjectId,
+  userId: ObjectId,
   questions: Seq[Question]
 
 )

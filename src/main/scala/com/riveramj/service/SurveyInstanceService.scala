@@ -13,12 +13,12 @@ import java.util.Date
 
 object SurveyInstanceService extends Loggable {
 
-  def createSurveyInstance(responderPhone: String, surveyId: ObjectId, currentQuestionId: ObjectId, companyPhoneNumber: String) = {
+  def createSurveyInstance(responderPhone: String, surveyId: ObjectId, currentQuestionId: ObjectId, senderPhoneNumber: String) = {
     val surveyInstance = SurveyInstance(
       _id = ObjectId.get(),
       surveyId = surveyId,
       responderPhone = responderPhone,
-      companyPhone = companyPhoneNumber,
+      senderPhone = senderPhoneNumber,
       status = SurveyInstanceStatus.Active,
       currentQuestionId = Some(currentQuestionId),
       dateStarted = new Date(),
@@ -55,7 +55,7 @@ object SurveyInstanceService extends Loggable {
     // TODO: the below should probably work. for now this will be a work around
     // implicit val formats = net.liftweb.json.DefaultFormats 
 //     SurveyInstance.findAll(("responderPhone" -> phone) ~ ("status" -> Extraction.decompose(SurveyInstanceStatus.Active)))
-   val surveys = SurveyInstance.findAll(("responderPhone" -> fromPhone) ~ ("companyPhone" -> toPhone))
+   val surveys = SurveyInstance.findAll(("responderPhone" -> fromPhone) ~ ("senderPhone" -> toPhone))
    surveys.filter(_.status == SurveyInstanceStatus.Active)
   }
 
