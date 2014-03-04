@@ -18,7 +18,7 @@ class Boot extends Loggable {
 
     MongoConfig.init
     MailConfig.init
-    
+
     // where to search snippet
     LiftRules.addToPackages("com.riveramj")
 
@@ -32,38 +32,37 @@ class Boot extends Loggable {
       //    LiftRules.setSiteMap(SiteMap(entries:_*))
       //
 
-      LiftRules.setSiteMap(Paths.siteMap)
-      //Show the spinny image when an Ajax call starts
-      LiftRules.ajaxStart =
-      Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
+    LiftRules.setSiteMap(Paths.siteMap)
+    //Show the spinny image when an Ajax call starts
+    LiftRules.ajaxStart =
+    Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
 
-      // Make the spinny image go away when it ends
-      LiftRules.ajaxEnd =
-      Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
+    // Make the spinny image go away when it ends
+    LiftRules.ajaxEnd =
+    Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
-      // Force the request to be UTF-8
-      LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
+    // Force the request to be UTF-8
+    LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
 
-      // set DocType to HTML5
-      LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
+    // set DocType to HTML5
+    LiftRules.htmlProperties.default.set((r: Req) =>new Html5Properties(r.userAgent))
 
-      //Init the jQuery module, see http://liftweb.net/jquery for more information.
-      LiftRules.jsArtifacts = JQueryArtifacts
+    //Init the jQuery module, see http://liftweb.net/jquery for more information.
+    LiftRules.jsArtifacts = JQueryArtifacts
 
-      // stateless -- no session created
-      LiftRules.statelessDispatch.append(NewMessageListener)
+    // stateless -- no session created
+    LiftRules.statelessDispatch.append(NewMessageListener)
 
-      SurveyorService.getAllUsers match {
-        case users if users.isEmpty => TestDataLoader.createTestUsers()
-        case _ =>
-      }
+    SurveyorService.getAllUsers match {
+      case users if users.isEmpty => TestDataLoader.createTestUsers()
+      case _ =>
+    }
 
-      if(Props.mode == Props.RunModes.Development)
-        SurveyService.getAllSurveys match {
-          case surveys if surveys.isEmpty => TestDataLoader.createTestQuestions()
-          case _ =>
-        }
-    } //boot
-
-  } //Boot
+    if(Props.mode == Props.RunModes.Development)
+    SurveyService.getAllSurveys match {
+      case surveys if surveys.isEmpty => TestDataLoader.createTestQuestions()
+      case _ =>
+    }
+  } //boot
+} //Boot
 
