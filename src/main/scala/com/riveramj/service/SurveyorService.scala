@@ -25,7 +25,7 @@ object SurveyorService extends Loggable {
     rng.nextBytes(32).toBase64
   }
 
-  def createSurveyor(firstName: String, lastName: String, email: String, companyId: Option[ObjectId], password: String) = {
+  def createSurveyor(firstName: String, lastName: String, email: String, password: String) = {
 
     val salt = getSalt
     val hashedPassword = hashPassword(password, salt)
@@ -35,7 +35,6 @@ object SurveyorService extends Loggable {
       firstName = firstName,
       lastName = lastName,
       email = email,
-      companyId = companyId,
       password = hashedPassword,
       salt = salt
     )

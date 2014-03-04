@@ -11,11 +11,11 @@ import java.util.regex._
 
 object SurveyService extends Loggable {
 
-  def createSurvey(name: String, companyId: ObjectId) = {
+  def createSurvey(name: String, userId: ObjectId) = {
     val survey = Survey(
       _id = ObjectId.get,
       name = name,
-      companyId = companyId,
+      userId = userId,
       questions = Nil
     )
 
@@ -50,8 +50,8 @@ object SurveyService extends Loggable {
     Survey.find("name" -> (("$regex" -> pattern.pattern) ~ ("$flags" -> pattern.flags)))
   }
 
-  def getAllSurveysByCompanyId(companyId: ObjectId): List[Survey] = {
-    Survey.findAll("companyId" -> ("$oid" -> companyId.toString))
+  def getAllSurveysByUserId(userId: ObjectId): List[Survey] = {
+    Survey.findAll("userId" -> ("$oid" -> userId.toString))
   }
 
   def getAllSurveys = {
@@ -67,13 +67,13 @@ object SurveyService extends Loggable {
     question.headOption
   }
 
-  def startSurvey(surveyId: ObjectId, toPhoneNumber: String, companyPhoneNumber: String) {
+  def startSurvey(surveyId: ObjectId, toPhoneNumber: String, senderPhoneNumber: String) {
     val firstQuestion = getFirstQuestionBySurveyId(surveyId) openOrThrowException "No first question"
     val surveyInstance = SurveyInstanceService.createSurveyInstance(
       responderPhone = toPhoneNumber,
       surveyId = surveyId,
       currentQuestionId = firstQuestion._id,
-      companyPhoneNumber = companyPhoneNumber
+      senderPhoneNumber = senderPhoneNumber
     )
 
     TwilioService.sendMessage(toPhoneNumber,questionToSend(Full(firstQuestion)))

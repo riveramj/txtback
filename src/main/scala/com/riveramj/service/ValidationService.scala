@@ -1,7 +1,6 @@
 package com.riveramj.service
 
 import com.riveramj.service.SurveyorService._
-import com.riveramj.service.CompanyService._
 import net.liftweb.common._
 import net.liftweb.http.S
 
@@ -28,24 +27,9 @@ object ValidationService extends Loggable {
     } else Empty
   }
 
-  def checkDuplicateCompany(companyName: String, errorId: String): Box[ValidationError] = {
-    if(companyName.nonEmpty) {
-      getCompanyByName(companyName) match {
-        case Full(company) => Full(ValidationError(errorId, S ? "Company Already Exists"))
-        case _ => Empty
-      }
-    }
-    else
-      Empty
-  }
-
   def checkEmail(email: String, errorId: String): Box[ValidationError] = {
     checkDuplicateEmail(email, errorId) or
     checkEmpty(email, errorId)
-  }
-
-  def checkCompany(companyName: String, errorId: String): Box[ValidationError] = {
-    checkDuplicateCompany(companyName, errorId)
   }
 }
 

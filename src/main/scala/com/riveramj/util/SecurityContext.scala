@@ -3,22 +3,15 @@ package com.riveramj.util
 import net.liftweb.http._
 import net.liftweb.common._
 import net.liftweb.util.ControlHelpers._
-import com.riveramj.model.{Company, Surveyor}
+import com.riveramj.model.Surveyor
 import com.riveramj.service.SurveyorService._
-import com.riveramj.service.CompanyService._
 import org.bson.types.ObjectId
 
 object SecurityContext extends Loggable {
   private object loggedInUserId extends SessionVar[Box[ObjectId]](Empty)
-  private object loggedInCompanyId extends SessionVar[Box[ObjectId]](Empty)
-
   private object loggedInUser extends RequestVar[Box[Surveyor]](Empty)
-  private object loggedInUserCompany extends RequestVar[Box[Company]](Empty)
-
-
 
   def logIn(user: Surveyor) {
-
     setCurrentUser(user)
     loggedInUser.is
 
@@ -68,6 +61,10 @@ object SecurityContext extends Loggable {
     }
   }
 
+  def currentUserId: Box[ObjectId] = {
+    currentUser.map(_._id)
+  }
+
   def currentUserName: Box[String] = {
     for {
       user <- currentUser
@@ -77,21 +74,6 @@ object SecurityContext extends Loggable {
       firstName + " " + lastName
     }
   }
-
-  def currentCompany : Box[Company] = {
-    loggedInUserCompany.is or {
-      val currentCompanyId = currentUser.flatMap(_.companyId)
-      val currentCompany = getCompanyById(currentCompanyId openOrThrowException "Not Valid Company")
-
-      loggedInCompanyId(currentCompanyId)
-      loggedInUserCompany(currentCompany)
-
-      loggedInCompanyId.is
-      loggedInUserCompany.is
-    }
-  }
-
-  def currentCompanyId : Box[ObjectId] = loggedInUserCompany map (_._id)
 
   def loggedIn_? : Boolean = {
     currentUser.isDefined

@@ -4,12 +4,6 @@ h3 {
   text-align: center;
 }
 
-#company-name {
-  text-align: center;
-  margin-top: 6%;
-  font-size: 28px;
-}
-
 button.signup {
   @extend %btn;
   height: 46px;
@@ -40,14 +34,14 @@ button.signup {
   margin-right: 5px;
 }
 
-#email, #password, #company, #first-name, #last-name {
+#email, #password, #first-name, #last-name {
   height: 44px;
   border: 1px solid #d9d9d9;
   margin: 5px 0 0;
   padding: 0 8px;
 }
 
-#email, #password, #company {
+#email, #password {
   width: 382px;  
 }
 
@@ -88,7 +82,7 @@ button.signup {
   font-size: 16px;
 }
 
-li.name, li.password, li.email, li.company {
+li.name, li.password, li.email {
   margin-bottom: 20px;
 }
 

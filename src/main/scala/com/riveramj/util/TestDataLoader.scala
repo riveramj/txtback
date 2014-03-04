@@ -1,19 +1,16 @@
 package com.riveramj.util
 
 import net.liftweb.common.Loggable
-import com.riveramj.service.CompanyService.createCompany
 import com.riveramj.service.SurveyorService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.SurveyInstanceService._
-import com.riveramj.service.{AnswerService, SurveyService, QuestionService}
+import com.riveramj.service._
 import com.riveramj.model.QuestionType
 
 object  TestDataLoader extends Loggable {
   val surveyName = "questions about you"
   lazy val exampleSurveyId = SurveyService.getSurveyByName(surveyName) map(_._id)
-  val company = createCompany("Company1")
-  val newCompanyId = company.map(company => company._id).get
 
   def createTestUsers() {
     logger.info("Creating Test Data")
@@ -22,16 +19,16 @@ object  TestDataLoader extends Loggable {
       firstName = "Mike",
       lastName = "Rivera",
       email = "rivera.mj@gmail.com",
-      companyId = Some(newCompanyId),
       password = "password"
     )
 
   }
   def createTestQuestions() {
+    val userId = SurveyorService.getUserByEmail("rivera.mj@gmail.com").map(_._id) openOrThrowException "no valid user"
 
     val survey = createSurvey(
       name = surveyName,
-      companyId = newCompanyId
+      userId = userId
     )
 
     val newSurveyId = survey.map(survey => survey._id).get
@@ -113,7 +110,7 @@ object  TestDataLoader extends Loggable {
       responderPhone = "4044090725",
       surveyId = newSurveyId,
       currentQuestionId = question1Id,
-      companyPhoneNumber = "7702123225"
+      senderPhoneNumber = "7702123225"
     )
 
     val surveyInstanceId = surveyInstance.map(surveyInstance =>

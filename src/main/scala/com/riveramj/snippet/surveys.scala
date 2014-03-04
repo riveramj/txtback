@@ -18,11 +18,9 @@ object Surveys {
 }
 
 class Surveys extends Loggable {
-  val currentCompany = SecurityContext.currentCompany
-  val currentCompanyId = SecurityContext.currentCompanyId openOrThrowException "Not valid Company"
-
+  val currentUserId = SecurityContext.currentUserId openOrThrowException "Not valid User"
   def list() = {
-    val surveys = SurveyService.getAllSurveysByCompanyId(currentCompanyId)
+    val surveys = SurveyService.getAllSurveysByUserId(currentUserId)
 
     def deleteSurvey(surveyId: ObjectId): JsCmd = {
       SurveyService.deleteSurveyById(surveyId) match {
@@ -33,7 +31,6 @@ class Surveys extends Loggable {
     }
 
     ClearClearable andThen
-    "#company-name *" #> currentCompany.map(_.name) &
     ".survey" #> surveys.map{ survey =>
       "a *" #> survey.name &
       "a [href]" #> ("/survey/" + survey._id) &
@@ -52,7 +49,7 @@ class Surveys extends Loggable {
     var surveyName = ""
 
     def createSurvey() = {
-      SurveyService.createSurvey(surveyName,currentCompanyId) match {
+      SurveyService.createSurvey(surveyName, currentUserId) match {
         case Full(survey) => 
           S.notice("Survey Created")
         case error =>
