@@ -58,7 +58,7 @@ class Boot extends Loggable {
       case _ =>
     }
 
-    if(Props.mode == Props.RunModes.Development)
+    if(Props.mode == Props.RunModes.Development || Props.mode == Props.RunModes.Test)
     SurveyService.getAllSurveys match {
       case surveys if surveys.isEmpty => TestDataLoader.createTestQuestions()
       case _ =>
