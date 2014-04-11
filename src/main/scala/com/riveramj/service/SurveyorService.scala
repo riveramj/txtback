@@ -11,7 +11,9 @@ import org.bson.types.ObjectId
 
 import org.apache.shiro.crypto.hash.Sha256Hash
 import org.apache.shiro.crypto.SecureRandomNumberGenerator
+
 import java.util.regex._
+import java.util.Date
 
 
 object SurveyorService extends Loggable {
@@ -29,6 +31,7 @@ object SurveyorService extends Loggable {
 
     val salt = getSalt
     val hashedPassword = hashPassword(password, salt)
+    val activationKey = Some(ActivationService.createActivationKey())
 
     val user = Surveyor(
       _id = ObjectId.get,
@@ -36,7 +39,10 @@ object SurveyorService extends Loggable {
       lastName = lastName,
       email = email,
       password = hashedPassword,
-      salt = salt
+      salt = salt,
+      active = false,
+      activationKey = activationKey,
+      activationKeyDate = Some(new Date())
     )
 
     val newUser = saveUser(user)
@@ -73,11 +79,15 @@ object SurveyorService extends Loggable {
       case _ => throw new Exception("Info email not supplied")
     }
 
+    val baseUrl = Props.get("server.url").openOr("")
+    val activationKey = user.flatMap(_.activationKey).openOr("")
+    
+
     sendMail(
       from = fromEmail,
       to = user.map(_.email).openOr(""),
       subject = "Welcome to TxtBack! Please confirm your email",
-      body = "Welcome to TxtBack! Please confirm your email"
+      body = s"Welcome to TxtBack! Please confirm your email. Your activation link is $baseUrl/activate/$activationKey" 
     )
   }
 }

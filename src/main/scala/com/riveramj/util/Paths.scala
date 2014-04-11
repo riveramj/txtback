@@ -24,6 +24,7 @@ object Paths {
     Signup.menu,
     Surveys.menu >> loggedIn,
     SurveySnippet.menu,
-    SurveyResponsesSnippet.menu
+    SurveyResponsesSnippet.menu,
+    ActivateUser.menu
   )
 }
