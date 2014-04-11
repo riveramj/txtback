@@ -2,6 +2,7 @@ package com.riveramj.model
 
 import org.bson.types.ObjectId
 import net.liftweb.mongodb._
+import java.util.Date
 
 case class Surveyor(
   _id: ObjectId,
@@ -10,7 +11,9 @@ case class Surveyor(
   email: String,
   password: String,
   salt: String,
-  verified: Boolean = false
+  active: Boolean = false,
+  activationKey: Option[String], 
+  activationKeyDate: Option[Date]
 )
   extends MongoDocument[Surveyor] {
   def meta = Surveyor
