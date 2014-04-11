@@ -8,4 +8,4 @@ mail.debug=false
 
 info.email=info@txtback.co
 
-server.url=http://localhost:8080/
+server.url=http://localhost:8080
