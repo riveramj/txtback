@@ -18,6 +18,11 @@ object SecurityContext extends Loggable {
     logger.info("Logged user in [ %s ]".format(user.email ))
   }
 
+  def logCurrentUserOut {
+    loggedInUserId(Empty)
+    loggedInUser(Empty)
+  }
+
 
   def setCurrentUser(user: Surveyor) {
     loggedInUserId(Full(user._id))
@@ -37,19 +42,6 @@ object SecurityContext extends Loggable {
       case _ =>
         false
     }
-  }
-
-  def logCurrentUserOut() : Boolean = {
-    {
-      for {
-        user <- currentUser
-        email = user.email
-      } yield {
-        logger.info("Logged user out [" + email + "]")
-        clearCurrentUser()
-        true
-      }
-    } openOr false
   }
 
   def currentUser: Box[Surveyor] = {
