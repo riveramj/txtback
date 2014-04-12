@@ -40,14 +40,15 @@ class Signup extends Loggable with StatefulSnippet {
       ).flatten
 
       if(validateFields.isEmpty) {
+        val purchasedPhoneNumber = TwilioService.buyPhoneNumber(areaCode+phone)
+        
         val user = createSurveyor(
           firstName = firstName,
           lastName = lastName,
           email = email,
-          password = password
+          password = password, 
+          phoneNumber = purchasedPhoneNumber
         )
-
-        val purchasedPhoneNumber = TwilioService.buyPhoneNumber(areaCode+phone)
         
         user.map( newUser => SecurityContext.logUserIn(newUser._id))
         S.redirectTo("/home")

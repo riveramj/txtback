@@ -11,6 +11,7 @@ case class Surveyor(
   email: String,
   password: String,
   salt: String,
+  phoneNumbers: List[String] = Nil,
   active: Boolean = false,
   activationKey: Option[String], 
   activationKeyDate: Option[Date]

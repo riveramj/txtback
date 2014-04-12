@@ -19,7 +19,8 @@ object  TestDataLoader extends Loggable {
       firstName = "Mike",
       lastName = "Rivera",
       email = "rivera.mj@gmail.com",
-      password = "password"
+      password = "password", 
+      phoneNumber = "15005550006"
     )
 
   }
