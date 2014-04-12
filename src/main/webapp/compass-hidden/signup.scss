@@ -11,7 +11,7 @@ button.signup {
   line-height: 1;
 }
 
-.name {
+fieldset.name, fieldset.phone {
   border: none;
   margin: 0;
   padding: 0;
@@ -30,11 +30,21 @@ button.signup {
   display: inline-block;
 }
 
-#first-name {
+#phone {
+  width: 260px;
+  display: inline-block;
+}
+
+#area-code {
+  width: 100px;
+  display: inline-block;
+}
+
+#first-name, #area-code {
   margin-right: 5px;
 }
 
-#email, #password, #first-name, #last-name {
+#email, #password, #first-name, #last-name, #area-code, #area-code, #phone {
   height: 44px;
   border: 1px solid #d9d9d9;
   margin: 5px 0 0;
@@ -82,7 +92,7 @@ button.signup {
   font-size: 16px;
 }
 
-li.name, li.password, li.email {
+li.name, li.password, li.email, li.phone {
   margin-bottom: 20px;
 }
 

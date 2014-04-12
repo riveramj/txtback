@@ -22,15 +22,30 @@
           <label data-lift="Loc.general-email">
             Email
             <span data-lift="Msg?id=email-error&noticeClass=notice&errorClass=error"></span>
-            <input id="email" type="text" autofocus placeholder="Email" data-lift="Loc.general-email?attr=placeholder">
+            <input id="email" type="text" placeholder="Email" data-lift="Loc.general-email?attr=placeholder">
           </label>
         </li>
-        <li class ="password">
+        <li class="password">
           <label data-lift="Loc.user-password">
             Create a Password
             <span data-lift="Msg?id=password-error&noticeClass=notice&errorClass=error"></span>
             <input id="password" type="password" placeholder="Password" data-lift="Loc.user-password?attr=placeholder">
           </label>
+        </li>
+        <li class="phone">
+          <legend>Choose a Phone Number</legend>
+          <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
+            <label>
+              <span class="field-label">Area Code</span>
+              <span data-lift="Msg?id=area-code-error&noticeClass=notice&errorClass=error"></span>
+              <input placeholder="Area Code" id="area-code" type="text">            
+            </label>
+            <label>
+              <span class="field-label">Phone Number</span>
+              <span data-lift="Msg?id=phone-error&noticeClass=notice&errorClass=error"></span>
+              <input placeholder="Phone Number" id="phone" type="text">
+            </label> 
+          </fieldset>
         </li>
         <li class="signup">
           <button data-lift="Loc.user-signup" class="signup">Sign Up</button>
