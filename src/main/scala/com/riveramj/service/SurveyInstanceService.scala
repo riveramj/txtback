@@ -69,12 +69,17 @@ object SurveyInstanceService extends Loggable {
     val nextQuestion = findNextQuestion(surveyInstance) 
     
     val messageBody = nextQuestion match {
+      case Full(question) =>
+        questionToSend(Full(question))
       case Empty =>
         surveyInstance = SurveyInstanceService.finishSurveyInstance(surveyInstance)
         "Thank you for completing our survey. " +
           "To create your own text message survy, visit txtback.co"
-      case Full(question) =>
-        questionToSend(Full(question))
+      case error => 
+        logger.error(
+          s"got $error. SurveyInstanceId: $surveyInstanceId. Next Question: $nextQuestion"
+        )
+        "Something has gone wrong. We aplogize for this."
     }
     
     updateCurrentQuestion(surveyInstance, nextQuestion)
@@ -93,11 +98,20 @@ object SurveyInstanceService extends Loggable {
           toPhoneNumber = surveyInstance.map(_.responderPhone) openOr "",
           message = "We did not understand your previous answer of \"" + response + "\"."
         )
+        
         TwilioService.sendMessage(
           toPhoneNumber = surveyInstance.map(_.responderPhone) openOr "",
           message = question.question
         )
       }
+      case error => 
+        logger.error(
+          s"got $error. SurveyInstanceId: $surveyInstanceId. QuestionId: $questionId. Response: $response"
+        )
+        TwilioService.sendMessage(
+          toPhoneNumber = surveyInstance.map(_.responderPhone) openOr "",
+          message = "Something has gone wrong. We aplogize for this."
+        )
     }
   }
 

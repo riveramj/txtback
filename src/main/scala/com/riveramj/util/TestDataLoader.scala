@@ -32,7 +32,7 @@ object  TestDataLoader extends Loggable {
       userId = userId
     )
 
-    val newSurveyId = survey.map(survey => survey._id).get
+    val newSurveyId = survey.map(survey => survey._id).openOrThrowException("Didnt get survey Id")
 
     val question1 = createQuestion(
       questionText = "what type of pet do you have?",
@@ -41,7 +41,7 @@ object  TestDataLoader extends Loggable {
       surveyId = newSurveyId
     )
 
-    val question1Id = question1.map(question => question._id).get
+    val question1Id = question1.map(question => question._id).openOrThrowException("Didnt get question 1 Id")
 
     AnswerService.createAnswer(
       questionId = question1Id,
@@ -65,7 +65,7 @@ object  TestDataLoader extends Loggable {
       questionNumber = 2,
       surveyId = newSurveyId
     )
-    val question2Id = question2.map(question => question._id).get
+    val question2Id = question2.map(question => question._id).openOrThrowException("Didnt get question 2 Id")
 
     AnswerService.createAnswer(
       questionId = question2Id,
@@ -89,7 +89,7 @@ object  TestDataLoader extends Loggable {
       questionNumber = 3,
       surveyId = newSurveyId
     )
-    val question3Id = question3.map(question => question._id).get
+    val question3Id = question3.map(question => question._id).openOrThrowException("Didnt get question 3 Id")
 
     AnswerService.createAnswer(
       questionId = question3Id,
@@ -115,7 +115,7 @@ object  TestDataLoader extends Loggable {
     )
 
     val surveyInstanceId = surveyInstance.map(surveyInstance =>
-      surveyInstance._id).get
+      surveyInstance._id).openOrThrowException("Didnt get survey Instance Id")
 
     deleteSurveyInstanceById(surveyInstanceId)
   }

@@ -35,7 +35,7 @@ object AnswerService extends Loggable {
     val answer = survey.map { s =>
       s.questions.collect {
         case q: Question => q.answers
-      } flatten
+      }.flatten
     } getOrElse Nil
 
     val answers = answer.filter(_._id == answerId)
@@ -74,7 +74,7 @@ object AnswerService extends Loggable {
         AnswerService.findAnswerIdByResponse(answerChoice, questionId) match {
           case Full(possibleAnswer) =>
             answerChoice
-          case Empty =>
+          case _ =>
             "-1"
         }
       }
