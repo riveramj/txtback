@@ -10,7 +10,7 @@ version := "0.1-SNAPSHOT"
 
 organization := "com.riveramj"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
 
 seq(webSettings :_*)
 
@@ -35,7 +35,7 @@ resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/s
                   "releases"  at "http://oss.sonatype.org/content/repositories/releases")
 
 libraryDependencies ++= {
-val liftVersion = "2.6-M2"
+val liftVersion = "2.6-M3"
   Seq(
     "ch.qos.logback"         %  "logback-classic"      % "1.0.13",
     "org.apache.shiro"       %  "shiro-core"           % "1.2.0",
@@ -66,4 +66,4 @@ resourceGenerators in Compile <+= (resourceManaged, baseDirectory) map
 parallelExecution in Test := false
 
 // append -deprecation to the options passed to the Scala compiler
-scalacOptions += "-deprecation"
+scalacOptions ++= Seq("-deprecation", "-feature")
