@@ -31,6 +31,14 @@ object ValidationService extends Loggable {
     checkDuplicateEmail(email, errorId) or
     checkEmpty(email, errorId)
   }
+
+  def checkValidNumber(phoneNumber: String, errorId: String): Box[ValidationError] = {
+    if (phoneNumber != "5005550006") {
+      Full(ValidationError(errorId, S ? "Use 15005550006 for testing."))
+    } else {
+      Empty 
+    }
+  }
 }
 
 case class ValidationError(id: String, message: String)

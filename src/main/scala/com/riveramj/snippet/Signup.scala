@@ -4,6 +4,7 @@ import net.liftweb.sitemap.Menu
 import net.liftweb.http.{S, SHtml, StatefulSnippet}
 import net.liftweb.util.Helpers._
 import com.riveramj.service.SurveyorService._
+import com.riveramj.service.TwilioService
 import com.riveramj.model.Surveyor
 import net.liftweb.common._
 import net.liftweb.http.js.JsCmds
@@ -23,13 +24,19 @@ class Signup extends Loggable with StatefulSnippet {
     var password = ""
     var firstName = ""
     var lastName = ""
+    var areaCode = ""
+    var phone = ""
+    
 
-    def createUser() = {
+    def signupUser() = {
       val validateFields = List(
         checkEmail(email, "email-error"),
         checkEmpty(firstName, "first-name-error"),
         checkEmpty(lastName, "last-name-error"),
-        checkEmpty(password, "password-error")
+        checkEmpty(password, "password-error"),
+        checkEmpty(areaCode, "area-code-error"),
+        checkEmpty(phone, "phone-error"),
+        checkValidNumber(areaCode+phone, "phone-number-error")
       ).flatten
 
       if(validateFields.isEmpty) {
@@ -39,6 +46,8 @@ class Signup extends Loggable with StatefulSnippet {
           email = email,
           password = password
         )
+
+        val purchasedPhoneNumber = TwilioService.buyPhoneNumber(areaCode+phone)
         
         user.map( newUser => SecurityContext.logUserIn(newUser._id))
         S.redirectTo("/home")
@@ -54,6 +63,8 @@ class Signup extends Loggable with StatefulSnippet {
     "#last-name" #> SHtml.text(lastName, lastName = _) &
     "#email" #> SHtml.text(email, email = _) &
     "#password" #> SHtml.password(password, password = _) &
-    ".signup button" #> SHtml.onSubmitUnit(createUser)
+    "#area-code" #> SHtml.text(areaCode, areaCode = _) &
+    "#phone" #> SHtml.text(phone, phone = _) &
+    ".signup button" #> SHtml.onSubmitUnit(signupUser)
   }
 }
