@@ -33,8 +33,9 @@
           </label>
         </li>
         <li class="phone">
-          <legend>Choose a Phone Number</legend>
-          <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
+          <fieldset class="phone">
+            <legend>Choose a Phone Number</legend>
+            <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
             <label>
               <span class="field-label">Area Code</span>
               <span data-lift="Msg?id=area-code-error&noticeClass=notice&errorClass=error"></span>
@@ -45,6 +46,17 @@
               <span data-lift="Msg?id=phone-error&noticeClass=notice&errorClass=error"></span>
               <input placeholder="Phone Number" id="phone" type="text">
             </label> 
+            <button class="number-search" type="button">Search</button>
+            <ul id="phone-numbers">
+              <li class="number-entry">
+                  <input type="radio" name="available-number" value="4044090725">
+                  <div id="4044090725">404-409-0725</div>
+              </li>
+              <li class="number-entry clearable">
+                  <input type="radio" name="available-number" value="5005550006">
+                  <div id="5005550006">500-555-0006</div>
+              </li>
+            </ul>
           </fieldset>
         </li>
         <li class="signup">
@@ -57,7 +69,11 @@
     <a href="/login">Already have an account?</a>
   </div>
   
-  <tail>
+  <head_merge>
     <link rel="stylesheet" href="/static/css/signup.css">
+  </head_merge>
+
+  <tail>
+    <script type="text/javascript" src="/static/js/signup.js"></script>
   </tail>
 </div>
