@@ -70,6 +70,6 @@ object TwilioService extends Loggable with WrapAsJava {
 
     val purchasedNumber = TestTwilioClient.getAccount.getIncomingPhoneNumberFactory().create(mapAsJavaMap(purchaseParams))
     
-    purchasedNumber
+    purchasedNumber.getPhoneNumber()
   }
 }
