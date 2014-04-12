@@ -31,12 +31,21 @@ fieldset.name, fieldset.phone {
 }
 
 #phone {
-  width: 260px;
+  width: 190px;
   display: inline-block;
 }
 
+button.number-search {
+  display: inline-block;  
+  @extend %btn;
+  height: 46px;
+  padding: 15px;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
 #area-code {
-  width: 100px;
+  width: 80px;
   display: inline-block;
 }
 
@@ -98,4 +107,36 @@ li.name, li.password, li.email, li.phone {
 
 li.signup {
   text-align: right;
+}
+
+#phone-numbers {
+  width: 100%;
+  margin-top: 20px;
+  border-top: solid 1px;
+}
+
+.number-entry {
+  text-align: center;
+  cursor: pointer;
+
+  div {
+    padding: 10px 0;
+  }
+
+
+  border-bottom: solid 1px;
+
+  background: #D4D4D3;
+
+  &:hover {
+    background: #B4B4B3;
+  }
+
+  &.selected {
+    background: #B4B4B3;
+  }
+
+  input {
+    display: none;
+  }
 }
