@@ -33,8 +33,8 @@ object ValidationService extends Loggable {
   }
 
   def checkValidNumber(phoneNumber: String, errorId: String): Box[ValidationError] = {
-    if (phoneNumber != "5005550006") {
-      Full(ValidationError(errorId, S ? "Use 15005550006 for testing."))
+    if (phoneNumber != "(500) 555-0006") {
+      Full(ValidationError(errorId, S ? "Use (500) 555-0006 for testing."))
     } else {
       Empty 
     }
