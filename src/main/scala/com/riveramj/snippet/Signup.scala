@@ -40,20 +40,19 @@ class Signup extends Loggable with StatefulSnippet {
         checkEmpty(firstName, "first-name-error"),
         checkEmpty(lastName, "last-name-error"),
         checkEmpty(password, "password-error"),
-        checkEmpty(areaCode, "area-code-error"),
-        checkEmpty(phone, "phone-error"),
-        checkValidNumber(areaCode+phone, "phone-number-error")
+        checkEmpty(selectedNumber, "phone-number-error")
+        checkValidNumber(selectedNumber, "phone-number-error")
       ).flatten
 
       if(validateFields.isEmpty) {
-        val purchasedPhoneNumber = TwilioService.buyPhoneNumber(areaCode+phone)
+        val purchasedPhoneNumber = TwilioService.buyPhoneNumber(selectedNumber)
         
         val user = createSurveyor(
           firstName = firstName,
           lastName = lastName,
           email = email,
           password = password, 
-          phoneNumber = purchasedPhoneNumber
+          phoneNumber = selectedNumber
         )
         
         user.map( newUser => SecurityContext.logUserIn(newUser._id))
@@ -78,7 +77,6 @@ class Signup extends Loggable with StatefulSnippet {
 
       renderer.setHtml
     }
-    
 
     ClearClearable andThen
     "#first-name" #> SHtml.text(firstName, firstName = _) &
