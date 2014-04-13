@@ -1,33 +1,38 @@
 package com.riveramj.service
 
-import com.twilio.sdk.TwilioRestClient
-import com.twilio.sdk.TwilioRestException
-import com.twilio.sdk.resource.factory.SmsFactory
+import com.twilio.sdk.{TwilioRestClient, TwilioRestException}
 import com.twilio.sdk.resource.instance.Sms
 import com.twilio.sdk.resource.list.SmsList
-import com.twilio.sdk.resource.factory.IncomingPhoneNumberFactory
-import com.twilio.sdk.resource.instance.Account
-import com.twilio.sdk.resource.instance.AvailablePhoneNumber
-import com.twilio.sdk.resource.instance.IncomingPhoneNumber
+import com.twilio.sdk.resource.factory.{IncomingPhoneNumberFactory, SmsFactory}
+import com.twilio.sdk.resource.instance.{Account, AvailablePhoneNumber, IncomingPhoneNumber}
 
+import net.liftweb.common._
+import net.liftweb.util.Props
 
-import net.liftweb.common.Loggable
 import scala.collection.convert.WrapAsJava
 import scala.collection.JavaConverters._
 
-import net.liftweb._
-import common._
-import util.Props
 
 object TwilioService extends Loggable with WrapAsJava {
-  val ACCOUNT_SID = "AC7b257aff635e86c50a87e5755bf0fd79" //TODO: put in props file
-  val AUTH_TOKEN = "82dca0784a423ff566696aa495f702b0" //TODO: put in props file
-  val twilioClient = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-  val messageFactory = twilioClient.getAccount.getSmsFactory
-   
-  val TEST_ACCOUNT_SID = "AC5864c960b5fd10f1af07317c81dbe17a" //TODO: put in props file
-  val TEST_AUTH_TOKEN = "6695764111318a945ee8a89182ac9b7a" //TODO: put in props file
-  val TestTwilioClient = new TwilioRestClient(TEST_ACCOUNT_SID, TEST_AUTH_TOKEN)
+  val accountSid = Props.get("twilio.account.sid").openOr("")
+  val authToken =  Props.get("twilio.auth.token").openOr("")
+  
+  val twilioClient = new TwilioRestClient(accountSid, authToken)
+  val account = twilioClient.getAccount()
+  val smsFactory = account.getSmsFactory()
+  val accountFactory = twilioClient.getAccountFactory()
+  
+  val testAccountSid = Props.get("twilio.test.account.sid").openOr("")
+  val testAuthToken =  Props.get("twilio.test.auth.token").openOr("")
+
+  val testTwilioClient = new TwilioRestClient(testAccountSid, testAuthToken)
+  val testAccount = testTwilioClient.getAccount()
+
+  val incomingPhoneNumberFactory = 
+    (Props.mode == Props.RunModes.Development || Props.mode == Props.RunModes.Pilot) match {
+      case true => testAccount.getIncomingPhoneNumberFactory()
+      case false => account.getIncomingPhoneNumberFactory()
+    }
 
   def sendMessage(toPhoneNumber: String, message: String, fromPhoneNumber: String = "7702123225") {
     val params = Map(
@@ -36,17 +41,15 @@ object TwilioService extends Loggable with WrapAsJava {
     "From" -> fromPhoneNumber
     )
 
-    if(Props.mode == Props.RunModes.Test || Props.mode == Props.RunModes.Production) {
-      messageFactory.create(mapAsJavaMap(params))  
-    }
-    else {
-      logger.info(params)
+    (Props.mode == Props.RunModes.Development) match {
+      case true => logger.info(params)
+      case false => smsFactory.create(mapAsJavaMap(params))  
     }
   }
 
   def lookupPhoneNumbers(areaCode: String, partialPhoneNumber: String = "") = {
     // Get the account and phone number factory class
-    val account = twilioClient.getAccount()
+    
     val phoneNumberFactory = account.getIncomingPhoneNumberFactory()
 
     // Find a number with the given area code!
@@ -68,7 +71,7 @@ object TwilioService extends Loggable with WrapAsJava {
       "PhoneNumber" -> s"+1$phoneNumber"
     )
 
-    val purchasedNumber = TestTwilioClient.getAccount.getIncomingPhoneNumberFactory().create(mapAsJavaMap(purchaseParams))
+    val purchasedNumber = incomingPhoneNumberFactory.create(mapAsJavaMap(purchaseParams))
     
     purchasedNumber.getPhoneNumber()
   }
@@ -77,7 +80,6 @@ object TwilioService extends Loggable with WrapAsJava {
     // Build a filter for the AccountList
     val subAccountParams = Map("FriendlyName" -> email)
      
-    val accountFactory = twilioClient.getAccountFactory()
     val account = accountFactory.create(mapAsJavaMap(subAccountParams))
     account.getSid()
   }
