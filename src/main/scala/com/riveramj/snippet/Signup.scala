@@ -13,6 +13,8 @@ import net.liftweb.http.IdMemoizeTransform
 import com.riveramj.service.ValidationService._
 import com.riveramj.util.SecurityContext
 
+import scala.xml.NodeSeq
+
 object Signup {
   val menu = Menu.i("signup") / "signup"
 }
@@ -27,7 +29,9 @@ class Signup extends Loggable with StatefulSnippet {
     var lastName = ""
     var areaCode = ""
     var phone = ""
-    var availableNumbers: List[String] = Nil 
+    var availableNumbers: List[String] = List("first","second","third") 
+    var phoneNumberRadios: NodeSeq = Nil 
+    var selectedNumber = ""
     
 
     def signupUser() = {
@@ -69,8 +73,12 @@ class Signup extends Loggable with StatefulSnippet {
           "(%s) %s-%s", number.substring(2, 5), number.substring(5, 8), number.substring(8, 12)
         )
       }
+
+      phoneNumberRadios = SHtml.radio(availableNumbers.toSeq, Empty, selectedNumber = _).toForm 
+
       renderer.setHtml
     }
+    
 
     ClearClearable andThen
     "#first-name" #> SHtml.text(firstName, firstName = _) &
@@ -81,10 +89,8 @@ class Signup extends Loggable with StatefulSnippet {
       "#area-code" #> SHtml.ajaxText(areaCode, areaCode = _) &
       "#phone" #> SHtml.ajaxText(phone, phone = _) &
       ".number-search [onclick]" #> SHtml.ajaxInvoke(() => findPhoneNumbers(renderer)) &
-      ".number-entry" #> availableNumbers.map { availableNumber =>
-        "div [id]" #> availableNumber &
-        "div *" #> availableNumber &
-        "input [value]" #> availableNumber
+      ".number-entry" #> phoneNumberRadios.map { radio => 
+        "input" #> radio
       }
     } &
     ".signup button" #> SHtml.onSubmitUnit(signupUser)
