@@ -40,7 +40,7 @@ class Signup extends Loggable with StatefulSnippet {
         checkEmpty(firstName, "first-name-error"),
         checkEmpty(lastName, "last-name-error"),
         checkEmpty(password, "password-error"),
-        checkEmpty(selectedNumber, "phone-number-error")
+        checkEmpty(selectedNumber, "phone-number-error"),
         checkValidNumber(selectedNumber, "phone-number-error")
       ).flatten
 
