@@ -63,7 +63,12 @@ class Signup extends Loggable with StatefulSnippet {
     }
 
     def findPhoneNumbers(renderer: IdMemoizeTransform) = {
-      availableNumbers = TwilioService.lookupPhoneNumbers(areaCode, phone).toList
+      val rawNumbers = List("+15005550006") ++ TwilioService.lookupPhoneNumbers(areaCode, phone).toList
+      availableNumbers = rawNumbers.map { number => 
+        String.format(
+          "(%s) %s-%s", number.substring(2, 5), number.substring(5, 8), number.substring(8, 12)
+        )
+      }
       renderer.setHtml
     }
 
