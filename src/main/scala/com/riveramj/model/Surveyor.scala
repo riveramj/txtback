@@ -12,6 +12,7 @@ case class Surveyor(
   password: String,
   salt: String,
   phoneNumbers: List[String] = Nil,
+  twilioAccountSid: String,
   active: Boolean = false,
   activationKey: Option[String], 
   activationKeyDate: Option[Date]

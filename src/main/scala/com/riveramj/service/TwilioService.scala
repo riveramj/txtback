@@ -72,4 +72,13 @@ object TwilioService extends Loggable with WrapAsJava {
     
     purchasedNumber.getPhoneNumber()
   }
+
+  def createSubAccout(email: String) = {
+    // Build a filter for the AccountList
+    val subAccountParams = Map("FriendlyName" -> email)
+     
+    val accountFactory = twilioClient.getAccountFactory()
+    val account = accountFactory.create(mapAsJavaMap(subAccountParams))
+    account.getSid()
+  }
 }
