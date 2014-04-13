@@ -9,3 +9,9 @@ mail.debug=false
 info.email=info@txtback.co
 
 server.url=http://localhost:8080
+
+twilio.account.sid=AC7b257aff635e86c50a87e5755bf0fd79
+twilio.auth.token=82dca0784a423ff566696aa495f702b0
+
+twilio.test.account.sid=AC5864c960b5fd10f1af07317c81dbe17a
+twilio.test.auth.token=6695764111318a945ee8a89182ac9b7a
