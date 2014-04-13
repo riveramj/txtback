@@ -33,6 +33,8 @@ object SurveyorService extends Loggable {
     val hashedPassword = hashPassword(password, salt)
     val activationKey = Some(ActivationService.createActivationKey())
 
+    val accountSid = TwilioService.createSubAccout(email)
+
     val user = Surveyor(
       _id = ObjectId.get,
       firstName = firstName,
@@ -41,6 +43,7 @@ object SurveyorService extends Loggable {
       password = hashedPassword,
       salt = salt,
       phoneNumbers = List(phoneNumber),
+      twilioAccountSid = accountSid,
       active = false,
       activationKey = activationKey,
       activationKeyDate = Some(new Date())
