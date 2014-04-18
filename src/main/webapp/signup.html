@@ -33,7 +33,11 @@
           </label>
         </li>
         <li class="phone">
-          <fieldset class="available-numbers" data-lift="embed?what=phone-search"></fieldset>
+          <fieldset class="available-numbers">
+            <legend>Choose a Phone Number</legend>
+            <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
+            <div data-lift="embed?what=phone-search"></div>
+          </fieldset>
         </li>
         <li class="signup">
           <button data-lift="Loc.user-signup" class="signup">Sign Up</button>

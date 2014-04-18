@@ -1,5 +1,5 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
-  <form data-lift="account.edit?form=post&eager_eval=true" id="registration">
+  <form data-lift="account.edit?form=post" id="registration">
     <ul id="user-info">
       <li class="name">
         <fieldset class="name">
@@ -30,14 +30,21 @@
           <li class="available-number clearable">(098) 765-4321</li>
         </ul>
       </li>
-      <li>
-        <fieldset class="available-numbers" data-lift="embed?what=phone-search"></fieldset>
-      </li>
       <li class="save-user">
         <button data-lift="Loc.user-saveUser" class="save-user">Save User</button>
       </li>
     </ul>
   </form>
+
+  <ul data-lift="Account.buyNewNumber?eager_eval=true">
+    <li class="phone">
+      <fieldset class="available-numbers">
+        <legend>Buy a New Number</legend>
+        <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
+        <div data-lift="embed?what=phone-search"></div>
+      </fieldset>
+    </li>
+  </ul>
 
   <head_merge>
     <link rel="stylesheet" href="/static/css/account.css">
