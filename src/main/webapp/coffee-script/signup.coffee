@@ -8,11 +8,13 @@ $(document).ready ->
     )
     .on('keydown', "#phone", (event) ->
       if event.which == 13
+        this.blur()
         $(".number-search").click()
         event.preventDefault()
     )
     .on('keydown', "#area-code", (event) ->
       if event.which == 13
+        this.blur()
         $(".number-search").click()
         event.preventDefault()
     )
