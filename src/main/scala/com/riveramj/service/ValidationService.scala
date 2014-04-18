@@ -3,6 +3,7 @@ package com.riveramj.service
 import com.riveramj.service.SurveyorService._
 import net.liftweb.common._
 import net.liftweb.http.S
+import net.liftweb.util.Props
 
 object ValidationService extends Loggable {
 
@@ -33,8 +34,11 @@ object ValidationService extends Loggable {
   }
 
   def checkValidNumber(phoneNumber: String, errorId: String): Box[ValidationError] = {
-    if (phoneNumber != "(500) 555-0006") {
-      Full(ValidationError(errorId, S ? "Use (500) 555-0006 for testing."))
+    val testPhoneNumber = Props.get("test.phone.number").openOr("")
+    val formattedNumber = PhoneNumberService.longFormatPhoneNumber(testPhoneNumber)
+    
+    if (phoneNumber != formattedNumber) {
+      Full(ValidationError(errorId, S ? s"Use $formattedNumber for testing."))
     } else {
       Empty 
     }
