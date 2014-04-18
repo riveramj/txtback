@@ -4,7 +4,7 @@ import net.liftweb.common._
 
 object PhoneNumberService extends Loggable {
 
-  def formatPhoneNumber(number: String) = {
+  def stripNonNumeric(number: String) = {
     val realNumber =
       if (number.startsWith("+1"))
         number.substring(2)

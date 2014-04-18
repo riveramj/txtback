@@ -13,9 +13,9 @@ object NewMessageListener extends RestHelper with Loggable {
       logger.info("new message is:")
       logger.info(req)
 
-      val fromPhone = PhoneNumberService.formatPhoneNumber(req.param("From").openOr(""))
+      val fromPhone = PhoneNumberService.stripNonNumeric(req.param("From").openOr(""))
       
-      val toPhone = PhoneNumberService.formatPhoneNumber(req.param("To").openOr(""))
+      val toPhone = PhoneNumberService.stripNonNumeric(req.param("To").openOr(""))
 
       val response = req.param("Body") openOr ""
 
