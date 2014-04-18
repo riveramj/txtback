@@ -1,6 +1,8 @@
 package com.riveramj.util
 
 import net.liftweb.common.Loggable
+import net.liftweb.util.Props
+
 import com.riveramj.service.SurveyorService.createSurveyor
 import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
@@ -15,12 +17,15 @@ object  TestDataLoader extends Loggable {
   def createTestUsers() {
     logger.info("Creating Test Data")
 
+    val testPhoneNumber = Props.get("test.phone.number").openOr("")
+    val formattedTestNumber = PhoneNumberService.longFormatPhoneNumber(testPhoneNumber)
+
     createSurveyor(
       firstName = "Mike",
       lastName = "Rivera",
       email = "rivera.mj@gmail.com",
       password = "password", 
-      phoneNumber = "15005550006"
+      phoneNumber = formattedTestNumber
     )
 
   }
