@@ -27,6 +27,8 @@ object TwilioService extends Loggable with WrapAsJava {
 
   val testTwilioClient = new TwilioRestClient(testAccountSid, testAuthToken)
   val testAccount = testTwilioClient.getAccount()
+  
+  val testPhoneNumber = Props.get("test.phone.number").openOr("")
 
   val incomingPhoneNumberFactory = 
     (Props.mode == Props.RunModes.Development || Props.mode == Props.RunModes.Pilot) match {
@@ -61,7 +63,7 @@ object TwilioService extends Loggable with WrapAsJava {
 
     val availablePhoneNumbers = account.getAvailablePhoneNumbers(mapAsJavaMap(params)).getPageData()
 
-    availablePhoneNumbers.asScala.map(_.getPhoneNumber())
+    List(testPhoneNumber) ++ availablePhoneNumbers.asScala.map(_.getPhoneNumber()).toList
   }
 
   def buyPhoneNumber(phoneNumber: String) = {
