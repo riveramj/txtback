@@ -48,10 +48,14 @@
     </div>
     <div><span id="question-length">0</span>/162</div>
   </form>
-  <div class="input-group" data-lift="SurveySnippet.sendSurvey">
+  <fieldset data-lift="SurveySnippet.sendSurvey">
+    <select id="phone-select">
+      <option value="(123) 456-7890">(123) 456-7890</option>
+      <option value="(123) 456-7890">(098) 765-4321</option>
+    </select>
     <textarea id="phone-number" type="text" placeholder="Enter Phone Number"></textarea>
     <button type="button" id="send-survey" class="btn">Send Survey</button>
-  </div>
+  </fieldset>
   <span data-lift="msg?id=send-survey-notice">Survey Sent</span>
 
   <div data-lift="embed?what=edit-question"></div>
