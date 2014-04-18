@@ -1,5 +1,5 @@
 <div id="main" data-lift="surround?with=default-template;at=content">
-  <form data-lift="account.edit?form=post" id="registration">
+  <form data-lift="account.edit?form=post&eager_eval=true" id="registration">
     <ul id="user-info">
       <li class="name">
         <fieldset class="name">
@@ -23,6 +23,16 @@
           <input id="email" type="text" autofocus placeholder="Email" data-lift="Loc.general-email?attr=placeholder">
         </label>
       </li>
+      <li>
+        <h3>Available Numbers</h3>
+        <ul id="available-numbers">
+          <li class="available-number">(123) 456-7890</li>
+          <li class="available-number clearable">(098) 765-4321</li>
+        </ul>
+      </li>
+      <li>
+        <fieldset class="available-numbers" data-lift="embed?what=phone-search"></fieldset>
+      </li>
       <li class="save-user">
         <button data-lift="Loc.user-saveUser" class="save-user">Save User</button>
       </li>
@@ -31,5 +41,6 @@
 
   <tail>
     <link rel="stylesheet" href="/static/css/account.css">
+    <script type="text/javascript" src="/static/js/account.js"></script>
   </tail>
 </div>
