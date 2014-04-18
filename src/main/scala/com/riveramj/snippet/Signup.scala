@@ -3,13 +3,15 @@ package com.riveramj.snippet
 import net.liftweb.sitemap.Menu
 import net.liftweb.http.{S, SHtml, StatefulSnippet}
 import net.liftweb.util.Helpers._
-import com.riveramj.service.SurveyorService._
-import com.riveramj.service.TwilioService
-import com.riveramj.model.Surveyor
+import net.liftweb.util.Props
 import net.liftweb.common._
 import net.liftweb.util.ClearClearable
 import net.liftweb.http.js.JsCmds
 import net.liftweb.http.IdMemoizeTransform
+
+import com.riveramj.service.SurveyorService._
+import com.riveramj.service.{PhoneNumberService, TwilioService}
+import com.riveramj.model.Surveyor
 import com.riveramj.service.ValidationService._
 import com.riveramj.util.SecurityContext
 
@@ -19,6 +21,8 @@ object Signup {
   val menu = Menu.i("signup") / "signup"
 }
 class Signup extends Loggable with StatefulSnippet {
+  val testPhoneNumber = Props.get("test.phone.number").openOr("")
+  val formattedTestNumber = PhoneNumberService.longFormatPhoneNumber(testPhoneNumber)
 
   def dispatch = {case _ => render}
 
@@ -29,7 +33,7 @@ class Signup extends Loggable with StatefulSnippet {
     var lastName = ""
     var areaCode = ""
     var phone = ""
-    var availableNumbers: List[String] = List("first","second","third") 
+    var availableNumbers: List[String] = Nil
     var phoneNumberRadios: NodeSeq = Nil 
     var selectedNumber = ""
     
@@ -45,8 +49,11 @@ class Signup extends Loggable with StatefulSnippet {
       ).flatten
 
       if(validateFields.isEmpty) {
-        val purchasedPhoneNumber = TwilioService.buyPhoneNumber(selectedNumber)
-        
+        val purchasedPhoneNumber = (selectedNumber == formattedTestNumber) match {
+          case true => selectedNumber
+          case false => TwilioService.buyPhoneNumber(selectedNumber)
+        }
+
         val user = createSurveyor(
           firstName = firstName,
           lastName = lastName,
@@ -66,11 +73,9 @@ class Signup extends Loggable with StatefulSnippet {
     }
 
     def findPhoneNumbers(renderer: IdMemoizeTransform) = {
-      val rawNumbers = List("+15005550006") ++ TwilioService.lookupPhoneNumbers(areaCode, phone).toList
+      val rawNumbers = TwilioService.lookupPhoneNumbers(areaCode, phone)
       availableNumbers = rawNumbers.map { number => 
-        String.format(
-          "(%s) %s-%s", number.substring(2, 5), number.substring(5, 8), number.substring(8, 12)
-        )
+        PhoneNumberService.longFormatPhoneNumber(number)
       }
 
       phoneNumberRadios = SHtml.radio(availableNumbers.toSeq, Empty, selectedNumber = _).toForm 
