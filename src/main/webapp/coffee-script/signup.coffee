@@ -7,13 +7,13 @@ $(document).ready ->
       event.stopPropagation()
     )
     .on('keydown', "#phone", (event) ->
-      event.preventDefault()
       if event.which == 13
         $(".number-search").click()
+        event.preventDefault()
     )
     .on('keydown', "#area-code", (event) ->
-      event.preventDefault()
       if event.which == 13
         $(".number-search").click()
+        event.preventDefault()
     )
    
