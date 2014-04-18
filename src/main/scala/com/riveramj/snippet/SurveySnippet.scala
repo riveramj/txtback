@@ -88,8 +88,8 @@ class SurveySnippet extends Loggable {
     phoneNumbers.map { number => 
       SurveyService.startSurvey( 
         surveyId,
-        PhoneNumberService.formatPhoneNumber(number),
-        "7702123225"
+        PhoneNumberService.stripNonNumeric(number),
+        fromPhoneNumber
       )
     }
 
