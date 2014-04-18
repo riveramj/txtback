@@ -13,4 +13,10 @@ object PhoneNumberService extends Loggable {
 
     realNumber.filter(_.toString.matches("\\d"))
   }
+
+  def longFormatPhoneNumber(number: String) = {
+    String.format(
+      "(%s) %s-%s", number.substring(2, 5), number.substring(5, 8), number.substring(8, 12)
+    )
+  }
 }
