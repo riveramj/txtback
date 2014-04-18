@@ -32,12 +32,6 @@ class Account extends Loggable {
     var firstName = user.firstName
     var lastName = user.lastName
 
-    var availableNumbers: List[String] = Nil
-    var phoneNumberRadios: NodeSeq = Nil 
-    var selectedNumber = ""
-    var areaCode = ""
-    var phone = ""
-
     def updateUser() = {
       val emailError = 
         if(email != user.email)
@@ -68,9 +62,24 @@ class Account extends Loggable {
       }
     }
 
-    def findPhoneNumbers(renderer: IdMemoizeTransform) = {
-      println(areaCode)
-      println(phone)
+    ClearClearable andThen
+    "#first-name" #> SHtml.text(firstName, firstName = _) &
+    "#last-name" #> SHtml.text(lastName, lastName = _) &
+    "#email" #> SHtml.text(email, email = _) &
+    "#available-numbers" #> user.phoneNumbers.map { number => 
+      ".available-number *" #> number
+    } &
+    ".save-user button" #> SHtml.onSubmitUnit(updateUser)
+  }
+
+  def buyNewNumber = {
+    var availableNumbers: List[String] = Nil
+    var phoneNumberRadios: NodeSeq = Nil 
+    var selectedNumber = ""
+    var areaCode = ""
+    var phone = ""
+
+     def findPhoneNumbers(renderer: IdMemoizeTransform) = {
       val rawNumbers = TwilioService.lookupPhoneNumbers(areaCode, phone)
       availableNumbers = rawNumbers.map { number => 
         PhoneNumberService.longFormatPhoneNumber(number)
@@ -80,15 +89,8 @@ class Account extends Loggable {
 
       renderer.setHtml
     }
-
-
+    
     ClearClearable andThen
-    "#first-name" #> SHtml.text(firstName, firstName = _) &
-    "#last-name" #> SHtml.text(lastName, lastName = _) &
-    "#email" #> SHtml.text(email, email = _) &
-    "#available-numbers" #> user.phoneNumbers.map { number => 
-      ".available-number *" #> number
-    } &
     ".available-numbers"  #> SHtml.idMemoize { renderer =>
       "#area-code" #> SHtml.ajaxText(areaCode, areaCode = _) &
       "#phone" #> SHtml.ajaxText(phone, phone = _) &
@@ -96,7 +98,6 @@ class Account extends Loggable {
       ".number-entry" #> phoneNumberRadios.map { radio => 
         "input" #> radio
       }
-    } &
-    ".save-user button" #> SHtml.onSubmitUnit(updateUser)
+    }
   }
 }
