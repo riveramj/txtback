@@ -1,0 +1,27 @@
+<fieldset class="available-numbers">
+  <legend>Choose a Phone Number</legend>
+  <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
+  <label>
+    <span class="field-label">Area Code</span>
+    <span data-lift="Msg?id=area-code-error&noticeClass=notice&errorClass=error"></span>
+    <input placeholder="Area Code" id="area-code" type="text">            
+  </label>
+  <label>
+    <span class="field-label">Phone Number</span>
+    <span data-lift="Msg?id=phone-error&noticeClass=notice&errorClass=error"></span>
+    <input placeholder="Phone Number" id="phone" type="text">
+  </label> 
+  <button class="number-search" type="button">Search</button>
+  <ul id="phone-numbers">
+    <li class="number-entry"> 
+      <!-- Need to fix the input below so it reflects temp data. Lift radio dials are odd. -->
+      <input>                
+    </li>
+    <li class="number-entry clearable">
+      <span>
+        <input type="radio" name="available-number" value="5005550006">
+        (500) 555-0006
+      </span>
+    </li>
+  </ul>
+</fieldset>
