@@ -1,16 +1,19 @@
 package com.riveramj.snippet
 
-import com.riveramj.service._
 import net.liftweb.util.{CssSel, ClearClearable}
 import net.liftweb.util.Helpers._
 import net.liftweb.sitemap._
 import net.liftweb.common._
 import net.liftweb.sitemap.Loc.TemplateBox
 import net.liftweb.http._
-import com.riveramj.model.{QuestionType, Question}
 import net.liftweb.http.js.{JE, JsCmds, JsCmd}
 import net.liftweb.http.js.JsCmds.Noop
+
 import org.bson.types.ObjectId
+
+import com.riveramj.model.{QuestionType, Question}
+import com.riveramj.service._
+import com.riveramj.util.SecurityContext
 
 object SurveySnippet {
   import com.riveramj.util.PathHelpers.loggedIn
@@ -34,6 +37,7 @@ class SurveySnippet extends Loggable {
 
   var newQuestion = ""
   var toPhoneNumber = ""
+  var fromPhoneNumber = ""
 
   val surveyId = menu.currentValue map {ObjectId.massageToObjectId(_)} openOrThrowException "Not valid survey id"
   surveyIdRV(Full(surveyId))
@@ -112,6 +116,15 @@ class SurveySnippet extends Loggable {
   }
 
   def sendSurvey() = {
+    val userPhoneNumbers = SecurityContext.currentUser.map(_.phoneNumbers) openOr Nil
+
+    val phoneNumberSelect = SHtml.select(
+        userPhoneNumbers.map(number => (number, number)),
+        Empty,
+        fromPhoneNumber = _
+      )
+    
+    "#phone-select" #> phoneNumberSelect &
     "#phone-number" #> SHtml.ajaxTextarea(toPhoneNumber, toPhoneNumber = _) &
     "#send-survey [onclick]" #> SHtml.ajaxInvoke(startSurvey _)
   }
