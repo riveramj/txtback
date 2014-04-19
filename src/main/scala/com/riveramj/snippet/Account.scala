@@ -13,6 +13,7 @@ import net.liftweb.util.Helpers._
 import net.liftweb.util.ClearClearable
 import net.liftweb.http.js.JsCmds
 import net.liftweb.http.IdMemoizeTransform
+import net.liftweb.util.Props
 
 import scala.xml.NodeSeq
 
@@ -26,6 +27,9 @@ object Account {
 
 class Account extends Loggable {
   val user = SecurityContext.currentUser openOrThrowException "Need Valid User"
+
+  val testPhoneNumber = Props.get("test.phone.number").openOr("")
+  val formattedTestNumber = PhoneNumberService.longFormatPhoneNumber(testPhoneNumber)
 
   def edit = {
     var email = user.email
@@ -89,7 +93,32 @@ class Account extends Loggable {
 
       renderer.setHtml
     }
-    
+
+    def buyNumber() = {
+      val validateFields = List(
+        checkEmpty(selectedNumber, "phone-number-error"),
+        checkValidNumber(selectedNumber, "phone-number-error")
+      ).flatten
+
+      if(validateFields.isEmpty) {
+        val purchasedPhoneNumber = (selectedNumber == formattedTestNumber) match {
+          case true => selectedNumber
+          case false => TwilioService.buyPhoneNumber(selectedNumber)
+        }
+
+        val updatedUser = user.copy(
+          phoneNumbers = user.phoneNumbers ++ List(purchasedPhoneNumber)
+        )
+
+        saveUser(updatedUser)
+      }
+      else {
+        for (error <- validateFields) {
+          S.error(error.id, error.message)
+        }
+      }
+    }
+
     ClearClearable andThen
     ".available-numbers"  #> SHtml.idMemoize { renderer =>
       "#area-code" #> SHtml.ajaxText(areaCode, areaCode = _) &
@@ -98,6 +127,7 @@ class Account extends Loggable {
       ".number-entry" #> phoneNumberRadios.map { radio => 
         "input" #> radio
       }
-    }
+    } &
+    ".buy-number button" #> SHtml.onSubmitUnit(buyNumber)
   }
 }

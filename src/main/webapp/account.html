@@ -36,15 +36,20 @@
     </ul>
   </form>
 
-  <ul data-lift="Account.buyNewNumber?eager_eval=true">
-    <li class="phone">
-      <fieldset class="available-numbers">
-        <legend>Buy a New Number</legend>
-        <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
-        <div data-lift="embed?what=phone-search"></div>
-      </fieldset>
-    </li>
-  </ul>
+  <form data-lift="Account.buyNewNumber?form=post&eager_eval=true">
+    <ul id="buy-new-number">
+      <li class="phone">
+        <fieldset class="available-numbers">
+          <legend>Buy a New Number</legend>
+          <span data-lift="Msg?id=phone-number-error&noticeClass=notice&errorClass=error"></span>
+          <div data-lift="embed?what=phone-search"></div>
+        </fieldset>
+      </li>
+      <li class="buy-number">
+        <button data-lift="Loc.user-buyNumber" class="buy-number">Buy Number</button>
+      </li>
+    </ul>
+  <form>
 
   <head_merge>
     <link rel="stylesheet" href="/static/css/account.css">
