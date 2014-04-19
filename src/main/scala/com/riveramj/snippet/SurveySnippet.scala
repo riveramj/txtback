@@ -119,7 +119,7 @@ class SurveySnippet extends Loggable {
     val userPhoneNumbers = SecurityContext.currentUser.map(_.phoneNumbers) openOr Nil
 
     val phoneNumberSelect = SHtml.select(
-        userPhoneNumbers.map(number => (number, number)),
+        userPhoneNumbers.map(number => (number.number, number.number)),
         Empty,
         fromPhoneNumber = _
       )

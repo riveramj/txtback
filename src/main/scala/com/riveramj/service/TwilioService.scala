@@ -12,6 +12,9 @@ import net.liftweb.util.Props
 import scala.collection.convert.WrapAsJava
 import scala.collection.JavaConverters._
 
+import com.riveramj.model.PhoneNumber
+import com.riveramj.util.SecurityContext
+
 
 object TwilioService extends Loggable with WrapAsJava {
   val accountSid = Props.get("twilio.account.sid").openOr("")
@@ -76,9 +79,11 @@ object TwilioService extends Loggable with WrapAsJava {
     val purchasedNumber = incomingPhoneNumberFactory.create(mapAsJavaMap(purchaseParams))
     
     purchasedNumber.getPhoneNumber()
+    PhoneNumber(sid = purchasedNumber.getSid(), number = purchasedNumber.getPhoneNumber()) 
+  }
   }
 
-  def createSubAccout(email: String) = {
+  def createSubAccount(email: String) = {
     // Build a filter for the AccountList
     val subAccountParams = Map("FriendlyName" -> email)
      

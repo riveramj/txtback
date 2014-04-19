@@ -11,7 +11,7 @@ import net.liftweb.http.IdMemoizeTransform
 
 import com.riveramj.service.SurveyorService._
 import com.riveramj.service.{PhoneNumberService, TwilioService}
-import com.riveramj.model.Surveyor
+import com.riveramj.model.{Surveyor, PhoneNumber}
 import com.riveramj.service.ValidationService._
 import com.riveramj.util.SecurityContext
 
@@ -50,7 +50,7 @@ class Signup extends Loggable with StatefulSnippet {
 
       if(validateFields.isEmpty) {
         val purchasedPhoneNumber = (selectedNumber == formattedTestNumber) match {
-          case true => selectedNumber
+          case true => PhoneNumber(number = selectedNumber, sid = "")
           case false => TwilioService.buyPhoneNumber(selectedNumber)
         }
 
@@ -59,7 +59,7 @@ class Signup extends Loggable with StatefulSnippet {
           lastName = lastName,
           email = email,
           password = password, 
-          phoneNumber = selectedNumber
+          phoneNumber = purchasedPhoneNumber
         )
         
         user.map( newUser => SecurityContext.logUserIn(newUser._id))

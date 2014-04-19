@@ -4,6 +4,11 @@ import org.bson.types.ObjectId
 import net.liftweb.mongodb._
 import java.util.Date
 
+case class PhoneNumber(
+  sid: String,
+  number: String
+)
+
 case class Surveyor(
   _id: ObjectId,
   firstName: String,
@@ -11,7 +16,7 @@ case class Surveyor(
   email: String,
   password: String,
   salt: String,
-  phoneNumbers: List[String] = Nil,
+  phoneNumbers: Seq[PhoneNumber] = Nil,
   twilioAccountSid: String,
   active: Boolean = false,
   activationKey: Option[String], 
