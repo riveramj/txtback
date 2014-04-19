@@ -1,6 +1,6 @@
 package com.riveramj.service
 
-import com.riveramj.model.Surveyor
+import com.riveramj.model.{Surveyor, PhoneNumber}
 import com.riveramj.service.MailService._
 import net.liftweb.util.Props
 
@@ -27,14 +27,15 @@ object SurveyorService extends Loggable {
     rng.nextBytes(32).toBase64
   }
 
-  def createSurveyor(firstName: String, lastName: String, email: String, password: String, phoneNumber: String) = {
+  def createSurveyor(firstName: String, lastName: String, email: String, password: String, phoneNumber: PhoneNumber) = {
 
     val salt = getSalt
     val hashedPassword = hashPassword(password, salt)
     val activationKey = Some(ActivationService.createActivationKey())
 
-    val accountSid = TwilioService.createSubAccout(email)
-
+    val accountSid = TwilioService.createSubAccount(email)
+    
+    
     val user = Surveyor(
       _id = ObjectId.get,
       firstName = firstName,
@@ -42,7 +43,7 @@ object SurveyorService extends Loggable {
       email = email,
       password = hashedPassword,
       salt = salt,
-      phoneNumbers = List(phoneNumber),
+      phoneNumbers = Seq(phoneNumber),
       twilioAccountSid = accountSid,
       active = false,
       activationKey = activationKey,

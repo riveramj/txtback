@@ -8,7 +8,7 @@ import com.riveramj.service.SurveyService.createSurvey
 import com.riveramj.service.QuestionService.createQuestion
 import com.riveramj.service.SurveyInstanceService._
 import com.riveramj.service._
-import com.riveramj.model.QuestionType
+import com.riveramj.model.{QuestionType, PhoneNumber}
 
 object  TestDataLoader extends Loggable {
   val surveyName = "questions about you"
@@ -25,7 +25,7 @@ object  TestDataLoader extends Loggable {
       lastName = "Rivera",
       email = "rivera.mj@gmail.com",
       password = "password", 
-      phoneNumber = formattedTestNumber
+      phoneNumber = PhoneNumber(number = formattedTestNumber, sid = "")
     )
 
   }

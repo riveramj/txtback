@@ -2,7 +2,7 @@ package com.riveramj.snippet
 
 import com.riveramj.service.SurveyorService._
 import com.riveramj.service.{TwilioService, PhoneNumberService}
-import com.riveramj.model.Surveyor
+import com.riveramj.model.{Surveyor, PhoneNumber}
 import com.riveramj.service.ValidationService._
 import com.riveramj.util.SecurityContext
 
@@ -71,7 +71,7 @@ class Account extends Loggable {
     "#last-name" #> SHtml.text(lastName, lastName = _) &
     "#email" #> SHtml.text(email, email = _) &
     "#available-numbers" #> user.phoneNumbers.map { number => 
-      ".available-number *" #> number
+      ".available-number *" #> number.number
     } &
     ".save-user button" #> SHtml.onSubmitUnit(updateUser)
   }
@@ -102,12 +102,12 @@ class Account extends Loggable {
 
       if(validateFields.isEmpty) {
         val purchasedPhoneNumber = (selectedNumber == formattedTestNumber) match {
-          case true => selectedNumber
+          case true => PhoneNumber(number = selectedNumber, sid = "")
           case false => TwilioService.buyPhoneNumber(selectedNumber)
         }
 
         val updatedUser = user.copy(
-          phoneNumbers = user.phoneNumbers ++ List(purchasedPhoneNumber)
+          phoneNumbers = user.phoneNumbers ++ Seq(purchasedPhoneNumber)
         )
 
         saveUser(updatedUser)
