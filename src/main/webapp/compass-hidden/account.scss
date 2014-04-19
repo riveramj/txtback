@@ -4,7 +4,7 @@ h3 {
   text-align: center;
 }
 
-button.save-user {
+button.save-user, button.buy-number {
   @extend %btn;
   height: 46px;
   padding: 15px;
@@ -86,7 +86,7 @@ li.name, li.email {
   margin-bottom: 20px;
 }
 
-li.save-user {
+li.save-user, li.buy-number {
   text-align: right;
 }
 
@@ -162,5 +162,12 @@ button.number-search {
   display: block;
 }
 
+#buy-new-number {
+  padding-top: 50px;
+}
+
+button.buy-number {
+  margin-top: 20px;
+}
 
 
