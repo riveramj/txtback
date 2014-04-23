@@ -28,100 +28,101 @@ object  TestDataLoader extends Loggable {
       phoneNumber = PhoneNumber(number = formattedTestNumber, sid = "")
     )
 
+    createSurveyor(
+      firstName = "Josh",
+      lastName = "Erickson",
+      email = "josh@applecrumbs.com",
+      password = "password", 
+      phoneNumber = PhoneNumber(number = formattedTestNumber, sid = "")
+    )
+
   }
   def createTestQuestions() {
-    val userId = SurveyorService.getUserByEmail("rivera.mj@gmail.com").map(_._id) openOrThrowException "no valid user"
+    val userIdMike = SurveyorService.getUserByEmail("rivera.mj@gmail.com").map(_._id) openOrThrowException "no valid user"
 
-    val survey = createSurvey(
-      name = surveyName,
-      userId = userId
-    )
+    val userIdJosh = SurveyorService.getUserByEmail("josh@applecrumbs.com").map(_._id) openOrThrowException "no valid user"
 
-    val newSurveyId = survey.map(survey => survey._id).openOrThrowException("Didnt get survey Id")
+    val testUsers = List(userIdMike, userIdJosh)
 
-    val question1 = createQuestion(
-      questionText = "what type of pet do you have?",
-      questionType = QuestionType.choseOne,
-      questionNumber = 1,
-      surveyId = newSurveyId
-    )
+    val surveyIds = testUsers.map { userId => 
+      createSurvey(
+        name = surveyName,
+        userId = userId
+      ).openOrThrowException("Didnt get survey")
+    }
 
-    val question1Id = question1.map(question => question._id).openOrThrowException("Didnt get question 1 Id")
+    surveyIds.map { survey => 
 
-    AnswerService.createAnswer(
-      questionId = question1Id,
-      number = 1,
-      answer = "dog"
-    )
-    AnswerService.createAnswer(
-      questionId = question1Id,
-      number = 2,
-      answer = "cat"
-    )
-    AnswerService.createAnswer(
-      questionId = question1Id,
-      number = 3,
-      answer = "none"
-    )
+      val newSurveyId = survey._id
+      
+      val question1Id = createQuestion(
+        questionText = "what type of pet do you have?",
+        questionType = QuestionType.choseOne,
+        questionNumber = 1,
+        surveyId = newSurveyId
+      ).map(_._id).openOrThrowException("Didnt get question 1 Id")
 
-    val question2 = createQuestion(
-      questionText = "which state do you live in?",
-      questionType = QuestionType.choseOne,
-      questionNumber = 2,
-      surveyId = newSurveyId
-    )
-    val question2Id = question2.map(question => question._id).openOrThrowException("Didnt get question 2 Id")
+      AnswerService.createAnswer(
+        questionId = question1Id,
+        number = 1,
+        answer = "dog"
+      )
+      AnswerService.createAnswer(
+        questionId = question1Id,
+        number = 2,
+        answer = "cat"
+      )
+      AnswerService.createAnswer(
+        questionId = question1Id,
+        number = 3,
+        answer = "none"
+      )
 
-    AnswerService.createAnswer(
-      questionId = question2Id,
-      number = 1,
-      answer = "georgia"
-    )
-    AnswerService.createAnswer(
-      questionId = question2Id,
-      number = 2,
-      answer = "florida"
-    )
-    AnswerService.createAnswer(
-      questionId = question2Id,
-      number = 3,
-      answer = "other"
-    )
+      val question2Id = createQuestion(
+        questionText = "which state do you live in?",
+        questionType = QuestionType.choseOne,
+        questionNumber = 2,
+        surveyId = newSurveyId
+      ).map(_._id).openOrThrowException("Didnt get question 2 Id")
 
-    val question3 = createQuestion(
-      questionText = "whats your favorite food",
-      questionType = QuestionType.choseOne,
-      questionNumber = 3,
-      surveyId = newSurveyId
-    )
-    val question3Id = question3.map(question => question._id).openOrThrowException("Didnt get question 3 Id")
+      AnswerService.createAnswer(
+        questionId = question2Id,
+        number = 1,
+        answer = "georgia"
+      )
+      AnswerService.createAnswer(
+        questionId = question2Id,
+        number = 2,
+        answer = "florida"
+      )
+      AnswerService.createAnswer(
+        questionId = question2Id,
+        number = 3,
+        answer = "other"
+      )
 
-    AnswerService.createAnswer(
-      questionId = question3Id,
-      number = 1,
-      answer = "pizza"
-    )
-    AnswerService.createAnswer(
-      questionId = question3Id,
-      number = 2,
-      answer = "hot dogs"
-    )
-    AnswerService.createAnswer(
-      questionId = question3Id,
-      number = 3,
-      answer = "other"
-    )
+      val question3Id = createQuestion(
+        questionText = "whats your favorite food",
+        questionType = QuestionType.choseOne,
+        questionNumber = 3,
+        surveyId = newSurveyId
+      ).map(_._id).openOrThrowException("Didnt get question 3 Id")
 
-    val surveyInstance = createSurveyInstance(
-      responderPhone = "4044090725",
-      surveyId = newSurveyId,
-      currentQuestionId = question1Id,
-      senderPhoneNumber = "7702123225"
-    )
-
-    val surveyInstanceId = surveyInstance.map(surveyInstance =>
-      surveyInstance._id).openOrThrowException("Didnt get survey Instance Id")
-
-    deleteSurveyInstanceById(surveyInstanceId)
+      AnswerService.createAnswer(
+        questionId = question3Id,
+        number = 1,
+        answer = "pizza"
+      )
+      AnswerService.createAnswer(
+        questionId = question3Id,
+        number = 2,
+        answer = "hot dogs"
+      )
+      AnswerService.createAnswer(
+        questionId = question3Id,
+        number = 3,
+        answer = "other"
+      )
+    }
   }
 }
