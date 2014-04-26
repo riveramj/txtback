@@ -10,8 +10,12 @@ object NewMessageListener extends RestHelper with Loggable {
   serve("api" / "textMessage" prefix {
     case "newMessage"  :: _ Post req =>
     {
-      logger.info("new message is:")
+      logger.info("new message is:")      
       logger.info(req)
+
+      println("=========")
+      println(req.body)
+      println("=========")
 
       val fromPhone = PhoneNumberService.stripNonNumeric(req.param("From").openOr(""))
       
