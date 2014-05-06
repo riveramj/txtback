@@ -106,6 +106,8 @@ class SurveySnippet extends Loggable {
       )
     }
 
+    SurveyService.markSurveyAsStarted(surveyId)
+
     S.notice("send-survey-notice", "Survey Sent") //TODO: validate it actually sent
   }
 
