@@ -16,7 +16,8 @@ object SurveyService extends Loggable {
       _id = ObjectId.get,
       name = name,
       userId = userId,
-      questions = Nil
+      questions = Nil,
+      startedDate = None
     )
 
     saveSurvey(survey)
