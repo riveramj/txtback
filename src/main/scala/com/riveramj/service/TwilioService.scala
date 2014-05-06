@@ -8,6 +8,7 @@ import com.twilio.sdk.resource.instance.{Account, AvailablePhoneNumber, Incoming
 
 import net.liftweb.common._
 import net.liftweb.util.Props
+import net.liftweb.util.StringHelpers.randomString
 
 import scala.collection.convert.WrapAsJava
 import scala.collection.JavaConverters._
@@ -95,7 +96,12 @@ object TwilioService extends Loggable with WrapAsJava {
     // Build a filter for the AccountList
     val subAccountParams = Map("FriendlyName" -> email)
      
-    val account = accountFactory.create(mapAsJavaMap(subAccountParams))
-    account.getSid()
+    Props.mode match {
+      case Props.RunModes.Development => 
+        randomString(16)
+      case _ => 
+        val account = accountFactory.create(mapAsJavaMap(subAccountParams))
+        account.getSid()
+    }
   }
 }
