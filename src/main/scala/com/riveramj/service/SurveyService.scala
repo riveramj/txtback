@@ -1,12 +1,16 @@
 package com.riveramj.service
 
-import net.liftweb.common._
 import com.riveramj.model._
+
+import net.liftweb.common._
 import net.liftweb.util.Helpers._
-import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json.JsonAST.JObject
+
+import org.bson.types.ObjectId
+
 import java.util.regex._
+import java.util.Date
 
 object SurveyService extends Loggable {
 
@@ -20,6 +24,16 @@ object SurveyService extends Loggable {
     )
 
     saveSurvey(survey)
+  }
+
+  def markSurveyAsStarted(surveyId: ObjectId) = {
+    val possibleSurvey = getSurveyById(surveyId)
+
+    possibleSurvey.map { survey =>
+      updateSurvey(survey.copy(
+        startedDate = Some(new Date())
+      ))
+    }
   }
 
   def saveSurvey(survey:Survey): Box[Survey] = {
