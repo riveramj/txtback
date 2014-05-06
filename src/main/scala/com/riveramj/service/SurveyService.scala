@@ -3,7 +3,6 @@ package com.riveramj.service
 import net.liftweb.common._
 import com.riveramj.model._
 import net.liftweb.util.Helpers._
-import com.riveramj.service.QuestionService.questionToSend
 import org.bson.types.ObjectId
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json.JsonAST.JObject
@@ -66,18 +65,6 @@ object SurveyService extends Loggable {
   def getFirstQuestionBySurveyId(surveyId: ObjectId): Box[Question] = {
     val question = getSurveyById(surveyId).map(_.questions.filter(_.questionNumber == 1)) openOr Nil
     question.headOption
-  }
-
-  def startSurvey(surveyId: ObjectId, toPhoneNumber: String, senderPhoneNumber: String) {
-    val firstQuestion = getFirstQuestionBySurveyId(surveyId) openOrThrowException "No first question"
-    val surveyInstance = SurveyInstanceService.createSurveyInstance(
-      responderPhone = toPhoneNumber,
-      surveyId = surveyId,
-      currentQuestionId = firstQuestion._id,
-      senderPhoneNumber = senderPhoneNumber
-    )
-
-    TwilioService.sendMessage(toPhoneNumber,questionToSend(Full(firstQuestion)))
   }
 
   def getSurveyByQuestionId(questionId: ObjectId): Box[Survey] = {

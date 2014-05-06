@@ -89,11 +89,20 @@ class SurveySnippet extends Loggable {
   def startSurvey:JsCmd = {
     val phoneNumbers = toPhoneNumber.split("""[, ;]""")
 
-    phoneNumbers.map { number => 
-      SurveyService.startSurvey( 
-        surveyId,
-        PhoneNumberService.stripNonNumeric(number),
-        fromPhoneNumber
+    val firstQuestion = SurveyService.getFirstQuestionBySurveyId(surveyId) openOrThrowException "No first question"
+    
+    phoneNumbers.foreach { number => 
+      val toPhoneNumber = PhoneNumberService.stripNonNumeric(number)
+      SurveyInstanceService.createSurveyInstance(
+        responderPhone = toPhoneNumber,
+        surveyId = surveyId,
+        currentQuestionId = firstQuestion._id,
+        senderPhoneNumber = fromPhoneNumber
+      )
+      
+      TwilioService.sendMessage(
+        toPhoneNumber,
+        QuestionService.questionToSend(Full(firstQuestion))
       )
     }
 
