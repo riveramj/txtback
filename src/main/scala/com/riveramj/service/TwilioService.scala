@@ -44,9 +44,9 @@ object TwilioService extends Loggable with WrapAsJava {
 
     val smsFactory = subAccount.getSmsFactory()
     
-    (Props.mode == Props.RunModes.Development) match {
-      case true => logger.info(params)
-      case false => smsFactory.create(mapAsJavaMap(params))  
+    Props.mode match {
+      case Props.RunModes.Development => logger.info(params)
+      case _ => smsFactory.create(mapAsJavaMap(params))  
     }
   }
 
@@ -75,9 +75,10 @@ object TwilioService extends Loggable with WrapAsJava {
     )
 
     val incomingPhoneNumberFactory = 
-    (Props.mode == Props.RunModes.Development || Props.mode == Props.RunModes.Pilot) match {
-      case true => testAccount.getIncomingPhoneNumberFactory()
-      case false => subAccount.getIncomingPhoneNumberFactory()
+    Props.mode match {
+      case Props.RunModes.Development | Props.RunModes.Pilot =>
+        testAccount.getIncomingPhoneNumberFactory()
+      case _ => subAccount.getIncomingPhoneNumberFactory()
     }
 
     val purchasedNumber = incomingPhoneNumberFactory.create(mapAsJavaMap(purchaseParams))
