@@ -7,6 +7,7 @@ import net.liftweb.common.Box
 import net.liftweb.json.JsonDSL._
 import net.liftweb.json._
 import net.liftweb.json.TypeInfo
+import java.util.Date
 
 sealed trait QuestionType
 object QuestionType {
@@ -35,7 +36,8 @@ case class Survey(
   _id: ObjectId,
   name: String,
   userId: ObjectId,
-  questions: Seq[Question]
+  questions: Seq[Question],
+  startedDate: Option[Date]
 
 )
   extends MongoDocument[Survey] {
