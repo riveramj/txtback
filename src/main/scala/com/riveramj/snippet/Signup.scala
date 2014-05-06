@@ -86,7 +86,7 @@ class Signup extends Loggable with StatefulSnippet {
     ClearClearable andThen
     "#first-name" #> SHtml.text(firstName, firstName = _) &
     "#last-name" #> SHtml.text(lastName, lastName = _) &
-    "#email" #> SHtml.text(email, email = _) &
+    "#email" #> SHtml.text(email, userEmail => email = userEmail.trim) &
     "#password" #> SHtml.password(password, password = _) &
     ".available-numbers"  #> SHtml.idMemoize { renderer =>
       "#area-code" #> SHtml.ajaxText(areaCode, areaCode = _) &
