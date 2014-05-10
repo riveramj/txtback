@@ -2,13 +2,15 @@ package com.riveramj.snippet
 
 import net.liftweb.sitemap.Menu
 import net.liftweb.util.Helpers._
-import com.riveramj.util.SecurityContext
-import com.riveramj.service.SurveyService
-import net.liftweb.util.ClearClearable
+import net.liftweb.util.{ClearClearable, ClearNodes}
 import net.liftweb.http._
 import net.liftweb.http.js.{JsCmd, JsCmds}
 import net.liftweb.common._
 import org.bson.types.ObjectId
+
+import com.riveramj.util.SecurityContext
+import com.riveramj.service.SurveyService
+import com.riveramj.model.Survey
 
 object Surveys {
   import com.riveramj.util.PathHelpers.loggedIn
@@ -30,18 +32,28 @@ class Surveys extends Loggable {
       }
     }
 
-    ClearClearable andThen
-    ".survey" #> surveys.map{ survey =>
-      "a *" #> survey.name &
-      "a [href]" #> ("/survey/" + survey._id) &
-      "a [id]" #> survey._id.toString &
+    def deleteSurveyCssSel(survey: Survey) = {
+      val isSurveyEditable = survey.startedDate.isEmpty
+      if (isSurveyEditable) {
         ".delete-survey [onclick]" #> SHtml.ajaxInvoke(() => {
-          JsCmds.Confirm("Are you sure you want to delete the question?", {
+          JsCmds.Confirm("Are you sure you want to delete the survey?", {
             SHtml.ajaxInvoke(() => {
               deleteSurvey(survey._id)
             }).cmd
           })
         })
+      } else {
+        ".delete-survey" #> ClearNodes
+      }
+    }
+
+    ClearClearable andThen
+    ".survey" #> surveys.map{ survey =>
+      "a *" #> survey.name &
+      "a [href]" #> ("/survey/" + survey._id) &
+      "a [id]" #> survey._id.toString &
+      deleteSurveyCssSel(survey)
+      
     }
   }
 
