@@ -1,6 +1,6 @@
 package com.riveramj.snippet
 
-import net.liftweb.util.{CssSel, ClearClearable}
+import net.liftweb.util._
 import net.liftweb.util.Helpers._
 import net.liftweb.sitemap._
 import net.liftweb.common._
@@ -61,24 +61,40 @@ class SurveySnippet extends Loggable {
       S.error("survey-question-created", "Question is required")
   }
 
-  def questionAndAnswers(question: Question): CssSel = {
+  def questionAndAnswers(question: Question, surveyIsEditable: Boolean): CssSel = {
     val questionId = question._id
     val answers = QuestionService.findAnswersByQuestionId(questionId)
 
+    def editQuestionCssSel = {
+      if (surveyIsEditable) {
+        ".edit-question [onclick]" #> SHtml.ajaxInvoke(() => {
+          editQuestionIdRV(Full(questionId))
+          editQuestionIdRV.is
+          Noop
+        }) 
+      } else {
+        ".edit-question" #> ClearNodes
+      }
+    }
+
+    def deleteQuestionCssSel = {
+      if (surveyIsEditable) {
+        ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => {
+          JsCmds.Confirm("Are you sure you want to delete the question?", {
+            SHtml.ajaxInvoke(() => {
+              deleteQuestion(questionId)
+            }).cmd
+          })
+        })
+      } else {
+        ".delete-question" #> ClearNodes
+      }
+    }
+
     ".question *" #> question.question &
     ".question [id]" #> questionId.toString &
-    ".edit-question [onclick]" #> SHtml.ajaxInvoke(() => {
-        editQuestionIdRV(Full(questionId))
-        editQuestionIdRV.is
-        Noop
-      }) &
-    ".delete-question [onclick]" #> SHtml.ajaxInvoke(() => {
-      JsCmds.Confirm("Are you sure you want to delete the question?", {
-        SHtml.ajaxInvoke(() => {
-          deleteQuestion(questionId)
-        }).cmd
-      })
-    }) &
+    editQuestionCssSel &
+    deleteQuestionCssSel &
     ".answer" #> answers.map{ answer =>
       ".answer-number *" #> answer.answerNumber &
       ".answer-text *" #> answer.answer &
@@ -113,6 +129,7 @@ class SurveySnippet extends Loggable {
 
   def renderQuestions() = {
     val survey = SurveyService.getSurveyById(surveyId)
+    val surveyIsEditable = survey.map(_.startedDate.isEmpty).openOr(true)
     val questions = SurveyService.getAllQuestionsBySurveyId(surveyId)
 
     editQuestionIdRV(SurveyService.getFirstQuestionBySurveyId(surveyId).map(_._id))
@@ -122,7 +139,7 @@ class SurveySnippet extends Loggable {
     "#survey-name *" #> survey.map(_.name) &
     "#view-responses [href]" #> ("/survey/" + surveyId + "/responses") &
     "#question-list" #> questions.map{ question =>
-      questionAndAnswers(question)
+      questionAndAnswers(question, surveyIsEditable)
     } 
   }
 
@@ -141,10 +158,16 @@ class SurveySnippet extends Loggable {
   }
 
   def createNewQuestion() = {
-    "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
-    "#chose-one" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.choseOne)) &
-    "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.trueFalse)) &
-    "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.ratingScale)) &
-    "#free-response" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.freeResponse))
+    val survey = SurveyService.getSurveyById(surveyId)
+    val surveyIsEditable = survey.map(_.startedDate.isEmpty).openOr(true)
+    if (surveyIsEditable) {
+      "#new-question" #> SHtml.text(newQuestion, newQuestion = _) &
+      "#chose-one" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.choseOne)) &
+      "#true-false" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.trueFalse)) &
+      "#rating-scale" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.ratingScale)) &
+      "#free-response" #> SHtml.onSubmitUnit(() => createQuestion(surveyId, QuestionType.freeResponse))
+    } else {
+      ".input-group" #> ClearNodes
+    }
   }
 }
