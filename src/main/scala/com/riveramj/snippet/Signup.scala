@@ -76,7 +76,7 @@ class Signup extends Loggable with StatefulSnippet {
       val rawNumbers = TwilioService.lookupPhoneNumbers(areaCode, phone)
       availableNumbers = rawNumbers.map { number => 
         PhoneNumberService.longFormatPhoneNumber(number)
-      }
+      }.take(10)
 
       phoneNumberRadios = SHtml.radio(availableNumbers.toSeq, Empty, selectedNumber = _).toForm 
 
