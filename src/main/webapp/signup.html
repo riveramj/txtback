@@ -39,6 +39,41 @@
             <div data-lift="embed?what=phone-search"></div>
           </fieldset>
         </li>
+        <li class="billing">
+          <fieldset class="billing-info">
+            <legend>Billing Information</legend>
+            <ul class="billing-info">
+              <li>
+                <label>
+                  <span>Card Number</span>
+                  <span data-lift="Msg?id=card-number-error&noticeClass=notice&errorClass=error"></span>
+                  <input placeholder="0000 0000 0000 0000" id="card-number" type="text">            
+                </label>
+              </li>
+              <li>
+                <label>
+                  <span>CVC</span>
+                  <span data-lift="Msg?id=cvc-error&noticeClass=notice&errorClass=error"></span>
+                  <input placeholder="000" id="cvc" type="text">            
+                </label>
+              </li>
+              <li>
+                <label>
+                  <span>Expires</span>
+                  <span data-lift="Msg?id=expire-date-error&noticeClass=notice&errorClass=error"></span>
+                  <input placeholder="MM / YY" id="expire-date" type="text">            
+                </label>
+              </li>
+              <li>
+                <label>
+                  <span>Zip / Postal Code</span>
+                  <span data-lift="Msg?id=zip-code-error&noticeClass=notice&errorClass=error"></span>
+                  <input placeholder="00000" id="zip-code" type="text">            
+                </label>
+              </li>
+            </ul>
+          </fieldset>
+        </li>
         <li class="signup">
           <button data-lift="Loc.user-signup" class="signup">Sign Up</button>
         </li>
