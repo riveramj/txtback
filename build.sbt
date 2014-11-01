@@ -42,6 +42,7 @@ val liftVersion = "2.6-M3"
     "org.eclipse.jetty"      %  "jetty-webapp"         % "8.1.0.v20120127" % "container,compile",
     "org.eclipse.jetty"      %  "jetty-webapp"         % "8.1.0.v20120127" % "container; compile->default",
     "com.twilio.sdk"         % "twilio-java-sdk"       % "3.3.15"          % "compile",
+    "com.stripe"             %% "stripe-scala"         % "1.1.2",
     "net.liftweb"            %% "lift-json"            % liftVersion       % "compile->default",
     "net.liftweb"            %% "lift-mongodb"         % liftVersion       % "compile->default",
     "net.liftweb"            %% "lift-webkit"          % liftVersion       % "compile",

@@ -10,7 +10,7 @@ import net.liftweb.http.js.JsCmds
 import net.liftweb.http.IdMemoizeTransform
 
 import com.riveramj.service.SurveyorService._
-import com.riveramj.service.{PhoneNumberService, TwilioService}
+import com.riveramj.service.{PhoneNumberService, TwilioService, StripeService}
 import com.riveramj.model.{Surveyor, PhoneNumber}
 import com.riveramj.service.ValidationService._
 import com.riveramj.util.SecurityContext
@@ -35,8 +35,6 @@ class Signup extends Loggable with StatefulSnippet {
     var phone = ""
     var availableNumbers: List[String] = Nil
     var phoneNumberRadios: NodeSeq = Nil 
-    var selectedNumber = ""
-    
 
     def signupUser() = {
       val validateFields = List(
@@ -63,6 +61,7 @@ class Signup extends Loggable with StatefulSnippet {
         )
         
         user.map( newUser => SecurityContext.logUserIn(newUser._id))
+        
         S.redirectTo("/home")
       }
       else {

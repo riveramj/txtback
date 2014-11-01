@@ -1,3 +1,5 @@
+Stripe.setPublishableKey 'pk_test_8CPavIa4sd82JvvmSJym4CqL'
+
 $(document).ready ->
   $(".available-numbers")
     .on('click', ".number-entry", (event) ->
@@ -18,4 +20,5 @@ $(document).ready ->
         $(".number-search").click()
         event.preventDefault()
     )
+
    
